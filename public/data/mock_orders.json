@@ -1,0 +1,43 @@
+[
+    {
+        "_id": "order_001",
+        "transactionId": "TXN_1234567890",
+        "userDetails": {
+            "name": "Ravi Sankar",
+            "phone": "9876543210"
+        },
+        "totalAmount": 450,
+        "orderStatus": "placed",
+        "items": [
+            {
+                "name": "Chicken Mandi",
+                "quantity": 1,
+                "price": 450
+            }
+        ],
+        "createdAt": "2026-02-10T10:00:00.000Z"
+    },
+    {
+        "_id": "order_002",
+        "transactionId": "TXN_0987654321",
+        "userDetails": {
+            "name": "Jane Doe",
+            "phone": "9988776655"
+        },
+        "totalAmount": 200,
+        "orderStatus": "pending",
+        "items": [
+            {
+                "name": "Bumping Cars Ticket",
+                "quantity": 1,
+                "price": 150
+            },
+            {
+                "name": "Coke",
+                "quantity": 1,
+                "price": 50
+            }
+        ],
+        "createdAt": "2026-02-11T12:30:00.000Z"
+    }
+]

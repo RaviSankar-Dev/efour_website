@@ -1,0 +1,26 @@
+[
+    {
+        "_id": "book_001",
+        "userDetails": {
+            "name": "Alice Smith",
+            "phone": "9123456780"
+        },
+        "facility": "VIP Dining Suite",
+        "date": "2026-02-14",
+        "totalPrice": 2000,
+        "status": "confirmed",
+        "createdAt": "2026-02-01T09:00:00.000Z"
+    },
+    {
+        "_id": "book_002",
+        "userDetails": {
+            "name": "Bob Jones",
+            "phone": "9876500000"
+        },
+        "facility": "Indoor Cricket Slot",
+        "date": "2026-02-15",
+        "totalPrice": 500,
+        "status": "pending",
+        "createdAt": "2026-02-10T14:00:00.000Z"
+    }
+]
