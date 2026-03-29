@@ -4,7 +4,7 @@ import { Ticket, Clock, ArrowRight, ShieldCheck, AlertCircle, History, LayoutDas
 import useStore from '../store/useStore';
 import { Link } from 'react-router-dom';
 import QRCode from 'react-qr-code';
-import { fetchWithAuth } from '../utils/api';
+import { fetchWithAuth, getMyTickets } from '../utils/api';
 
 // Constants for expiry logic
 const EXPIRY_HOURS = 24; // 24 hours
@@ -49,14 +49,14 @@ const safeDate = (dateVal) => {
     return isNaN(d.getTime()) ? new Date() : d;
 };
 
-const TicketCard = memo(({ ticket, item }) => {
+const TicketCard = memo(({ ticket, item, onRefresh }) => {
     const [isFlipped, setIsFlipped] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ h: 0, m: 0, s: 0, pct: 100 });
     const [status, setStatus] = useState('active'); // active, expiring, expired
 
     useEffect(() => {
         const calculateTime = () => {
-            const purchaseDate = safeDate(ticket.date || ticket.createdAt);
+            const purchaseDate = safeDate(ticket.date || ticket.createdAt || ticket.created_at || ticket.purchaseDate);
             const expiryDate = new Date(purchaseDate.getTime() + EXPIRY_HOURS * 60 * 60 * 1000);
             const now = new Date();
             const diff = expiryDate - now;
@@ -79,7 +79,7 @@ const TicketCard = memo(({ ticket, item }) => {
         calculateTime();
         const timer = setInterval(calculateTime, 1000);
         return () => clearInterval(timer);
-    }, [ticket.date, ticket.createdAt]);
+    }, [ticket.date, ticket.createdAt, ticket.created_at, ticket.purchaseDate]);
 
     const getStatusConfig = () => {
         return { label: 'READY', color: 'text-[#6C5CE7]', bg: 'bg-[#6C5CE7]/10', border: 'border-[#6C5CE7]/30', glow: 'shadow-[0_0_20px_rgba(108,92,231,0.3)]' };
@@ -87,10 +87,10 @@ const TicketCard = memo(({ ticket, item }) => {
 
 
     const config = getStatusConfig();
-    const qrData = `${ticket.id || ticket._id}-${item.id}`;
+    const qrData = `${ticket.id || ticket._id || ticket.code || 'ID'}-${item.ticketId || item.id || 'ITEM'}`;
 
     return (
-        <div className="relative h-[380px] w-full perspective-3000 group">
+        <div className="relative h-[280px] w-full perspective-3000 group">
             <motion.div
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
                 transition={{ duration: 1.2, type: 'spring', damping: 20, stiffness: 80 }}
@@ -98,47 +98,48 @@ const TicketCard = memo(({ ticket, item }) => {
                 onClick={() => status !== 'expired' && setIsFlipped(!isFlipped)}
             >
                 <div className="absolute inset-0 backface-hidden">
-                    <div className={`h-full w-full rounded-[2.5rem] bg-white/[0.02] backdrop-blur-4xl border border-white/10 p-6 flex flex-col justify-between overflow-hidden shadow-4xl transition-all duration-1000 hover:border-[#6C5CE7]/40 group/card ${status === 'expiring' ? 'animate-pulse-subtle ring-1 ring-[#FF7A00]/30' : ''}`}>
+                    <div className={`h-full w-full rounded-[2rem] bg-white/[0.02] backdrop-blur-4xl border border-white/10 p-4 flex flex-col justify-between overflow-hidden shadow-4xl transition-all duration-1000 hover:border-[#6C5CE7]/40 group/card ${status === 'expiring' ? 'animate-pulse-subtle ring-1 ring-[#FF7A00]/30' : ''}`}>
                         {/* Background Ambient Glow */}
-                        <div className={`absolute top-0 right-0 w-48 h-48 blur-[100px] opacity-20 pointer-events-none rounded-full translate-x-1/2 -translate-y-1/2 transition-colors duration-1000 ${status === 'expired' ? 'bg-red-500' : (status === 'expiring' ? 'bg-[#FF7A00]' : 'bg-[#6C5CE7]')}`} />
+                        <div className={`absolute top-0 right-0 w-24 h-24 blur-[60px] opacity-10 pointer-events-none rounded-full translate-x-1/2 -translate-y-1/2 transition-colors duration-1000 ${status === 'expired' ? 'bg-red-500' : (status === 'expiring' ? 'bg-[#FF7A00]' : 'bg-[#6C5CE7]')}`} />
                         <div className="absolute inset-0 noise-overlay opacity-[0.02] pointer-events-none" />
 
-                        {/* Status Header */}
-                        <div className="flex justify-between items-start relative z-10">
-                            <div className={`px-4 py-2 rounded-xl ${config.bg} border ${config.border} flex items-center gap-2 backdrop-blur-3xl ${config.glow} transition-all duration-1000`}>
-                                <div className={`w-2 h-2 rounded-full ${config.color.replace('text', 'bg')} ${status === 'expiring' ? 'animate-pulse' : ''} shadow-[0_0_12px_currentColor]`} />
-                                <span className={`text-[8px] font-black uppercase tracking-[0.4em] ${config.color} transform `}>{config.label}</span>
+                        <div className="flex justify-between items-start relative z-10 mb-1">
+                            <div className={`px-2 py-1 rounded-lg ${config.bg} border ${config.border} flex items-center gap-1.5 backdrop-blur-3xl`}>
+                                <div className={`w-1 h-1 rounded-full ${config.color.replace('text', 'bg')} ${status === 'expiring' ? 'animate-pulse' : ''} shadow-[0_0_8px_currentColor]`} />
+                                <span className={`text-[6px] font-black uppercase tracking-[0.3em] ${config.color}`}>{config.label}</span>
                             </div>
-                            <div className="bg-white/[0.03] p-2 rounded-xl border border-white/10 opacity-40 group-hover/card:opacity-100 group-hover/card:scale-110 group-hover/card:bg-[#6C5CE7]/10 group-hover/card:border-[#6C5CE7]/30 transition-all duration-700">
-                                <QrCode className="text-white" size={20} />
+                            <div className="flex items-center gap-2">
+                                <span className="text-white font-black text-sm md:text-base tracking-tight shadow-sm">₹{Number(item.price * item.quantity).toFixed(0)}</span>
+                                <div className="bg-white/[0.05] p-1.5 rounded-lg border border-white/10 opacity-60">
+                                    <QrCode className="text-white shadow-lg" size={10} />
+                                </div>
                             </div>
                         </div>
 
                         {/* Main Content */}
-                        <div className="space-y-4 relative z-10">
-                            <div className="space-y-2">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-[#6C5CE7] group-hover/card:bg-[#6C5CE7] group-hover/card:text-white transition-all duration-700 shadow-xl">
-                                        <Cpu size={20} />
+                        <div className="space-y-2 relative z-10 flex-grow">
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                    <div className="text-[#6C5CE7]">
+                                        <Cpu size={12} />
                                     </div>
-                                    <span className="text-slate-600 text-[8px] font-black tracking-[0.5em] uppercase opacity-60">FOR RIDE/FOOD</span>
+                                    <span className="text-slate-600 text-[6.5px] font-black tracking-[0.3em] uppercase opacity-50">E4 PASS</span>
                                 </div>
-                                <h3 className="text-white font-black text-xl md:text-2xl tracking-tighter uppercase transform leading-tight group-hover:text-gradient-primary transition-all duration-1000">
+                                <h3 className="text-white font-black text-sm md:text-base tracking-tighter uppercase leading-tight line-clamp-2">
                                     {item.name}
                                 </h3>
-                                <p className="text-[#6C5CE7] text-[10px] font-black tracking-[0.5em] uppercase opacity-60">EFOUR ELURU</p>
                             </div>
 
-                            <div className="flex items-center gap-4 bg-black/40 p-4 rounded-3xl border border-white/5 backdrop-blur-4xl shadow- inner group-hover/card:border-[#6C5CE7]/20 transition-all duration-1000">
+                            <div className="mt-auto flex items-center gap-3 bg-black/20 p-2 rounded-2xl border border-white/5 backdrop-blur-3xl shadow-inner">
                                 <div className="relative shrink-0">
                                     <CircularProgress pct={timeLeft.pct} color={status === 'expired' ? 'text-red-500' : (status === 'expiring' ? 'text-[#FF7A00]' : 'text-[#6C5CE7]')} />
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <Clock className="text-white/20" size={16} />
+                                        <Clock className="text-white/10" size={12} />
                                     </div>
                                 </div>
-                                <div className="space-y-1">
-                                    <span className="text-slate-800 text-[8px] font-black uppercase tracking-[0.3em] block opacity-40">EXPIRES IN</span>
-                                    <span className={`text-xl font-mono font-black tabular-nums transition-colors duration-1000 ${config.color} tracking-widest`}>
+                                <div className="space-y-0 text-left">
+                                    <span className="text-[6.5px] font-black uppercase tracking-[0.2em] text-slate-700 opacity-40 block">EXPIRES</span>
+                                    <span className={`text-sm font-mono font-black tabular-nums ${config.color} tracking-[0.1em]`}>
                                         {String(timeLeft.h).padStart(2, '0')}:{String(timeLeft.m).padStart(2, '0')}:{String(timeLeft.s).padStart(2, '0')}
                                     </span>
                                 </div>
@@ -146,23 +147,17 @@ const TicketCard = memo(({ ticket, item }) => {
                         </div>
 
                         {/* Bottom Metadata */}
-                        <div className="mt-3 pt-4 border-t border-white/5 space-y-3 relative z-10">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1">
-                                    <span className="text-slate-800 text-[8px] font-black uppercase tracking-[0.3em] block opacity-40">PRICE</span>
-                                    <span className="text-white font-black text-xl tracking-tighter transform ">₹{item.price * item.quantity}</span>
-                                </div>
-                                <div className="text-right space-y-1">
-                                    <span className="text-slate-800 text-[8px] font-black uppercase tracking-[0.3em] block opacity-40">DATE & TIME</span>
-                                    <span className="text-white/80 font-black text-[9px] uppercase tracking-[0.1em]">{safeDate(ticket.date || ticket.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true })}</span>
-                                </div>
+                        <div className="mt-2 pt-2 border-t border-white/5 flex items-center justify-between relative z-10">
+                            <div className="space-y-0 text-left">
+                                <span className="text-slate-800 text-[6px] font-black uppercase tracking-[0.1em] block opacity-40">DATE</span>
+                                <span className="text-white/70 font-black text-[7.5px] uppercase tracking-normal">{safeDate(ticket.date || ticket.createdAt || ticket.created_at || ticket.purchaseDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
                             </div>
 
                             <button
-                                className={`w-full py-4 rounded-xl font-black text-[9px] uppercase tracking-[0.5em] transition-all duration-700 flex items-center justify-center gap-3 transform ${status === 'expired' ? 'bg-red-500/5 text-red-500/30 cursor-not-allowed border border-red-500/10' : 'bg-white/[0.03] text-white border border-white/10 hover:border-[#6C5CE7] hover:bg-[#6C5CE7] hover:text-white hover:shadow-4xl active:scale-95 group/btn'}`}
+                                className={`px-4 py-2 rounded-lg font-black text-[7px] uppercase tracking-[0.2em] transition-all duration-700 flex items-center gap-2 transform ${status === 'expired' ? 'bg-red-500/5 text-red-500/30 cursor-not-allowed border border-red-500/10' : 'bg-white/[0.04] text-white border border-white/5 hover:bg-[#6C5CE7] hover:border-[#6C5CE7] active:scale-95'}`}
                             >
-                                {status === 'expired' ? 'EXPIRED' : 'SHOW TICKET'}
-                                {status !== 'expired' && <ArrowRight size={14} className="group-hover/btn:translate-x-2 transition-transform duration-500" />}
+                                {status === 'expired' ? 'EXPIRED' : 'SHOW PASS'}
+                                {status !== 'expired' && <ArrowRight size={10} />}
                             </button>
                         </div>
 
@@ -172,50 +167,56 @@ const TicketCard = memo(({ ticket, item }) => {
 
                 {/* Back Side (QR) */}
                 <div className="absolute inset-0 backface-hidden rotate-y-180">
-                    <div className="h-full w-full rounded-[2.5rem] bg-[#02040a] p-6 flex flex-col items-center justify-between shadow-4xl border border-white/10 relative overflow-hidden">
+                    <div className="h-full w-full rounded-[2.5rem] bg-[#02040a] p-5 flex flex-col items-center justify-between shadow-4xl border border-white/10 relative overflow-hidden">
                         <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
                         
                         {/* Background Light */}
-                        <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+                        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                             <div className="absolute top-[-20%] left-[-20%] w-[70%] h-[70%] bg-[#6C5CE7] rounded-full blur-[120px]" />
                         </div>
 
                         <div className="w-full flex justify-between items-center relative z-10">
-                            <div className="bg-white/[0.03] border border-white/5 px-6 py-2.5 rounded-2xl backdrop-blur-3xl">
-                                <span className="text-slate-600 text-[9px] font-black uppercase tracking-[0.5em] opacity-60">EFOUR TICKET</span>
+                            <div className="bg-white/[0.03] border border-white/5 px-4 py-2 rounded-xl backdrop-blur-3xl">
+                                <span className="text-slate-600 text-[7px] font-black uppercase tracking-[0.4em] opacity-60">PASS VERIFICATION</span>
                             </div>
-                            <img src="/E4LOGOr.png" className="w-12 h-12 rounded-[1.25rem] border border-white/10 brightness-150 contrast-125 shadow-4xl" alt="E4" />
+                            <img src="/E4LOGOr.png" className="w-10 h-10 rounded-xl border border-white/10 brightness-150" alt="E4" />
                         </div>
 
-                        <div className="flex-grow flex flex-col items-center justify-center space-y-4 relative z-10">
+                        <div className="flex-grow flex flex-col items-center justify-center space-y-3 relative z-10">
                             <div className="relative group/qr">
-                                <div className="absolute -inset-8 bg-gradient-to-tr from-[#6C5CE7]/30 to-[#FF7A00]/30 rounded-[4rem] blur-[60px] opacity-40 group-hover:opacity-80 transition-opacity duration-1000" />
-                                <div className="p-4 bg-white rounded-[2rem] shadow-4xl border-[4px] border-white/5 relative z-10 group-hover:scale-105 transition-transform duration-1000">
-                                    <QRCode value={qrData} size={140} fgColor="#02040a" />
+                                <div className="absolute -inset-6 bg-gradient-to-tr from-[#6C5CE7]/30 to-[#FF7A00]/30 rounded-[3rem] blur-[40px] opacity-40 group-hover:opacity-80 transition-opacity duration-1000" />
+                                <div className="p-3 bg-white rounded-[1.5rem] relative z-10 group-hover:scale-105 transition-transform duration-1000">
+                                    <QRCode value={qrData} size={110} fgColor="#02040a" />
                                 </div>
                             </div>
-                            <div className="text-center space-y-3">
-                                <span className="text-slate-800 text-[10px] font-black uppercase tracking-[0.5em] block opacity-40">TICKET ID</span>
-                                <code className="bg-white/[0.03] px-6 py-2.5 rounded-2xl text-white font-mono text-xs border border-white/5 backdrop-blur-3xl tracking-widest uppercase">{(ticket.id || ticket._id || '').slice(0, 16)}</code>
+                            <div className="text-center space-y-2">
+                                <span className="text-slate-800 text-[7px] font-black uppercase tracking-[0.3em] block opacity-40">TICKET KEY</span>
+                                <code className="bg-white/[0.02] px-4 py-1.5 rounded-xl text-white font-mono text-[9px] border border-white/5 backdrop-blur-3xl tracking-widest uppercase">{String(ticket.id || ticket._id || ticket.code || '').slice(0, 12)}</code>
                             </div>
                         </div>
 
-                        <div className="w-full bg-white/[0.02] border border-white/5 p-4 rounded-[1.5rem] space-y-3 backdrop-blur-4xl relative z-10">
-                            <div className="flex items-center gap-4 text-slate-500">
-                                <div className="w-8 h-8 rounded-xl bg-[#6C5CE7]/10 flex items-center justify-center text-[#6C5CE7] border border-[#6C5CE7]/20 shadow-inner">
-                                    <ShieldCheck size={16} />
+                        <div className="w-full bg-white/[0.02] border border-white/5 p-3 rounded-[1.25rem] space-y-2 backdrop-blur-4xl relative z-10">
+                            <div className="flex items-center gap-3 text-slate-500">
+                                <div className="w-6 h-6 rounded-lg bg-[#6C5CE7]/10 flex items-center justify-center text-[#6C5CE7] border border-[#6C5CE7]/20">
+                                    <ShieldCheck size={12} />
                                 </div>
-                                <span className="text-[10px] font-black uppercase tracking-[0.4em] ">VERIFIED</span>
+                                <span className="text-[8px] font-black uppercase tracking-[0.3em] ">SECURE</span>
                             </div>
-                            <div className="flex items-center gap-4 text-slate-500">
-                                <div className="w-8 h-8 rounded-xl bg-[#FF7A00]/10 flex items-center justify-center text-[#FF7A00] border border-[#FF7A00]/20 shadow-inner">
-                                    <Zap size={16} />
+                            <div className="flex items-center gap-3 text-slate-500">
+                                <div className="w-6 h-6 rounded-lg bg-[#FF7A00]/10 flex items-center justify-center text-[#FF7A00] border border-[#FF7A00]/20">
+                                    <Zap size={12} />
                                 </div>
-                                <span className="text-[9px] font-black uppercase tracking-[0.4em] ">FAST ACCESS</span>
+                                <span className="text-[8px] font-black uppercase tracking-[0.3em] ">VALID</span>
                             </div>
                         </div>
 
-                        <button className="text-slate-800 text-[11px] font-black uppercase tracking-[0.5em] mt-8 hover:text-white transition-all transform hover:scale-110 active:scale-90">
+                        <button 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onRefresh && onRefresh();
+                            }}
+                            className="text-slate-800 text-[9px] font-black uppercase tracking-[0.4em] mt-4 hover:text-white transition-all transform hover:scale-110 active:scale-90"
+                        >
                             REFRESH
                         </button>
                     </div>
@@ -243,46 +244,90 @@ const YourTickets = () => {
     const [loading, setLoading] = useState(true);
     const [rawTickets, setRawTickets] = useState([]);
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (token) {
-                    const res = await fetchWithAuth('/api/payment/my-orders');
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (Array.isArray(data)) {
-                            setRawTickets(data);
-                            setLoading(false);
-                            return;
-                        }
+    const fetchOrders = async (isManual = false) => {
+        if (!isManual) setLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const res = await getMyTickets();
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data)) {
+                        setRawTickets(data);
+                    } else if (data && Array.isArray(data.data)) {
+                        setRawTickets(data.data);
+                    } else if (data && data.tickets && Array.isArray(data.tickets)) {
+                        setRawTickets(data.tickets);
+                    } else if (data && typeof data === 'object') {
+                        setRawTickets([data]);
                     }
                 }
-            } catch (err) {
-                console.warn('Failed to fetch from /api/payment/my-orders', err);
             }
-            setLoading(false);
-        };
+        } catch (err) {
+            console.warn('Failed to fetch from tickets endpoint', err);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
         fetchOrders();
     }, []);
 
     const tickets = useMemo(() => {
         if (!rawTickets || rawTickets.length === 0) return [];
-        const validStatuses = ['success', 'confirmed', 'paid', 'captured'];
+        const validStatuses = ['success', 'confirmed', 'paid', 'captured', 'active', 'unused'];
         return rawTickets
             .filter(Boolean)
-            .filter(ticket => {
-                const status = (ticket.status || ticket.orderStatus || '').toLowerCase();
-                return validStatuses.includes(status);
-            })
-            .flatMap(ticket =>
-                (ticket.items || []).filter(item => item.id !== 'tax-gst-9').map(item => ({
-                    ...item,
-                    ticketId: ticket.id || ticket._id,
-                    purchaseDate: ticket.date || ticket.createdAt,
-                    originalTicket: ticket
-                }))
-            );
+            .flatMap(ticket => {
+                // Determine if this is an order with multiple items or a single ticket
+                const items = ticket.items || [];
+                
+                if (items.length > 0) {
+                    // It's an order document
+                    const status = (ticket.status || ticket.orderStatus || '').toLowerCase();
+                    if (!validStatuses.includes(status) && status !== '') return []; // Skip if invalid status
+
+                    return items.filter(item => item.id !== 'tax-gst-9').map(item => {
+                        // Look for price in the item FIRST, then the parent ticket (order)
+                        const rawPrice = item.price || item.item_price || item.unit_price || 
+                                         item.product?.price || item.product?.unit_price ||
+                                         ticket.amount || ticket.total_amount || ticket.total_price || 
+                                         ticket.amount_total || ticket.total || 0;
+                        
+                        const price = typeof rawPrice === 'string' ? parseFloat(rawPrice.replace(/[^0-9.]/g, '')) : (Number(rawPrice) || 0);
+                        return {
+                            ...item,
+                            price,
+                            quantity: Number(item.quantity) || 1,
+                            ticketId: ticket.id || ticket._id,
+                            purchaseDate: ticket.date || ticket.createdAt || ticket.purchaseDate,
+                            originalTicket: ticket
+                        };
+                    });
+                } else {
+                    // It's already an individual ticket document (new API format)
+                    const status = (ticket.status || '').toLowerCase();
+                    // If flat tickets don't have a status or are valid, include them
+                    if (status && !validStatuses.includes(status)) return [];
+
+                    // Extract price - extremely aggressive search for potential price fields
+                    const rawPrice = ticket.price || ticket.item_price || ticket.amount || ticket.unit_price || 
+                                     ticket.total_amount || ticket.amount_total || ticket.price_total || 
+                                     ticket.grand_total || ticket.cost || ticket.price_paid || 0;
+                    
+                    const price = typeof rawPrice === 'string' ? parseFloat(rawPrice.replace(/[^0-9.]/g, '')) : (Number(rawPrice) || 0);
+
+                    return [{
+                        ...ticket,
+                        name: ticket.item_name || ticket.name || ticket.title || ticket.item_title || 'E4 Ticket',
+                        price: price,
+                        quantity: Number(ticket.quantity) || 1,
+                        ticketId: ticket.id || ticket._id || ticket.code || ticket.order_id || 'TKT-000',
+                        purchaseDate: ticket.created_at || ticket.date || ticket.createdAt || ticket.purchaseDate || new Date(),
+                        originalTicket: ticket
+                    }];
+                }
+            });
     }, [rawTickets]);
 
     const filteredTickets = useMemo(() => {
@@ -300,7 +345,17 @@ const YourTickets = () => {
 
 
 
-    if (!user || (!loading && tickets.length === 0)) {
+    if (loading && tickets.length === 0) {
+        return (
+            <div className="min-h-screen bg-[#02040a] pt-52 md:pt-64 pb-12 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden">
+                <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
+                <div className="w-20 h-20 border-[3px] border-[#6C5CE7]/20 border-t-[#6C5CE7] rounded-full animate-spin mb-10" />
+                <p className="text-[10px] font-black uppercase tracking-[0.6em] text-[#6C5CE7] animate-pulse">Loading Neural Interface...</p>
+            </div>
+        );
+    }
+
+    if (!user || tickets.length === 0) {
         return (
             <div className="min-h-screen bg-[#02040a] pt-52 md:pt-64 pb-12 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden">
                 <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
@@ -326,62 +381,47 @@ const YourTickets = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#02040a] text-white pt-52 md:pt-64 pb-24 md:pb-48 selection:bg-[#6C5CE7]/30 relative overflow-hidden">
+        <div className="min-h-screen bg-[#02040a] text-white pt-40 md:pt-48 pb-24 md:pb-48 selection:bg-[#6C5CE7]/30 relative overflow-hidden">
             {/* Background Effects */}
             <div className="absolute inset-0 matrix-grid opacity-[0.05] pointer-events-none" />
             <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#6C5CE7]/5 rounded-full blur-[200px] pointer-events-none" />
             <div className="absolute bottom-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#FF7A00]/5 rounded-full blur-[200px] pointer-events-none" />
-            <div className="absolute inset-0 noise-overlay opacity-[0.02]" />
-
-            <div className="container mx-auto px-8 max-w-[1440px] relative z-10">
+            <div className="absolute inset-0 noise-overlay opacity-[0.02]" />            <div className="container mx-auto px-8 max-w-[1440px] relative z-10">
                 {/* Header Section */}
-                <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-20 mb-32">
-                    <div className="space-y-10">
+                <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-12 mb-16">
+                    <div className="space-y-6">
                         <div className="flex items-center gap-6 text-[#6C5CE7]">
-                            <div className="w-16 h-[2px] bg-[#6C5CE7]/40" />
-                            <span className="text-[11px] font-black uppercase tracking-[0.8em] ">MY TICKETS</span>
+                            <div className="w-16 h-[1.5px] bg-[#6C5CE7]/40" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.8em] ">MY TICKETS</span>
                         </div>
-                        <h1 className="text-6xl md:text-[10rem] font-black tracking-tighter uppercase leading-[0.8] transform ">
-                            YOUR <br /> <span className="text-gradient-primary">TICKETS</span>
+                        <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-[1] transform mb-6">
+                            YOUR <span className="text-gradient-primary">TICKETS</span>
                         </h1>
-                        <p className="text-slate-600 text-sm font-bold uppercase tracking-[0.4em] max-w-2xl opacity-80 leading-relaxed border-l-2 border-[#6C5CE7]/30 pl-10">
-                            Manage all your tickets here. Each ticket is valid for 24 hours after purchase.
+                        <p className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] max-w-2xl opacity-60 leading-relaxed border-l border-white/5 pl-8">
+                            Active bookings pass is valid for 24 hours.
                         </p>
                     </div>
-
-                    {/* Filters removed per user request - only Active tickets shown */}
                 </div>
 
                 {/* Tickets Grid */}
                 {loading ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                         {[1, 2, 3, 4].map(i => (
-                            <div key={i} className="h-[380px] rounded-[2.5rem] bg-white/[0.02] border border-white/10 animate-pulse relative overflow-hidden shadow-4xl">
-                                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent animate-shimmer" />
-                            </div>
+                            <div key={i} className="h-[380px] rounded-[2.5rem] bg-white/[0.02] border border-white/10 animate-pulse" />
                         ))}
                     </div>
                 ) : (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"
-                    >
-                        <AnimatePresence mode="popLayout">
-                            {filteredTickets.map((ticket, index) => (
-                                <motion.div
-                                    key={`${ticket.ticketId}-${ticket.id}`}
-                                    layout
-                                    initial={{ opacity: 0, y: 50 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9, rotateX: -20 }}
-                                    transition={{ duration: 1, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                                >
-                                    <TicketCard ticket={ticket.originalTicket} item={ticket} />
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
-                    </motion.div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                        {filteredTickets.map((ticket, index) => (
+                            <div key={index}>
+                                <TicketCard 
+                                    ticket={ticket.originalTicket} 
+                                    item={ticket} 
+                                    onRefresh={() => fetchOrders(true)} 
+                                />
+                            </div>
+                        ))}
+                    </div>
                 )}
 
                 {/* Empty State for Filter */}

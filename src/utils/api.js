@@ -101,3 +101,7 @@ export const deleteAccount = async () => {
         method: 'DELETE'
     });
 };
+
+export const getMyTickets = async () => {
+    return fetchWithAuth(import.meta.env.VITE_TICKETS_API_URL || 'https://xzanzkz0wl.execute-api.ap-south-1.amazonaws.com/api/tickets/my-tickets');
+};

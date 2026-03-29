@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Utensils, User, Ticket, Phone } from 'lucide-react';
+import { Home, Utensils, User, Ticket, Phone, Globe } from 'lucide-react';
 import useStore from '../../store/useStore';
 
 const BottomNav = () => {
@@ -29,6 +29,20 @@ const BottomNav = () => {
                         </span>
                     </div>
                     <span className="text-[9px] font-bold uppercase tracking-wider">Dine</span>
+                </NavLink>
+
+                <NavLink
+                    to="/dome"
+                    className={({ isActive }) => `flex flex-col items-center gap-1 transition-all duration-300 ${isActive ? 'text-white scale-110' : 'text-slate-500 hover:text-slate-400'}`}
+                >
+                    <div className="relative">
+                        <Globe size={20} strokeWidth={2.5} />
+                        <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                        </span>
+                    </div>
+                    <span className="text-[9px] font-bold uppercase tracking-wider">Dome</span>
                 </NavLink>
 
                 <NavLink
