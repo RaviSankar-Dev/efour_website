@@ -130,21 +130,18 @@ const Scanner = ({ isEmbedded = false }) => {
             )}
 
             {/* Scan Interface Module */}
-            <div className={`${isEmbedded ? 'mt-0' : 'mt-24 md:mt-32'} w-full max-w-lg relative z-10 px-4`}>
-                <div className={`${isEmbedded ? 'bg-transparent border-none' : 'bg-[#0F172A]/40 border border-white/10'} backdrop-blur-3xl rounded-[3rem] p-5 md:p-8 shadow-2xl overflow-hidden relative`}>
+            <div className={`${isEmbedded ? 'mt-0' : 'mt-20 md:mt-32'} w-full max-w-lg relative z-10 px-4 pb-20`}>
+                <div className={`${isEmbedded ? 'bg-transparent border-none' : 'bg-[#0F172A]/40 border border-white/10'} backdrop-blur-3xl rounded-[2.5rem] p-4 md:p-8 shadow-2xl overflow-hidden relative`}>
                     {/* Decorative Corner */}
                     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#FF7A18]/10 to-transparent blur-2xl" />
 
-                    <div className="text-center mb-6">
-                        <h2 className="text-2xl md:text-3xl font-black uppercase tracking-[0.2em] text-[#F8FAFC] mb-2">Scanner</h2>
-                        <div className="flex items-center justify-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-[#FF7A18] animate-pulse" />
-                            <p className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em]">Operational Status: Online</p>
-                        </div>
+                    <div className="text-center mb-4">
+                        <h2 className="text-xl md:text-3xl font-black uppercase tracking-[0.2em] text-[#F8FAFC]">Terminal</h2>
+                        <p className="text-[9px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] mt-1">Status: Operational</p>
                     </div>
                     
                     {/* Camera Viewport Module */}
-                    <div className="relative w-full aspect-square border-2 border-dashed border-[#AAB2C5]/20 rounded-[2.5rem] flex items-center justify-center overflow-hidden ring-offset-4 ring-offset-[#070B14] group transition-all bg-slate-900 shadow-inner">
+                    <div className="relative w-full h-[280px] md:h-[400px] border-2 border-dashed border-[#AAB2C5]/20 rounded-[2rem] flex items-center justify-center overflow-hidden ring-offset-4 ring-offset-[#070B14] group transition-all bg-slate-900 shadow-inner">
                         
                         {/* Scanning Overlay Grid */}
                         {isScanning && !result && (
@@ -174,38 +171,38 @@ const Scanner = ({ isEmbedded = false }) => {
 
                         {/* Result Confirmation View */}
                         {result && (
-                            <div className={`absolute inset-0 z-30 flex flex-col items-center justify-center p-8 transition-all duration-500 ${isConfirmed ? 'bg-emerald-500/90' : 'bg-[#0F172A]/95'}`}>
+                            <div className={`absolute inset-0 z-30 flex flex-col items-center justify-center p-4 transition-all duration-500 ${isConfirmed ? 'bg-emerald-500/90' : 'bg-[#0F172A]/95'}`}>
                                 {isConfirmed ? (
                                     <div className="text-center animate-in fade-in zoom-in duration-500">
-                                        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
-                                            <CheckCircle2 className="text-emerald-500" size={48} />
+                                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl">
+                                            <CheckCircle2 className="text-emerald-500" size={32} />
                                         </div>
-                                        <h3 className="text-white text-2xl font-black uppercase tracking-widest mb-2">Identity Verified</h3>
-                                        <p className="text-white/80 text-[10px] font-bold uppercase tracking-[0.2em] mb-8">Access Granted Successfully</p>
-                                        <button onClick={handleReset} className="px-10 py-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest transition-all">Next Subject</button>
+                                        <h3 className="text-white text-lg font-black uppercase tracking-widest mb-1">Pass Verified</h3>
+                                        <p className="text-white/80 text-[8px] font-bold uppercase tracking-[0.2em] mb-6">Access Granted</p>
+                                        <button onClick={handleReset} className="px-8 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-white font-black text-[9px] uppercase tracking-widest transition-all">Next Subject</button>
                                     </div>
                                 ) : (
                                     <div className="w-full text-center">
-                                        <div className="w-20 h-20 bg-[#FF7A18]/10 border border-[#FF7A18]/30 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
-                                            <ShieldCheck className="text-[#FF7A18]" size={32} />
+                                        <div className="w-16 h-16 bg-[#FF7A18]/10 border border-[#FF7A18]/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                            <ShieldCheck className="text-[#FF7A18]" size={24} />
                                         </div>
-                                        <h3 className="text-white text-lg font-black uppercase tracking-[0.2em] mb-2">Subject Detected</h3>
-                                        <div className="bg-white/5 border border-white/10 p-4 rounded-xl mb-8 break-all">
-                                            <p className="text-[10px] font-black text-[#AAB2C5] tracking-widest uppercase mb-1">Payload Data:</p>
-                                            <p className="text-xs font-mono text-[#FF7A18] font-bold">{result}</p>
+                                        <h3 className="text-white text-base font-black uppercase tracking-[0.2em] mb-1">Subject Detected</h3>
+                                        <div className="bg-white/5 border border-white/10 p-3 rounded-xl mb-6 break-all">
+                                            <p className="text-[8px] font-black text-[#AAB2C5] tracking-widest uppercase mb-1">ID:</p>
+                                            <p className="text-[10px] font-mono text-[#FF7A18] font-bold">{result}</p>
                                         </div>
-                                        <div className="flex flex-col gap-3">
+                                        <div className="flex flex-col gap-2">
                                             <button 
                                                 onClick={handleConfirm}
-                                                className="w-full py-5 bg-white text-black hover:bg-[#FF7A18] hover:text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] transition-all shadow-xl shadow-white/5 "
+                                                className="w-full py-4 bg-white text-black hover:bg-[#FF7A18] hover:text-white rounded-xl font-black text-[10px] uppercase tracking-[0.3em] transition-all"
                                             >
-                                                Confirm Scan
+                                                Confirm Pass
                                             </button>
                                             <button 
                                                 onClick={handleReset}
-                                                className="w-full py-4 text-[#AAB2C5] hover:text-white transition-all font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"
+                                                className="w-full py-2 text-[#AAB2C5] hover:text-white transition-all font-black text-[8px] uppercase tracking-widest flex items-center justify-center gap-2"
                                             >
-                                                <RefreshCcw size={14} /> Scan Again
+                                                <RefreshCcw size={12} /> Retry
                                             </button>
                                         </div>
                                     </div>
