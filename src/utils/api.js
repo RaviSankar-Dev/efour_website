@@ -107,6 +107,5 @@ export const getMyTickets = async () => {
 };
 
 export const getOrderDetails = async (orderId) => {
-    const baseUrl = (import.meta.env.VITE_TICKETS_API_URL || 'https://xzanzkz0wl.execute-api.ap-south-1.amazonaws.com/api/tickets/my-tickets').replace('/my-tickets', '');
-    return fetchWithAuth(`${baseUrl}/order/${orderId}`);
+    return fetchWithAuth(`https://xzanzkz0wl.execute-api.ap-south-1.amazonaws.com/api/tickets/order/${orderId}`);
 };

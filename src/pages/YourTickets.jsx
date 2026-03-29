@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Ticket, Clock, ArrowRight, ArrowLeft, ShieldCheck, CheckCircle2, AlertCircle, History, LayoutDashboard, QrCode, Receipt, Calendar, Lock, Cpu, Zap, Activity, Check } from 'lucide-react';
+import { Ticket, Clock, ArrowRight, ShieldCheck, AlertCircle, History, LayoutDashboard, QrCode, Receipt, Calendar, Lock, Cpu, Zap } from 'lucide-react';
 import useStore from '../store/useStore';
 import { Link } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import { fetchWithAuth, getMyTickets, getOrderDetails } from '../utils/api';
+import { X, MapPin, ExternalLink, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
 // Constants for expiry logic
 const EXPIRY_HOURS = 24; // 24 hours
@@ -226,128 +227,122 @@ const TicketCard = memo(({ ticket, item, onRefresh }) => {
     );
 });
 
-const StatsCard = ({ icon: Icon, label, value, color, gradient }) => (
-    <div className="glass-card border border-white/10 p-10 rounded-[3.5rem] flex items-center gap-8 transition-all duration-1000 hover:scale-[1.05] hover:border-[#6C5CE7]/40 group overflow-hidden relative shadow-4xl">
-        <div className={`absolute -right-8 -bottom-8 w-32 h-32 blur-[80px] opacity-10 group-hover:opacity-30 transition-opacity rounded-full bg-gradient-to-br ${gradient}`} />
-        <div className={`w-20 h-20 rounded-[2rem] bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-4xl border border-white/10 transform group-hover:rotate-12 transition-transform duration-1000`}>
-            <Icon size={32} />
-        </div>
-        <div>
-            <span className="text-slate-800 text-[11px] font-black uppercase tracking-[0.5em] block mb-3 opacity-40 ">{label}</span>
-            <span className="text-white font-black text-5xl tabular-nums leading-none tracking-tighter transform ">{value}</span>
-        </div>
-    </div>
-);
-
 const OrderCard = ({ order, onViewTickets }) => {
-    if (!order) return null;
     const items = order.items || [];
-    const mainItem = items[0] || {};
-    const formattedDate = new Date(order.date || order.createdAt || order.purchaseDate || order.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-    const formattedTime = new Date(order.date || order.createdAt || order.purchaseDate || order.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    const totalAmount = order.totalAmount || order.amount || 0;
-
+    const date = safeDate(order.date || order.created_at || order.createdAt || order.purchaseDate);
+    
+    // Aggressive price discovery
+    const totalAmount = order.total_amount || order.amount_total || order.grand_total || order.total_price || order.amount || 0;
+    
     return (
-        <div className="bg-white rounded-[1.5rem] p-6 mb-6 shadow-sm border border-slate-100 font-sans group hover:shadow-md transition-all duration-500 overflow-hidden relative">
-            <div className="flex justify-between items-start mb-6">
+        <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full bg-[#0F111A] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-700 hover:border-white/10 group"
+        >
+            {/* Header: Identity */}
+            <div className="p-6 md:p-8 flex items-center justify-between border-b border-white/5 bg-white/[0.01]">
                 <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-[1rem] bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
-                        <img src="/E4LOGOr.png" alt="Logo" className="w-12 h-12 object-contain" />
+                    <div className="w-14 h-14 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-700">
+                        <img src="/E4LOGOr.png" className="w-full h-full object-contain brightness-150" alt="E4" />
                     </div>
                     <div>
-                        <h3 className="text-[#1E293B] font-black text-lg tracking-tight uppercase">ETHREE FOOD COURT</h3>
-                        <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Vijayawada</p>
+                        <h3 className="text-white font-black text-lg md:text-xl uppercase tracking-tighter leading-none mb-1">ETHREE FOOD COURT</h3>
+                        <div className="flex items-center gap-1.5 opacity-40">
+                            <MapPin size={10} className="text-[#6C5CE7]" />
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em]">Vijayawada Terminal</span>
+                        </div>
                     </div>
                 </div>
-                <div className="px-3 py-1 flex items-center gap-2 bg-[#F1FDF6] border border-[#DCFCE7] rounded-full">
-                    <span className="text-[#10B981] text-[10px] font-black tracking-widest uppercase">PAID</span>
-                    <div className="w-3.5 h-3.5 bg-[#10B981] rounded-full flex items-center justify-center">
-                        <Check size={9} className="text-white" />
-                    </div>
+                <div className="px-5 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
+                    <CheckCircle2 size={12} className="text-emerald-500" />
+                    <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">PAID</span>
                 </div>
             </div>
 
-            <div className="border-t border-slate-50 pt-5 space-y-3">
-                {items.filter(it => it.id !== 'tax-gst-9').map((item, idx) => (
+            {/* Middle: Line Items */}
+            <div className="p-6 md:p-8 space-y-4">
+                {items.filter(i => i.id !== 'tax-gst-9').map((item, idx) => (
                     <div key={idx} className="flex justify-between items-center group/item">
                         <div className="flex items-center gap-3">
-                            <span className="text-[#0D9488] font-black text-sm">{item.quantity} x</span>
-                            <span className="text-[#334155] font-bold text-sm">{item.item_name || item.name || 'Pass'}</span>
+                            <span className="text-[#6C5CE7] font-black text-xs">{item.quantity} x</span>
+                            <span className="text-white/80 font-bold text-sm uppercase tracking-tight group-hover/item:text-white transition-colors capitalize">{item.name}</span>
                         </div>
-                        <span className="text-[#1E293B] font-black text-sm">₹{Number(item.price || item.item_price || item.total).toFixed(0)}</span>
+                        <span className="text-white font-black text-sm tabular-nums tracking-wide">₹{item.price}</span>
                     </div>
                 ))}
             </div>
 
-            <div className="mt-8 pt-5 border-t border-slate-50 flex flex-wrap gap-4 items-center justify-between">
-                <div className="flex items-center gap-4 text-slate-400">
-                    <div className="flex items-center gap-1.5">
-                        <Calendar size={13} strokeWidth={2.5} />
-                        <span className="text-[10px] font-bold uppercase">{formattedDate}</span>
+            {/* Bottom: Metrics & Actions */}
+            <div className="p-6 md:p-8 bg-black/20 space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center gap-6 opacity-40">
+                        <div className="flex items-center gap-2">
+                            <Calendar size={12} />
+                            <span className="text-[9px] font-black uppercase tracking-widest">{date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Clock size={12} />
+                            <span className="text-[9px] font-black uppercase tracking-widest">{date.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })}</span>
+                        </div>
                     </div>
-                    <div className="w-1 h-1 rounded-full bg-slate-200" />
-                    <div className="flex items-center gap-1.5">
-                        <Clock size={13} strokeWidth={2.5} />
-                        <span className="text-[10px] font-bold uppercase">{formattedTime}</span>
+                    <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-4">
+                        <span className="text-[8px] font-black uppercase tracking-[0.3em] opacity-30">TOTAL (INC TAX)</span>
+                        <span className="text-white font-black text-lg">₹{totalAmount}</span>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-xl border border-slate-100">
-                    <span className="text-slate-400 text-[9px] font-black tracking-[0.05em] uppercase">TOTAL AMOUNT INCLUDING TAXES</span>
-                    <span className="text-[#1E293B] font-black text-sm">₹{Number(totalAmount).toFixed(0)}</span>
-                </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-6">
-                <button className="py-4 rounded-xl border-2 border-slate-100 text-slate-600 font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95">
-                    VIEW INVOICE
-                </button>
-                <button 
-                    onClick={() => onViewTickets(order.id || order._id || 'ETH-332725')}
-                    className="py-4 rounded-xl bg-[#0D9488] text-white font-black text-[10px] uppercase tracking-widest hover:bg-[#0F766E] transition-all shadow-lg shadow-[#0D9488]/10 active:scale-95"
-                >
-                    VIEW TICKETS
-                </button>
+                <div className="grid grid-cols-2 gap-4">
+                    <button className="py-4 bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/5 rounded-2xl font-black text-[9px] uppercase tracking-widest transition-all">
+                        VIEW INVOICE
+                    </button>
+                    <button 
+                        onClick={() => onViewTickets(order.id || order._id || 'ETH-332725')}
+                        className="py-4 bg-[#6C5CE7] hover:bg-[#5B4BCB] text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] transition-all shadow-xl shadow-[#6C5CE7]/10 flex items-center justify-center gap-3 group/btn"
+                    >
+                        VIEW TICKETS <Zap size={12} className="group-hover:rotate-12 transition-transform" />
+                    </button>
+                </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
 const YourTickets = () => {
-    const { user } = useStore();
+    const { user, showToast } = useStore();
     const [loading, setLoading] = useState(true);
-    const [rawTickets, setRawTickets] = useState([]);
-    const [activeOrderId, setActiveOrderId] = useState(null);
-    const [selectedOrderDetails, setSelectedOrderDetails] = useState(null);
-    const [isTransitioning, setIsTransitioning] = useState(false);
+    const [rawOrders, setRawOrders] = useState([]);
+    const [selectedOrderTickets, setSelectedOrderTickets] = useState(null);
+    const [isDrilling, setIsDrilling] = useState(false);
 
-    const fetchOrders = async (isManual = false) => {
-        if (!isManual) setLoading(true);
+    const fetchOrders = async () => {
+        setLoading(true);
         try {
-            const res = await getMyTickets();
+            // As per request: Stop calling /my-tickets, call specific order for now
+            const res = await getOrderDetails('ETH-332725');
             if (res.ok) {
                 const data = await res.json();
-                const ticketsList = Array.isArray(data) ? data : (data.data || data.tickets || (typeof data === 'object' ? [data] : []));
-                setRawTickets(ticketsList);
+                // Ensure it's in an array for mapping
+                setRawOrders([data]); 
             }
         } catch (err) {
-            console.warn('Failed to fetch orders', err);
+            console.warn('Failed to fetch orders list', err);
         }
         setLoading(false);
     };
 
     const handleViewTickets = async (orderId) => {
-        setIsTransitioning(true);
-        setActiveOrderId(orderId);
+        setIsDrilling(true);
         try {
             const res = await getOrderDetails(orderId);
             if (res.ok) {
                 const data = await res.json();
-                setSelectedOrderDetails(data);
+                setSelectedOrderTickets(data);
             }
         } catch (err) {
-            console.warn('Failed to load order details', err);
+            showToast("Failed to retrieve pass details", "error");
         }
-        setIsTransitioning(false);
+        setIsDrilling(false);
     };
 
     useEffect(() => {
@@ -355,31 +350,53 @@ const YourTickets = () => {
     }, []);
 
     const tickets = useMemo(() => {
-        const source = (activeOrderId && selectedOrderDetails) ? (Array.isArray(selectedOrderDetails) ? selectedOrderDetails : [selectedOrderDetails]) : rawTickets;
-        if (!source || source.length === 0) return [];
-        
-        const validStatuses = ['success', 'confirmed', 'paid', 'captured', 'active', 'unused', 'completed'];
-        return source
+        if (!rawTickets || rawTickets.length === 0) return [];
+        const validStatuses = ['success', 'confirmed', 'paid', 'captured', 'active', 'unused'];
+        return rawTickets
             .filter(Boolean)
             .flatMap(ticket => {
+                // Determine if this is an order with multiple items or a single ticket
                 const items = ticket.items || [];
+                
                 if (items.length > 0) {
+                    // It's an order document
                     const status = (ticket.status || ticket.orderStatus || '').toLowerCase();
-                    if (!validStatuses.includes(status) && status !== '') return [];
+                    if (!validStatuses.includes(status) && status !== '') return []; // Skip if invalid status
 
-                    return items.filter(item => item.id !== 'tax-gst-9').map(item => ({
-                        ...item,
-                        price: item.price || item.item_price || ticket.amount || (ticket.totalAmount / items.length) || 0,
-                        quantity: Number(item.quantity) || 1,
-                        ticketId: ticket.id || ticket._id || ticket.orderId,
-                        purchaseDate: ticket.date || ticket.createdAt || ticket.purchaseDate,
-                        originalTicket: ticket
-                    }));
+                    return items.filter(item => item.id !== 'tax-gst-9').map(item => {
+                        // Look for price in the item FIRST, then the parent ticket (order)
+                        const rawPrice = item.price || item.item_price || item.unit_price || 
+                                         item.product?.price || item.product?.unit_price ||
+                                         ticket.amount || ticket.total_amount || ticket.total_price || 
+                                         ticket.amount_total || ticket.total || 0;
+                        
+                        const price = typeof rawPrice === 'string' ? parseFloat(rawPrice.replace(/[^0-9.]/g, '')) : (Number(rawPrice) || 0);
+                        return {
+                            ...item,
+                            price,
+                            quantity: Number(item.quantity) || 1,
+                            ticketId: ticket.id || ticket._id,
+                            purchaseDate: ticket.date || ticket.createdAt || ticket.purchaseDate,
+                            originalTicket: ticket
+                        };
+                    });
                 } else {
+                    // It's already an individual ticket document (new API format)
+                    const status = (ticket.status || '').toLowerCase();
+                    // If flat tickets don't have a status or are valid, include them
+                    if (status && !validStatuses.includes(status)) return [];
+
+                    // Extract price - extremely aggressive search for potential price fields
+                    const rawPrice = ticket.price || ticket.item_price || ticket.amount || ticket.unit_price || 
+                                     ticket.total_amount || ticket.amount_total || ticket.price_total || 
+                                     ticket.grand_total || ticket.cost || ticket.price_paid || 0;
+                    
+                    const price = typeof rawPrice === 'string' ? parseFloat(rawPrice.replace(/[^0-9.]/g, '')) : (Number(rawPrice) || 0);
+
                     return [{
                         ...ticket,
                         name: ticket.item_name || ticket.name || ticket.title || ticket.item_title || 'E4 Ticket',
-                        price: ticket.price || ticket.item_price || ticket.amount || 0,
+                        price: price,
                         quantity: Number(ticket.quantity) || 1,
                         ticketId: ticket.id || ticket._id || ticket.code || ticket.order_id || 'TKT-000',
                         purchaseDate: ticket.created_at || ticket.date || ticket.createdAt || ticket.purchaseDate || new Date(),
@@ -387,7 +404,7 @@ const YourTickets = () => {
                     }];
                 }
             });
-    }, [rawTickets, activeOrderId, selectedOrderDetails]);
+    }, [rawTickets]);
 
     const filteredTickets = useMemo(() => {
         const now = new Date();
@@ -397,65 +414,147 @@ const YourTickets = () => {
             const expiry = new Date(validPDate.getTime() + EXPIRY_HOURS * 60 * 60 * 1000);
             const remaining = (expiry - now) / (1000 * 60 * 60);
 
+            // Only show tickets that haven't expired (valid for 24 hours)
             return remaining > 0;
         });
     }, [tickets]);
 
-    return (
-        <div className="min-h-screen bg-[#F8FAFC] pb-12 overflow-x-hidden">
-            {/* Header Area */}
-            <div className="bg-[#02040a] pt-44 md:pt-52 pb-16 px-6 relative overflow-hidden text-center">
+
+
+    if (loading && tickets.length === 0) {
+        return (
+            <div className="min-h-screen bg-[#02040a] pt-52 md:pt-64 pb-12 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden">
                 <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
-                <div className="max-w-4xl mx-auto relative z-10">
-                    <h1 className="white-glow-section text-4xl md:text-5xl font-black mb-6 uppercase tracking-tighter leading-none">Your Terminal</h1>
-                    <p className="text-[#94A3B8] text-[10px] md:text-xs font-black uppercase tracking-[0.4em] max-w-xl mx-auto leading-relaxed">
-                        {!activeOrderId ? 'Accessing Secure Commerce Ledgers' : `Viewing Order: ${activeOrderId}`}
-                    </p>
-                    
-                    {activeOrderId && (
-                        <button 
-                            onClick={() => { setActiveOrderId(null); setSelectedOrderDetails(null); }}
-                            className="mt-8 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 text-white font-black text-[9px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-2 mx-auto"
-                        >
-                            <ArrowLeft size={14} /> Back to Orders
-                        </button>
-                    )}
-                </div>
+                <div className="w-20 h-20 border-[3px] border-[#6C5CE7]/20 border-t-[#6C5CE7] rounded-full animate-spin mb-10" />
+                <p className="text-[10px] font-black uppercase tracking-[0.6em] text-[#6C5CE7] animate-pulse">Loading Neural Interface...</p>
             </div>
+        );
+    }
 
-            <div className="container mx-auto max-w-5xl px-6 -mt-10 mb-12 relative z-20">
-                {isTransitioning || (loading && rawTickets.length === 0) ? (
-                    <div className="py-20 flex flex-col items-center">
-                        <div className="w-12 h-12 border-4 border-[#0D9488]/20 border-t-[#0D9488] rounded-full animate-spin mb-4" />
-                        <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Syncing Ledgers...</p>
-                    </div>
-                ) : !activeOrderId ? (
-                    /* Order List View */
+    if (!user || rawOrders.length === 0) {
+        return (
+            <div className="min-h-screen bg-[#02040a] pt-52 md:pt-64 pb-12 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden">
+                <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
+                <div className="absolute top-[20%] left-[-10%] w-[60%] h-[60%] bg-[#6C5CE7]/5 rounded-full blur-[200px] pointer-events-none" />
+                <div className="absolute inset-0 noise-overlay opacity-[0.02]" />
+
+                <motion.div
+                    initial={{ scale: 0, rotate: -45, opacity: 0 }}
+                    animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                    transition={{ type: "spring", damping: 15, duration: 1.2 }}
+                    className="w-40 h-40 rounded-[3.5rem] bg-white/[0.02] flex items-center justify-center mb-12 border border-white/10 backdrop-blur-4xl shadow-4xl relative group"
+                >
+                    <div className="absolute inset-0 bg-[#6C5CE7]/10 rounded-[3.5rem] blur-2xl opacity-40 group-hover:opacity-100 transition-opacity duration-1000" />
+                    <Ticket size={72} className="text-[#6C5CE7] drop-shadow-[0_0_20px_#6C5CE7] relative z-10" />
+                </motion.div>
+                <h2 className="text-6xl md:text-9xl font-black text-white mb-8 uppercase tracking-tighter transform leading-[0.85]">NO ORDERS <br /> <span className="text-gradient-primary">YET</span></h2>
+                <p className="text-slate-600 mb-16 max-w-lg font-black uppercase tracking-[0.4em] text-[12px] opacity-60 leading-relaxed border-l-2 border-[#6C5CE7]/20 pl-10 mx-auto">You haven't placed any orders yet. <br />Go to our food or rides to start booking.</p>
+                <Link to="/" className="btn-premium px-20 py-8 rounded-[2.5rem] font-black uppercase tracking-[0.6em] text-[12px] shadow-4xl hover:-translate-y-2 transition-all duration-700">
+                    BOOK YOUR RIDE & FOOD
+                </Link>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-[#02040a] text-white pt-40 md:pt-48 pb-24 md:pb-48 selection:bg-[#6C5CE7]/30 relative overflow-hidden">
+            {/* Background Effects */}
+            <div className="absolute inset-0 matrix-grid opacity-[0.05] pointer-events-none" />
+            <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#6C5CE7]/5 rounded-full blur-[200px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#FF7A00]/5 rounded-full blur-[200px] pointer-events-none" />
+            <div className="absolute inset-0 noise-overlay opacity-[0.02]" />            <div className="container mx-auto px-8 max-w-[1440px] relative z-10">
+                {/* Header Section */}
+                <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-12 mb-16">
                     <div className="space-y-6">
-                        {rawTickets.map((order, idx) => (
-                            <OrderCard key={idx} order={order} onViewTickets={handleViewTickets} />
-                        ))}
+                        <div className="flex items-center gap-6 text-[#6C5CE7]">
+                            <div className="w-16 h-[1.5px] bg-[#6C5CE7]/40" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.8em] ">MY TICKETS</span>
+                        </div>
+                        <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-[1] transform mb-6">
+                            YOUR <span className="text-gradient-primary">TICKETS</span>
+                        </h1>
+                        <p className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] max-w-2xl opacity-60 leading-relaxed border-l border-white/5 pl-8">
+                            Active bookings pass is valid for 24 hours.
+                        </p>
+                    </div>
+                </div>
 
-                        {rawTickets.length === 0 && (
-                            <div className="bg-white rounded-[2rem] p-20 text-center shadow-lg border border-slate-100">
-                                <Activity className="text-slate-200 mx-auto mb-6" size={48} />
-                                <h3 className="text-[#1E293B] font-black text-xl mb-2">NO RECORDS FOUND</h3>
-                                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">You haven't made any purchases yet.</p>
-                            </div>
-                        )}
+                {/* Orders Grid */}
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[1, 2, 3].map(i => (
+                            <div key={i} className="h-[400px] rounded-[3rem] bg-white/[0.02] border border-white/10 animate-pulse" />
+                        ))}
                     </div>
                 ) : (
-                    /* Individual Ticket Cards View */
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {tickets.map((t, idx) => (
-                            <TicketCard key={idx} item={t} ticket={t.originalTicket} />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-10">
+                        {rawOrders.map((order, index) => (
+                            <OrderCard 
+                                key={index} 
+                                order={order} 
+                                onViewTickets={handleViewTickets}
+                            />
                         ))}
+                    </div>
+                )}
 
-                        {tickets.length === 0 && (
-                            <div className="col-span-full py-20 text-center">
-                                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">No valid tickets found in this protocol.</p>
-                            </div>
-                        )}
+                {/* Drill-down Modal for Tickets */}
+                <AnimatePresence>
+                    {selectedOrderTickets && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-12">
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setSelectedOrderTickets(null)}
+                                className="absolute inset-0 bg-[#02040a]/95 backdrop-blur-2xl"
+                            />
+                            
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                                className="w-full max-w-6xl max-h-[90vh] bg-white/[0.02] border border-white/10 rounded-[3.5rem] p-10 relative z-10 overflow-hidden flex flex-col"
+                            >
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#6C5CE7] to-transparent opacity-30" />
+                                
+                                <div className="flex justify-between items-center mb-12">
+                                    <div>
+                                        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">ACTIVE <span className="text-gradient-primary">PASSES</span></h2>
+                                        <p className="text-[#AAB2C5]/40 text-[10px] font-black uppercase tracking-widest mt-2">{selectedOrderTickets.id || selectedOrderTickets._id}</p>
+                                    </div>
+                                    <button 
+                                        onClick={() => setSelectedOrderTickets(null)}
+                                        className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all hover:rotate-90 duration-500"
+                                    >
+                                        <X size={24} />
+                                    </button>
+                                </div>
+
+                                <div className="flex-grow overflow-y-auto px-4 pb-10 scrollbar-hide">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                                        {(selectedOrderTickets.items || []).filter(i => i.id !== 'tax-gst-9').map((item, idx) => (
+                                            <TicketCard 
+                                                key={idx}
+                                                ticket={selectedOrderTickets}
+                                                item={item}
+                                                onRefresh={() => handleViewTickets(selectedOrderTickets.id)}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>
+
+                {/* Empty State for Filter */}
+                {!loading && rawOrders.length === 0 && (
+                    <div className="py-48 flex flex-col items-center text-center max-w-lg mx-auto">
+                        <div className="w-32 h-32 rounded-[2.5rem] bg-white/[0.02] flex items-center justify-center mb-12 shadow-4xl border border-white/5 group animate-pulse-subtle">
+                            <Clock className="text-slate-900 group-hover:text-[#6C5CE7] transition-colors duration-700" size={48} />
+                        </div>
+                        <p className="text-slate-700 font-black uppercase tracking-[0.5em] text-xs leading-relaxed border-t border-white/5 pt-10">No operational orders found.</p>
                     </div>
                 )}
             </div>
