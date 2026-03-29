@@ -11,6 +11,13 @@ const Scanner = ({ isEmbedded = false }) => {
     const [isScanning, setIsScanning] = useState(false);
     const [hasCameraError, setHasCameraError] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
+    const [isUsed, setIsUsed] = useState(false);
+    const [scannedCache, setScannedCache] = useState(() => {
+        try {
+            const saved = localStorage.getItem('efour-scanned-v1');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) { return []; }
+    });
     const scannerRef = useRef(null);
 
     const handleLogout = () => {
@@ -32,6 +39,7 @@ const Scanner = ({ isEmbedded = false }) => {
     const startScanner = async () => {
         setHasCameraError(false);
         setIsConfirmed(false);
+        setIsUsed(false);
         setResult('');
 
         try {
@@ -56,8 +64,13 @@ const Scanner = ({ isEmbedded = false }) => {
                 { facingMode: "environment" },
                 config,
                 (decodedText) => {
+                    const alreadyScanned = scannedCache.includes(decodedText);
                     setResult(decodedText);
+                    setIsUsed(alreadyScanned);
                     stopScanner(); 
+                    if (alreadyScanned) {
+                        showToast("SECURITY ALERT: This pass is already USED!");
+                    }
                 },
                 (errorMessage) => {
                     // Normal skip
@@ -89,9 +102,13 @@ const Scanner = ({ isEmbedded = false }) => {
     }, []);
 
     const handleConfirm = () => {
-        setIsConfirmed(true);
-        showToast("Access Identity Verified Successfully!");
-        // Here you would typically send the result to your backend
+        if (!isUsed) {
+            const updatedCache = [...scannedCache, result];
+            setScannedCache(updatedCache);
+            localStorage.setItem('efour-scanned-v1', JSON.stringify(updatedCache));
+            setIsConfirmed(true);
+            showToast("Access Identity Verified Successfully!");
+        }
     };
 
     const handleReset = () => {
@@ -171,7 +188,7 @@ const Scanner = ({ isEmbedded = false }) => {
 
                         {/* Result Confirmation View */}
                         {result && (
-                            <div className={`absolute inset-0 z-30 flex flex-col items-center justify-center p-4 transition-all duration-500 ${isConfirmed ? 'bg-emerald-500/90' : 'bg-[#0F172A]/95'}`}>
+                            <div className={`absolute inset-0 z-30 flex flex-col items-center justify-center p-4 transition-all duration-500 ${isConfirmed ? 'bg-emerald-500/90' : (isUsed ? 'bg-red-600/95' : 'bg-[#0F172A]/95')}`}>
                                 {isConfirmed ? (
                                     <div className="text-center animate-in fade-in zoom-in duration-500">
                                         <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl">
@@ -180,6 +197,18 @@ const Scanner = ({ isEmbedded = false }) => {
                                         <h3 className="text-white text-lg font-black uppercase tracking-widest mb-1">Pass Verified</h3>
                                         <p className="text-white/80 text-[8px] font-bold uppercase tracking-[0.2em] mb-6">Access Granted</p>
                                         <button onClick={handleReset} className="px-8 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-white font-black text-[9px] uppercase tracking-widest transition-all">Next Subject</button>
+                                    </div>
+                                ) : isUsed ? (
+                                    <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        <div className="w-16 h-16 bg-white/10 border border-white/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl">
+                                            <AlertCircle className="text-white" size={32} />
+                                        </div>
+                                        <h3 className="text-white text-lg font-black uppercase tracking-widest mb-1">Used Pass</h3>
+                                        <p className="text-white/80 text-[8px] font-bold uppercase tracking-[0.2em] mb-6">Security Alert: Already Scanned</p>
+                                        <div className="bg-black/20 p-3 rounded-xl mb-6 font-mono text-[9px] text-white/40 border border-white/5 truncate max-w-[200px]">
+                                            ID: {result}
+                                        </div>
+                                        <button onClick={handleReset} className="px-10 py-4 bg-white text-black rounded-xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-red-100">Reset System</button>
                                     </div>
                                 ) : (
                                     <div className="w-full text-center">
