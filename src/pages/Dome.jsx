@@ -13,7 +13,7 @@ const Dome = () => {
         id: 'glass-dome',
         name: 'GLASS DOME',
         capacity: '4-6',
-        image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80'
+        image: '/dome.jpeg'
     };
 
     const [selectedDate, setSelectedDate] = useState(() => {
@@ -80,7 +80,7 @@ const Dome = () => {
 
 
     return (
-        <div className="bg-[#02040a] min-h-screen pt-16 md:pt-24 pb-20 selection:bg-[#FF7A00]/30 overflow-hidden relative">
+        <div className="bg-[#02040a] min-h-screen pt-48 md:pt-64 pb-20 selection:bg-[#FF7A00]/30 overflow-hidden relative">
             {/* Cinematic Background Architecture */}
             <div className="absolute top-0 right-0 w-[60rem] h-[60rem] bg-[#FF7A00]/5 blur-[160px] rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-[50rem] h-[50rem] bg-[#6C5CE7]/5 blur-[140px] rounded-full translate-y-1/4 -translate-x-1/4 pointer-events-none" />
@@ -99,7 +99,7 @@ const Dome = () => {
                                 <span className="text-[#FF7A00] font-black uppercase tracking-[0.6em] text-xs ">PRIVATE CABANAS</span>
                                 <div className="w-12 h-[1px] bg-white/10" />
                             </div>
-                            <h1 className="text-4xl md:text-9xl font-black tracking-tighter text-white leading-[0.85] transform mb-10 uppercase">
+                            <h1 className="text-4xl md:text-9xl font-black tracking-tighter text-white leading-tight transform mb-10 uppercase">
                                 THE <br />
                                 <span className="text-gradient-primary">DOMES.</span>
                             </h1>

@@ -144,7 +144,7 @@ const Dine = () => {
     }
 
     return (
-        <div className="bg-[#02040a] min-h-screen pt-16 md:pt-24 pb-20 selection:bg-[#6C5CE7]/30 overflow-hidden relative">
+        <div className="bg-[#02040a] min-h-screen pt-48 md:pt-64 pb-20 selection:bg-[#6C5CE7]/30 overflow-hidden relative">
             {/* Background Decorative Architecture */}
             <div className="absolute top-0 left-0 w-full h-[60rem] bg-gradient-to-b from-[#6C5CE7]/5 to-transparent z-0 pointer-events-none" />
             <div className="absolute inset-0 noise-overlay opacity-[0.02]" />
@@ -162,7 +162,7 @@ const Dine = () => {
                                 <span className="text-[#6C5CE7] font-black uppercase tracking-[0.6em] text-xs ">OUR DINE</span>
                                 <div className="w-12 h-[1px] bg-white/10" />
                             </div>
-                            <h1 className="text-4xl xs:text-5xl md:text-9xl font-black tracking-tighter text-white leading-[0.85] transform mb-10 uppercase">
+                            <h1 className="text-4xl xs:text-5xl md:text-9xl font-black tracking-tighter text-white leading-tight transform mb-10 uppercase">
                                 OUR <span className="text-gradient-primary">DINE.</span>
                             </h1>
                             <p className="text-[#94A3B8] text-xl font-bold opacity-40 max-w-lg border-l border-[#6C5CE7]/30 pl-10">

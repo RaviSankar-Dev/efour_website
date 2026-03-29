@@ -42,7 +42,7 @@ const Home = () => {
             <Hero />
 
             {/* --- RIDES SECTION --- */}
-            <section id="rides" className="relative py-16 md:py-24 overflow-hidden selection:bg-[#6C5CE7]/30">
+            <section id="rides" className="relative pt-48 md:pt-64 pb-16 md:pb-24 overflow-hidden selection:bg-[#6C5CE7]/30 scroll-mt-32 md:scroll-mt-48">
                 {/* Background Depth Layers */}
                 <div className="absolute inset-0 z-0 pointer-events-none">
                     <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#6C5CE7]/20 to-transparent" />
@@ -64,7 +64,7 @@ const Home = () => {
                                 <span className="text-[10px] font-black uppercase text-[#6C5CE7] tracking-[0.4em]">All Rides</span>
                             </motion.div>
 
-                            <h2 className="text-4xl xs:text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85] text-white">
+                            <h2 className="text-4xl xs:text-5xl md:text-8xl font-black tracking-tighter uppercase leading-tight text-white">
                                 OUR <span className="text-gradient-primary">RIDES.</span>
                             </h2>
                             <p className="text-[#94A3B8] text-lg font-bold max-w-lg opacity-40 border-l border-white/5 pl-8">

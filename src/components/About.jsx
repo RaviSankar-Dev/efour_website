@@ -40,7 +40,7 @@ const About = () => {
                             </span>
                         </div>
 
-                        <h2 className="text-4xl xs:text-5xl md:text-8xl font-black leading-[0.85] tracking-tighter uppercase transform text-white">
+                        <h2 className="text-4xl xs:text-5xl md:text-8xl font-black leading-none tracking-tighter uppercase transform text-white">
                             <span className="text-gradient-primary">OUR VISION.</span>
                         </h2>
 

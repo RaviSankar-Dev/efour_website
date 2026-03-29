@@ -5,7 +5,7 @@ import OptimizedImage from '../components/common/OptimizedImage';
 
 const Contact = () => {
     return (
-        <div className="bg-[#02040a] min-h-screen pt-24 md:pt-40 pb-32 relative overflow-hidden selection:bg-[#6C5CE7]/30">
+        <div className="bg-[#02040a] min-h-screen pt-48 md:pt-64 pb-32 relative overflow-hidden selection:bg-[#6C5CE7]/30">
             {/* Immersive Background Architecture */}
             <div className="absolute inset-0 noise-overlay opacity-[0.03] pointer-events-none" />
             <div className="absolute top-0 left-0 w-full h-[60rem] bg-gradient-to-b from-[#6C5CE7]/5 to-transparent pointer-events-none" />
@@ -21,7 +21,7 @@ const Contact = () => {
                     className="mb-32 text-center max-w-5xl mx-auto space-y-12"
                 >
                     <div className="flex flex-col items-center gap-6">
-                        <h1 className="text-3xl xs:text-5xl md:text-9xl font-black text-white tracking-tighter uppercase leading-[0.85] transform ">
+                        <h1 className="text-3xl xs:text-5xl md:text-9xl font-black text-white tracking-tighter uppercase leading-tight transform ">
                             CONTACT <br /><span className="text-gradient-primary">US.</span>
                         </h1>
                         <p className="max-w-2xl text-[#94A3B8] text-xs font-black uppercase tracking-[0.6em] opacity-40 leading-relaxed border-l-2 border-[#6C5CE7]/30 pl-10 mx-auto">

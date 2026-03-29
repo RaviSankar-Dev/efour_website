@@ -600,7 +600,7 @@ const Hero = () => {
         <section 
             ref={containerRef} 
             onMouseMove={handleMouseMove}
-            className="relative h-screen w-full overflow-hidden flex flex-col items-center justify-center bg-[#02040a] pt-16 md:pt-[100px]"
+            className="relative h-screen w-full overflow-hidden flex flex-col items-center justify-center bg-[#02040a] pt-[120px] md:pt-[180px]"
         >
             {/* Layer 1: Advanced Background System */}
             <BackgroundSystem mouseX={smoothedMouseX} mouseY={smoothedMouseY} />
@@ -672,7 +672,7 @@ const Hero = () => {
                             </span>
                         </motion.div>
 
-                        <h1 className="text-4xl xs:text-5xl md:text-[5.5rem] lg:text-[6.8rem] font-black mb-12 leading-[0.9] tracking-[-0.04em] text-white text-center antialiased relative group">
+                        <h1 className="text-4xl xs:text-5xl md:text-[5.5rem] lg:text-[6.8rem] font-black mb-12 leading-none tracking-[-0.04em] text-white text-center antialiased relative group">
                             {/* Layered Text Shadows for Depth */}
                             <span className="relative z-10 block filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
                                 EAT. ENJOY.<br />

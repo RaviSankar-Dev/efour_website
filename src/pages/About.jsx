@@ -60,7 +60,7 @@ const About = () => {
                                 </div>
                             </div>
                         </div>
-                        <h3 className="text-5xl sm:text-7xl font-black text-white mb-8 leading-[0.85] tracking-tighter transform ">
+                        <h3 className="text-5xl sm:text-7xl font-black text-white mb-8 leading-none tracking-tighter transform ">
                             EAT. ENJOY. <br /> <span className="text-[#6C5CE7]">ENTERTAIN. ELURU.</span>
                         </h3>
                         <p className="text-lg text-slate-500 leading-relaxed font-bold uppercase tracking-[0.1em] max-w-xl mx-auto border-l-2 border-[#6C5CE7]/30 pl-8 text-left opacity-70">
