@@ -130,16 +130,16 @@ const Scanner = ({ isEmbedded = false }) => {
             )}
 
             {/* Scan Interface Module */}
-            <div className={`${isEmbedded ? 'mt-0' : 'mt-20'} w-full max-w-md relative z-10`}>
-                <div className={`${isEmbedded ? 'bg-transparent border-none' : 'bg-[#0F172A]/40 border border-white/10'} backdrop-blur-3xl rounded-[3.5rem] p-8 md:p-12 shadow-2xl overflow-hidden relative`}>
+            <div className={`${isEmbedded ? 'mt-0' : 'mt-16'} w-full max-w-md relative z-10 px-4`}>
+                <div className={`${isEmbedded ? 'bg-transparent border-none' : 'bg-[#0F172A]/40 border border-white/10'} backdrop-blur-3xl rounded-[3rem] p-6 md:p-10 shadow-2xl overflow-hidden relative`}>
                     {/* Decorative Corner */}
                     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#FF7A18]/10 to-transparent blur-2xl" />
 
-                    <div className="text-center mb-10">
-                        <h2 className="text-3xl font-black uppercase tracking-[0.2em] text-[#F8FAFC] mb-2">Ticket Scanner</h2>
+                    <div className="text-center mb-6">
+                        <h2 className="text-xl md:text-2xl font-black uppercase tracking-[0.2em] text-[#F8FAFC] mb-2">Scanner Hub</h2>
                         <div className="flex items-center justify-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-[#FF7A18] animate-pulse" />
-                            <p className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em]">Operational Status: Active</p>
+                            <p className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em]">Status: Ready</p>
                         </div>
                     </div>
                     
@@ -217,9 +217,9 @@ const Scanner = ({ isEmbedded = false }) => {
                         <div id="qr-camera-element" className="absolute inset-0 z-0 [&>video]:!object-cover [&>video]:!w-full [&>video]:!h-full border-none"></div>
                     </div>
 
-                    <div className="mt-10 px-4">
-                        <p className="text-[10px] text-[#AAB2C5]/40 leading-relaxed text-center font-black uppercase tracking-[0.2em] ">
-                            System is searching for encrypted QR sequences. Keep subject stable within optical bounds.
+                    <div className="mt-8 px-4">
+                        <p className="text-[8px] md:text-[10px] text-[#AAB2C5]/40 leading-relaxed text-center font-black uppercase tracking-[0.2em] ">
+                            Position subject QR within optical bounds. 
                         </p>
                     </div>
                 </div>
