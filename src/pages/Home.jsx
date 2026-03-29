@@ -25,13 +25,13 @@ const Home = () => {
     }, [search]);
 
     useEffect(() => {
-        fetchRides(false); // Use cache if available (5 mins) instead of forcing fetch
+        fetchRides(true); // Always fetch fresh data on mount to ensure accuracy (e.g. after Admin changes)
     }, [fetchRides]);
 
     const visibleRides = useMemo(() => {
         const term = debouncedSearch.trim().toLowerCase();
         return rides
-            .filter(r => (r?.status ? r.status === 'on' : true))
+            .filter(r => r.open !== false)
             .filter(r => (term ? (r?.title || '').toLowerCase().includes(term) : true));
     }, [rides, debouncedSearch]);
 

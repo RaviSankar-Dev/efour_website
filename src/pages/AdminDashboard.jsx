@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { BASE_URL, fetchWithAuth } from '../utils/api';
 import { Link } from 'react-router-dom';
+import useStore from '../store/useStore';
 import Scanner from './Scanner';
 
 const AdminDashboard = () => {
@@ -23,6 +24,7 @@ const AdminDashboard = () => {
     const [products, setProducts] = useState([]);
     const [employeesList, setEmployeesList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const fetchRides = useStore(state => state.fetchRides);
 
     // Form States
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -250,8 +252,8 @@ const AdminDashboard = () => {
                     image: formData.image,
                     images: formData.image ? [formData.image] : [],
                     desc: formData.description || '',
-                    status: (editingItem?.status || 'on'),
-                    category: formData.category || 'play',
+                    status: (formData.status || 'on').toString().toLowerCase(),
+                    category: 'play',
                     ageGroup: formData.ageGroup || editingItem?.ageGroup || 'All',
                     type: formData.type || 'thrill',
                 };
@@ -344,6 +346,9 @@ const AdminDashboard = () => {
             }
 
             await fetchData();
+            // Force refresh the global store so main site sees changes immediately
+            fetchRides(true);
+            
             setIsModalOpen(false);
             setEditingItem(null);
             setFormData({ name: '', category: '', price: '', description: '', image: '', stall: '', type: '' });
@@ -537,6 +542,9 @@ const AdminDashboard = () => {
                         : p;
                 })
             );
+            
+            // Sync with global store
+            fetchRides(true);
         } catch (err) {
             console.error('Error updating status:', err);
             alert('Network error. Please try again.');
