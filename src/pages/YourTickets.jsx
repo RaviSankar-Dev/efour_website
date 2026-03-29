@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Ticket, Clock, ArrowRight, ShieldCheck, AlertCircle, History, LayoutDashboard, QrCode, Receipt, Calendar, Lock, Cpu, Zap } from 'lucide-react';
+import { Ticket, Clock, ArrowRight, ArrowLeft, ShieldCheck, CheckCircle2, AlertCircle, History, LayoutDashboard, QrCode, Receipt, Calendar, Lock, Cpu, Zap, Activity, Check } from 'lucide-react';
 import useStore from '../store/useStore';
 import { Link } from 'react-router-dom';
 import QRCode from 'react-qr-code';
-import { fetchWithAuth, getMyTickets } from '../utils/api';
+import { fetchWithAuth, getMyTickets, getOrderDetails } from '../utils/api';
 
 // Constants for expiry logic
 const EXPIRY_HOURS = 24; // 24 hours
