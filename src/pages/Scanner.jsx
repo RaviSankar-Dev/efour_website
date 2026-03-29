@@ -43,42 +43,24 @@ const Scanner = ({ isEmbedded = false }) => {
                 await scannerRef.current.stop();
             }
 
-            // High-fidelity hardware discovery
-            const devices = await Html5Qrcode.getCameras();
-            let targetCameraId = null;
-
-            if (devices && devices.length > 0) {
-                // Priority 1: Specifically seek the mobile back/environment sensor
-                const backCamera = devices.find(d => 
-                    d.label.toLowerCase().includes('back') || 
-                    d.label.toLowerCase().includes('environment') ||
-                    d.label.toLowerCase().includes('rear')
-                );
-                // Priority 2: Use the last detected camera (usually the higher-res back sensor)
-                targetCameraId = backCamera ? backCamera.id : devices[devices.length - 1].id;
-            }
-
             const config = {
-                fps: 20,
                 qrbox: (viewWidth, viewHeight) => {
                     const size = Math.min(viewWidth, viewHeight) * 0.75;
                     return { width: size, height: size };
                 },
-                aspectRatio: 1.0,
                 showTorchButtonIfSupported: true
             };
 
-            const cameraRequest = targetCameraId ? targetCameraId : { facingMode: "environment" };
-
+            // Simplified request to bypass ID discovery issues
             await scannerRef.current.start(
-                cameraRequest,
+                { facingMode: "environment" },
                 config,
                 (decodedText) => {
                     setResult(decodedText);
                     stopScanner(); 
                 },
                 (errorMessage) => {
-                    // Frame scan skip (normal operation)
+                    // Normal skip
                 }
             );
             setIsScanning(true);
@@ -96,7 +78,7 @@ const Scanner = ({ isEmbedded = false }) => {
     useEffect(() => {
         const timer = setTimeout(() => {
             startScanner();
-        }, 1500);
+        }, 500);
 
         return () => {
             clearTimeout(timer);
@@ -162,7 +144,7 @@ const Scanner = ({ isEmbedded = false }) => {
                     </div>
                     
                     {/* Camera Viewport Module */}
-                    <div className="relative w-full aspect-square border-2 border-dashed border-[#AAB2C5]/20 rounded-[2.5rem] flex items-center justify-center overflow-hidden ring-offset-4 ring-offset-[#070B14] group transition-all bg-[#070B14]">
+                    <div className="relative w-full aspect-square border-2 border-dashed border-[#AAB2C5]/20 rounded-[2.5rem] flex items-center justify-center overflow-hidden ring-offset-4 ring-offset-[#070B14] group transition-all bg-slate-900 shadow-inner">
                         
                         {/* Scanning Overlay Grid */}
                         {isScanning && !result && (
@@ -173,9 +155,9 @@ const Scanner = ({ isEmbedded = false }) => {
                         )}
 
                         {!isScanning && !result && !hasCameraError && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-[#070B14]/80 backdrop-blur-sm">
-                                <div className="w-16 h-16 border-4 border-[#FF7A18] border-t-transparent rounded-full animate-spin mb-6" />
-                                <p className="text-[#AAB2C5] text-[10px] font-black tracking-[0.4em] uppercase animate-pulse">Initializing Data Stream...</p>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center z-20 bg-black/40 backdrop-blur-md transition-all duration-700">
+                                <div className="w-12 h-12 border-4 border-[#FF7A18] border-t-transparent rounded-full animate-spin mb-6" />
+                                <p className="text-[#AAB2C5] text-[9px] font-black tracking-[0.4em] uppercase animate-pulse">Initializing Data Stream...</p>
                             </div>
                         )}
                         
@@ -232,7 +214,7 @@ const Scanner = ({ isEmbedded = false }) => {
                         )}
 
                         {/* Camera Element */}
-                        <div id="qr-camera-element" className="absolute inset-0 z-0 [&>video]:object-cover [&>video]:w-full [&>video]:h-full border-none"></div>
+                        <div id="qr-camera-element" className="absolute inset-0 z-0 [&>video]:!object-cover [&>video]:!w-full [&>video]:!h-full border-none"></div>
                     </div>
 
                     <div className="mt-10 px-4">
