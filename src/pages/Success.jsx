@@ -51,7 +51,7 @@ const Success = () => {
                     <div className="absolute inset-0 bg-[#6C5CE7]/20 rounded-full blur-3xl animate-pulse" />
                     <div className="animate-spin rounded-[2.5rem] h-24 w-24 border-t-2 border-b-2 border-[#6C5CE7] relative z-10 shadow-4xl"></div>
                 </div>
-                <p className="text-slate-600 font-black uppercase tracking-[0.6em] text-[12px] animate-pulse italic">SYNCING QUANTUM STREAM...</p>
+                <p className="text-slate-600 font-black uppercase tracking-[0.6em] text-[12px] animate-pulse ">SYNCING QUANTUM STREAM...</p>
             </div>
         );
     }
@@ -70,16 +70,16 @@ const Success = () => {
                         <X size={64} className="group-hover:scale-110 transition-transform duration-700" />
                     </div>
 
-                    <h1 className="text-6xl font-black text-white mb-8 tracking-tighter uppercase italic transform -skew-x-12 leading-none">
+                    <h1 className="text-6xl font-black text-white mb-8 tracking-tighter uppercase transform leading-none">
                         TELEMETRY <br /><span className="text-red-500">ABORTED</span>
                     </h1>
-                    <p className="text-slate-600 mb-16 font-black uppercase tracking-[0.5em] text-[11px] italic opacity-60 leading-relaxed border-l-2 border-red-500/20 pl-10 mx-auto text-left max-w-md">The synchronization cycle was terminated by the host. <br />Handshake sequence failed.</p>
+                    <p className="text-slate-600 mb-16 font-black uppercase tracking-[0.5em] text-[11px] opacity-60 leading-relaxed border-l-2 border-red-500/20 pl-10 mx-auto text-left max-w-md">The synchronization cycle was terminated by the host. <br />Handshake sequence failed.</p>
 
                     <div className="space-y-8">
                         <Link to="/" className="w-full btn-premium py-8 rounded-[2.5rem] shadow-4xl bg-gradient-to-r from-red-600 to-rose-700 group flex items-center justify-center gap-6">
                             RE-INITIATE <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-700" />
                         </Link>
-                        <Link to="/contact" className="block text-[11px] text-slate-800 font-black uppercase tracking-[0.6em] hover:text-white transition-all italic underline underline-offset-8">
+                        <Link to="/contact" className="block text-[11px] text-slate-800 font-black uppercase tracking-[0.6em] hover:text-white transition-all underline underline-offset-8">
                             UPLINK SUPPORT
                         </Link>
                     </div>
@@ -115,10 +115,10 @@ const Success = () => {
                 <div className="space-y-6 mb-20">
                     <div className="flex items-center justify-center gap-6 text-[#6C5CE7]">
                         <div className="w-16 h-[2px] bg-[#6C5CE7]/30 shadow-[0_0_10px_#6C5CE7]" />
-                        <span className="text-[11px] font-black uppercase tracking-[0.8em] italic opacity-80">ENCRYPTION VERIFIED</span>
+                        <span className="text-[11px] font-black uppercase tracking-[0.8em] opacity-80">ENCRYPTION VERIFIED</span>
                         <div className="w-16 h-[2px] bg-[#6C5CE7]/30 shadow-[0_0_10px_#6C5CE7]" />
                     </div>
-                    <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase leading-[0.8] transform -skew-x-12">
+                    <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase leading-[0.8] transform ">
                         VAULT KEY <br /><span className="text-gradient-primary">ISSUED</span>
                     </h1>
                 </div>
@@ -142,7 +142,7 @@ const Success = () => {
                         <div className="w-10 h-10 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#6C5CE7] shadow-inner">
                             <Cpu size={22} />
                         </div>
-                        <h2 className="text-[11px] font-black text-slate-800 uppercase tracking-[0.5em] italic opacity-40">AUTHORIZED MODULES</h2>
+                        <h2 className="text-[11px] font-black text-slate-800 uppercase tracking-[0.5em] opacity-40">AUTHORIZED MODULES</h2>
                     </div>
 
                     <div className="space-y-6">
@@ -166,15 +166,15 @@ const Success = () => {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <h3 className="font-black text-white text-2xl uppercase tracking-tighter italic transform -skew-x-12 leading-none group-hover:text-gradient-primary transition-all duration-700">{item.name}</h3>
+                                        <h3 className="font-black text-white text-2xl uppercase tracking-tighter transform leading-none group-hover:text-gradient-primary transition-all duration-700">{item.name}</h3>
                                         <div className="flex items-center gap-5">
-                                            <span className="text-[10px] text-slate-800 font-black uppercase tracking-widest italic opacity-60">QTY: {item.quantity}</span>
+                                            <span className="text-[10px] text-slate-800 font-black uppercase tracking-widest opacity-60">QTY: {item.quantity}</span>
                                             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-                                            <span className="text-[10px] text-[#6C5CE7] font-black uppercase tracking-widest italic tracking-[0.2em]">₹{item.price * item.quantity}</span>
+                                            <span className="text-[10px] text-[#6C5CE7] font-black uppercase tracking-widest tracking-[0.2em]">₹{item.price * item.quantity}</span>
                                         </div>
                                         <div className="flex items-center gap-3 mt-4">
                                             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_#10b981]" />
-                                            <span className="text-[9px] uppercase font-black text-emerald-400 tracking-[0.4em] italic leading-none">ACTIVE SYNC</span>
+                                            <span className="text-[9px] uppercase font-black text-emerald-400 tracking-[0.4em] leading-none">ACTIVE SYNC</span>
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@ const Success = () => {
                                             className="w-16 h-16 pointer-events-none"
                                         />
                                     </div>
-                                    <span className="text-[8px] font-black text-slate-800 tracking-[0.5em] uppercase opacity-40 italic leading-none">ALPHA-KEY</span>
+                                    <span className="text-[8px] font-black text-slate-800 tracking-[0.5em] uppercase opacity-40 leading-none">ALPHA-KEY</span>
                                 </div>
                             </motion.div>
                         ))}
@@ -194,10 +194,10 @@ const Success = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-8">
-                    <Link to="/login" className="flex-1 btn-premium py-8 rounded-[2.5rem] shadow-4xl group/btn flex items-center justify-center gap-4 italic h-full">
+                    <Link to="/login" className="flex-1 btn-premium py-8 rounded-[2.5rem] shadow-4xl group/btn flex items-center justify-center gap-4 h-full">
                         PROFILE HUB <User size={22} className="group-hover/btn:scale-110 transition-transform duration-700" />
                     </Link>
-                    <Link to="/dine" className="flex-1 glass-card border border-white/10 hover:border-[#6C5CE7]/40 py-8 rounded-[2.5rem] flex items-center justify-center gap-4 text-white font-black uppercase tracking-[0.5em] text-[12px] italic transition-all duration-1000 group/dine shadow-4xl bg-white/[0.03] backdrop-blur-4xl h-full">
+                    <Link to="/dine" className="flex-1 glass-card border border-white/10 hover:border-[#6C5CE7]/40 py-8 rounded-[2.5rem] flex items-center justify-center gap-4 text-white font-black uppercase tracking-[0.5em] text-[12px] transition-all duration-1000 group/dine shadow-4xl bg-white/[0.03] backdrop-blur-4xl h-full">
                         DINE MODULE <ArrowRight size={22} className="group-hover/dine:translate-x-3 transition-transform duration-700" />
                     </Link>
                 </div>
@@ -211,10 +211,10 @@ const Success = () => {
                         </div>
                         <div className="space-y-8 flex-grow">
                             <div className="flex items-center gap-4">
-                                <h3 className="font-black text-white tracking-[0.6em] uppercase text-[11px] italic opacity-40 leading-none">DIRECTIVE OMNI-01</h3>
+                                <h3 className="font-black text-white tracking-[0.6em] uppercase text-[11px] opacity-40 leading-none">DIRECTIVE OMNI-01</h3>
                                 <div className="h-[1px] flex-grow bg-white/5" />
                             </div>
-                            <ul className="grid md:grid-cols-2 gap-x-16 gap-y-6 text-[12px] text-slate-500 font-bold uppercase tracking-[0.15em] italic opacity-90 leading-relaxed">
+                            <ul className="grid md:grid-cols-2 gap-x-16 gap-y-6 text-[12px] text-slate-500 font-bold uppercase tracking-[0.15em] opacity-90 leading-relaxed">
                                 <li className="flex gap-5"><Zap size={18} className="text-[#6C5CE7] shrink-0" /> Synchronize digital keys at designated kiosks for instant verification.</li>
                                 <li className="flex gap-5"><Zap size={18} className="text-[#6C5CE7] shrink-0" /> Real-time telemetry monitoring enabled via profile uplink.</li>
                                 <li className="flex gap-5"><Zap size={18} className="text-[#6C5CE7] shrink-0" /> Access tokens are unique to this holographic session.</li>
@@ -241,3 +241,4 @@ const Success = () => {
 };
 
 export default Success;
+

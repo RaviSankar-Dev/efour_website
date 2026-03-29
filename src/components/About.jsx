@@ -17,7 +17,7 @@ const About = () => {
     const hoverShadow = "0 30px 60px rgba(0,0,0,0.6), 0 40px 100px rgba(0,0,0,0.4)";
 
     return (
-        <section id="philosophy" ref={containerRef} className="py-24 md:py-48 container mx-auto px-6 overflow-hidden bg-[#02040a] relative">
+        <section id="philosophy" ref={containerRef} className="py-16 md:py-24 container mx-auto px-6 overflow-hidden bg-[#02040a] relative">
             {/* Ambient Background Depth */}
             <div className="absolute top-0 right-0 w-[60%] h-[60%] bg-[#6C5CE7]/5 rounded-full blur-[160px] pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[#FF7A00]/5 rounded-full blur-[140px] pointer-events-none" />
@@ -35,16 +35,16 @@ const About = () => {
                             <div className="w-12 h-12 rounded-2xl bg-white/[0.03] flex items-center justify-center text-[#6C5CE7] border border-white/10 shadow-xl">
                                 <Globe size={20} />
                             </div>
-                            <span className="text-[#6C5CE7] font-black tracking-[0.6em] uppercase text-xs italic">
+                            <span className="text-[#6C5CE7] font-black tracking-[0.6em] uppercase text-xs ">
                                 ABOUT US
                             </span>
                         </div>
 
-                        <h2 className="text-4xl xs:text-5xl md:text-8xl font-black leading-[0.85] tracking-tighter uppercase italic transform -skew-x-12 text-white">
+                        <h2 className="text-4xl xs:text-5xl md:text-8xl font-black leading-[0.85] tracking-tighter uppercase transform text-white">
                             <span className="text-gradient-primary">OUR VISION.</span>
                         </h2>
 
-                        <p className="text-[#94A3B8] text-xl font-bold uppercase tracking-widest leading-relaxed italic opacity-40 border-l border-[#6C5CE7]/30 pl-10 max-w-lg">
+                        <p className="text-[#94A3B8] text-xl font-bold uppercase tracking-widest leading-relaxed opacity-40 border-l border-[#6C5CE7]/30 pl-10 max-w-lg">
                             We are building the best place in Eluru for great food and fun rides for families.
                         </p>
 
@@ -64,14 +64,14 @@ const About = () => {
                     <div className="relative aspect-video xl:aspect-square">
                         {/* Matrix Grid Decoration */}
                         <div className="absolute inset-[-10%] noise-overlay opacity-5 pointer-events-none" />
-                        
+
                         {/* Card 1: Main Perspective */}
                         <motion.div
-                            style={{ 
+                            style={{
                                 y: y1,
                                 boxShadow: cardShadow
                             }}
-                            whileHover={{ 
+                            whileHover={{
                                 scale: 1.03,
                                 boxShadow: hoverShadow,
                                 transition: { duration: 0.4, ease: "easeOut" }
@@ -92,7 +92,7 @@ const About = () => {
                         {/* Card 2: Intentional Overlap Highlight */}
                         <motion.div
                             style={{ y: y2 }}
-                            whileHover={{ 
+                            whileHover={{
                                 scale: 1.05,
                                 boxShadow: hoverShadow,
                                 transition: { duration: 0.4, ease: "easeOut" }
@@ -112,7 +112,7 @@ const About = () => {
 
                         {/* Text Decor Background */}
                         <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none select-none hidden md:block opacity-[0.03]">
-                            <h3 className="text-[12vw] font-black text-white whitespace-nowrap leading-none rotate-90 uppercase italic tracking-tighter">
+                            <h3 className="text-[12vw] font-black text-white whitespace-nowrap leading-none rotate-90 uppercase tracking-tighter">
                                 EFOUR
                             </h3>
                         </div>
@@ -124,3 +124,4 @@ const About = () => {
 };
 
 export default About
+

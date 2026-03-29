@@ -34,7 +34,7 @@ const Dine = () => {
                     <div className="w-20 h-20 border-[3px] border-[#6C5CE7]/20 border-t-[#6C5CE7] rounded-full animate-spin" />
                     <div className="absolute inset-0 blur-xl bg-[#6C5CE7]/20 animate-pulse rounded-full" />
                 </div>
-                <p className="text-[#6C5CE7] font-black uppercase tracking-[0.6em] text-[10px] animate-pulse italic">Setting up the Table...</p>
+                <p className="text-[#6C5CE7] font-black uppercase tracking-[0.6em] text-[10px] animate-pulse ">Setting up the Table...</p>
             </div>
         );
     }
@@ -76,16 +76,16 @@ const Dine = () => {
                                 </div>
                             </div>
 
-                            <h4 className="text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.8em] mb-8 italic">
+                            <h4 className="text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.8em] mb-8 ">
                                 EFOUR FOOD COURT
                             </h4>
 
-                            <h1 className="text-4xl xs:text-7xl md:text-9xl font-black italic tracking-tighter uppercase leading-[0.8] transform -skew-x-12 mb-12 text-white">
+                            <h1 className="text-4xl xs:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.8] transform mb-12 text-white">
                                 COMING <br />
                                 <span className="text-gradient-primary">SOON.</span>
                             </h1>
 
-                            <p className="text-[#94A3B8] text-xl font-bold max-w-2xl mx-auto italic leading-relaxed mb-24 px-4 opacity-40">
+                            <p className="text-[#94A3B8] text-xl font-bold max-w-2xl mx-auto leading-relaxed mb-24 px-4 opacity-40">
                                 Great food is coming soon to Efour. We are preparing the best tastes for you.
                             </p>
 
@@ -96,7 +96,7 @@ const Dine = () => {
                                     </div>
                                     <div className="text-left">
                                         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#94A3B8] opacity-30 mb-1">Status</p>
-                                        <p className="text-lg font-black uppercase text-white italic tracking-widest">In Development</p>
+                                        <p className="text-lg font-black uppercase text-white tracking-widest">In Development</p>
                                     </div>
                                 </div>
                             </div>
@@ -128,12 +128,12 @@ const Dine = () => {
                                     transition={{ delay: 0.2 * i, duration: 1 }}
                                     className="group bg-white/[0.02] backdrop-blur-3xl p-12 rounded-[4rem] border border-white/5 shadow-2xl hover:border-white/10 hover:-translate-y-4 transition-all duration-1000 relative overflow-hidden"
                                 >
-                                    <div className="absolute top-0 right-0 p-10 text-9xl font-black italic text-white/[0.02] select-none">
+                                    <div className="absolute top-0 right-0 p-10 text-9xl font-black text-white/[0.02] select-none">
                                         {feature.icon}
                                     </div>
-                                    <h4 className="font-black text-white uppercase tracking-[0.4em] mb-8 text-xs relative z-10 italic">{feature.title}</h4>
+                                    <h4 className="font-black text-white uppercase tracking-[0.4em] mb-8 text-xs relative z-10 ">{feature.title}</h4>
                                     <div className="w-16 h-1 bg-[#6C5CE7] mb-10 group-hover:w-24 transition-all duration-700 shadow-[0_0_20px_#6C5CE7]" />
-                                    <p className="text-[#94A3B8] text-sm font-bold italic leading-relaxed relative z-10 opacity-30 group-hover:opacity-100 transition-opacity duration-1000">{feature.desc}</p>
+                                    <p className="text-[#94A3B8] text-sm font-bold leading-relaxed relative z-10 opacity-30 group-hover:opacity-100 transition-opacity duration-1000">{feature.desc}</p>
                                 </motion.div>
                             ))}
                         </div>
@@ -144,14 +144,14 @@ const Dine = () => {
     }
 
     return (
-        <div className="bg-[#02040a] min-h-screen pt-24 md:pt-48 pb-40 selection:bg-[#6C5CE7]/30 overflow-hidden relative">
+        <div className="bg-[#02040a] min-h-screen pt-16 md:pt-24 pb-20 selection:bg-[#6C5CE7]/30 overflow-hidden relative">
             {/* Background Decorative Architecture */}
             <div className="absolute top-0 left-0 w-full h-[60rem] bg-gradient-to-b from-[#6C5CE7]/5 to-transparent z-0 pointer-events-none" />
             <div className="absolute inset-0 noise-overlay opacity-[0.02]" />
 
             <div className="container mx-auto px-6 relative z-10">
                 {/* --- Header Section --- */}
-                <div className="mb-24 flex flex-col lg:flex-row lg:items-end justify-between gap-16 border-b border-white/5 pb-20">
+                <div className="mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-16 border-b border-white/5 pb-12">
                     <div className="max-w-3xl">
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
@@ -159,13 +159,13 @@ const Dine = () => {
                             transition={{ duration: 1.2 }}
                         >
                             <div className="flex items-center gap-6 mb-8">
-                                <span className="text-[#6C5CE7] font-black uppercase tracking-[0.6em] text-xs italic">OUR DINE</span>
+                                <span className="text-[#6C5CE7] font-black uppercase tracking-[0.6em] text-xs ">OUR DINE</span>
                                 <div className="w-12 h-[1px] bg-white/10" />
                             </div>
-                            <h1 className="text-4xl xs:text-5xl md:text-9xl font-black italic tracking-tighter text-white leading-[0.85] transform -skew-x-12 mb-10 uppercase">
+                            <h1 className="text-4xl xs:text-5xl md:text-9xl font-black tracking-tighter text-white leading-[0.85] transform mb-10 uppercase">
                                 OUR <span className="text-gradient-primary">DINE.</span>
                             </h1>
-                            <p className="text-[#94A3B8] text-xl font-bold italic opacity-40 max-w-lg border-l border-[#6C5CE7]/30 pl-10">
+                            <p className="text-[#94A3B8] text-xl font-bold opacity-40 max-w-lg border-l border-[#6C5CE7]/30 pl-10">
                                 Best food in Eluru. Choose your favorite dish and enjoy.
                             </p>
                         </motion.div>
@@ -186,8 +186,8 @@ const Dine = () => {
                 </div>
 
                 {/* --- Dine Indicator --- */}
-                <div className="flex gap-4 pb-12 mb-20">
-                    <div className="px-12 py-5 rounded-2xl bg-[#6C5CE7] text-white border-[#6C5CE7] shadow-xl shadow-[#6C5CE7]/20 text-xs font-black uppercase tracking-[0.3em] italic transform -skew-x-12">
+                <div className="flex gap-4 pb-6 mb-10">
+                    <div className="px-12 py-5 rounded-2xl bg-[#6C5CE7] text-white border-[#6C5CE7] shadow-xl shadow-[#6C5CE7]/20 text-xs font-black uppercase tracking-[0.3em] transform ">
                         DINE
                     </div>
                 </div>
@@ -214,7 +214,7 @@ const Dine = () => {
                                     />
 
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#02040a] via-transparent to-transparent opacity-80" />
-                                    
+
                                     <div className="absolute inset-x-0 bottom-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 z-30">
                                         <button
                                             onClick={() => setSelectedMenu(item)}
@@ -228,13 +228,13 @@ const Dine = () => {
 
                                 {/* Content Container */}
                                 <div className="p-8">
-                                    <h3 className="text-xl font-black text-white italic tracking-tighter uppercase leading-none mb-3 group-hover:text-[#FF7A00] transition-colors duration-700 transform -skew-x-6">
+                                    <h3 className="text-xl font-black text-white tracking-tighter uppercase leading-none mb-3 group-hover:text-[#FF7A00] transition-colors duration-700 transform ">
                                         {item.name}
                                     </h3>
-                                    
+
                                     <div className="flex items-center gap-3">
                                         <div className="w-6 h-[1px] bg-[#6C5CE7]/30 group-hover:w-10 group-hover:bg-[#6C5CE7] transition-all duration-700" />
-                                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] italic group-hover:text-slate-400">
+                                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] group-hover:text-slate-400">
                                             {item.stall || 'EFOUR AREA'}
                                         </p>
                                     </div>
@@ -254,8 +254,8 @@ const Dine = () => {
                         <div className="w-24 h-24 bg-white/[0.03] border border-white/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 text-slate-700">
                             <Utensils size={40} />
                         </div>
-                        <h3 className="text-3xl font-black text-white mb-4 uppercase tracking-tight italic">NO FOOD FOUND</h3>
-                        <p className="text-sm font-bold italic opacity-30 uppercase tracking-widest">Adjust your search or filter</p>
+                        <h3 className="text-3xl font-black text-white mb-4 uppercase tracking-tight ">NO FOOD FOUND</h3>
+                        <p className="text-sm font-bold opacity-30 uppercase tracking-widest">Adjust your search or filter</p>
                     </motion.div>
                 )}
             </div>
@@ -277,8 +277,8 @@ const Dine = () => {
                         >
                             <div className="px-10 py-8 border-b border-white/5 flex justify-between items-center">
                                 <div>
-                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#6C5CE7] mb-2 block italic">GALLERY OVERRIDE</span>
-                                    <h3 className="text-3xl font-black text-white italic uppercase tracking-tighter transform -skew-x-6">{selectedMenu.name} MENU</h3>
+                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#6C5CE7] mb-2 block ">GALLERY OVERRIDE</span>
+                                    <h3 className="text-3xl font-black text-white uppercase tracking-tighter transform ">{selectedMenu.name} MENU</h3>
                                 </div>
                                 <button
                                     onClick={() => setSelectedMenu(null)}
@@ -304,10 +304,10 @@ const Dine = () => {
                             </div>
 
                             <div className="px-10 py-8 bg-white/2 border-t border-white/5 text-center">
-                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] italic leading-none">END OF DATA MATRIX</p>
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] leading-none">END OF DATA MATRIX</p>
                             </div>
                         </motion.div>
-                        
+
                         {/* Backdrop Close Click */}
                         <div className="absolute inset-0 -z-10" onClick={() => setSelectedMenu(null)} />
                     </motion.div>
@@ -318,3 +318,4 @@ const Dine = () => {
 };
 
 export default Dine;
+

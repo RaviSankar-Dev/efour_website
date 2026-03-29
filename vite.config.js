@@ -36,7 +36,7 @@ export default defineConfig({
     proxy: {
       // Proxy API requests during development to avoid CORS issues
       '/api': {
-        target: 'https://e3-e4-backend.ethree.in',
+        target: 'https://xzanzkz0wl.execute-api.ap-south-1.amazonaws.com',
         changeOrigin: true,
         secure: true,
         cookieDomainRewrite: {

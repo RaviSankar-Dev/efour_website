@@ -35,30 +35,30 @@ const Failed = () => {
                 <div className="space-y-6 mb-16">
                     <div className="flex items-center justify-center gap-6 text-red-500">
                         <div className="w-16 h-[2px] bg-red-500/30 shadow-[0_0_10px_#ef4444]" />
-                        <span className="text-[11px] font-black uppercase tracking-[0.8em] italic opacity-80">TRANSACTION ABORTED</span>
+                        <span className="text-[11px] font-black uppercase tracking-[0.8em] opacity-80">TRANSACTION ABORTED</span>
                         <div className="w-16 h-[2px] bg-red-500/30 shadow-[0_0_10px_#ef4444]" />
                     </div>
-                    <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase leading-[0.8] transform -skew-x-12">
+                    <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase leading-[0.8] transform ">
                         TELEMETRY <br /><span className="text-red-500">FAILED</span>
                     </h1>
                 </div>
 
                 <div className="space-y-4 mb-20">
-                    <p className="text-slate-600 font-black uppercase tracking-[0.5em] text-[11px] italic opacity-60 leading-relaxed border-l-2 border-red-500/20 pl-10 mx-auto text-left max-w-md">
+                    <p className="text-slate-600 font-black uppercase tracking-[0.5em] text-[11px] opacity-60 leading-relaxed border-l-2 border-red-500/20 pl-10 mx-auto text-left max-w-md">
                         The synchronization cycle was terminated by the host. Handshake sequence failed or user cancelled the process.
                     </p>
                     {orderId && (
-                        <div className="text-[10px] text-red-500/60 font-black uppercase tracking-[0.4em] italic text-left max-w-md mx-auto pl-10">
+                        <div className="text-[10px] text-red-500/60 font-black uppercase tracking-[0.4em] text-left max-w-md mx-auto pl-10">
                             REF-ID: {orderId} • LOC: {location || 'UNKNOWN'}
                         </div>
                     )}
                 </div>
 
                 <div className="space-y-8">
-                    <Link to="/dine" className="w-full btn-premium py-8 rounded-[2.5rem] shadow-4xl bg-gradient-to-r from-red-600 to-rose-700 group flex items-center justify-center gap-6 text-white font-black uppercase tracking-[0.5em] text-[14px] italic">
+                    <Link to="/dine" className="w-full btn-premium py-8 rounded-[2.5rem] shadow-4xl bg-gradient-to-r from-red-600 to-rose-700 group flex items-center justify-center gap-6 text-white font-black uppercase tracking-[0.5em] text-[14px] ">
                         RE-INITIATE <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-700" />
                     </Link>
-                    <Link to="/contact" className="block text-[11px] text-slate-800 font-black uppercase tracking-[0.6em] hover:text-white transition-all italic underline underline-offset-8">
+                    <Link to="/contact" className="block text-[11px] text-slate-800 font-black uppercase tracking-[0.6em] hover:text-white transition-all underline underline-offset-8">
                         UPLINK SUPPORT
                     </Link>
                 </div>
@@ -70,8 +70,8 @@ const Failed = () => {
                             <Activity size={28} />
                         </div>
                         <div className="space-y-4">
-                            <h3 className="font-black text-white tracking-[0.6em] uppercase text-[10px] italic opacity-40 leading-none">ERROR LOG OMNI-02</h3>
-                            <ul className="text-[11px] text-slate-500 font-bold uppercase tracking-[0.1em] italic opacity-90 leading-relaxed space-y-2">
+                            <h3 className="font-black text-white tracking-[0.6em] uppercase text-[10px] opacity-40 leading-none">ERROR LOG OMNI-02</h3>
+                            <ul className="text-[11px] text-slate-500 font-bold uppercase tracking-[0.1em] opacity-90 leading-relaxed space-y-2">
                                 <li className="flex gap-4"><Zap size={14} className="text-red-500 shrink-0" /> Connection timeout or insufficient credits detected.</li>
                                 <li className="flex gap-4"><Zap size={14} className="text-red-500 shrink-0" /> Quantum handshake rejected by encryption layer.</li>
                             </ul>
@@ -119,3 +119,4 @@ const Failed = () => {
 };
 
 export default Failed;
+

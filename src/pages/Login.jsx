@@ -88,7 +88,7 @@ const Login = () => {
 
             if (cleanPhone === '9346608305' && otp === '000000') {
                 // Use the real integrated bypass endpoint for the admin
-                res = await fetch(`/api/auth/bypass-login`, {
+                res = await fetch(`${BASE_URL}/api/auth/bypass-login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mobile: phone, location: 'E4' })
@@ -159,7 +159,7 @@ const Login = () => {
     }, [user, location?.state?.forceEdit, navigate]);
 
     const inputClasses = "w-full pl-14 pr-6 py-5 rounded-2xl bg-white/[0.03] border border-white/10 focus:bg-white/[0.08] focus:border-[#6C5CE7] focus:ring-4 focus:ring-[#6C5CE7]/10 transition-all outline-none font-bold text-white placeholder-slate-800 disabled:opacity-50 text-lg";
-    const labelClasses = "block text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.4em] mb-3 ml-2 italic opacity-60";
+    const labelClasses = "block text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.4em] mb-3 ml-2 opacity-60";
 
     const handleLogout = async () => {
         await apiLogout();
@@ -214,21 +214,21 @@ const Login = () => {
                         <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12 mb-10 md:mb-0 text-center md:text-left">
                             <div className="relative group">
                                 <div className="absolute -inset-2 bg-gradient-to-tr from-[#6C5CE7] to-[#FF7A00] rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity animate-pulse" />
-                                <div className="w-24 md:w-32 h-24 md:h-32 rounded-full border border-white/10 bg-[#02040a] flex items-center justify-center text-white text-4xl md:text-6xl font-black shadow-3xl relative z-10 uppercase italic transform -skew-x-12">
+                                <div className="w-24 md:w-32 h-24 md:h-32 rounded-full border border-white/10 bg-[#02040a] flex items-center justify-center text-white text-4xl md:text-6xl font-black shadow-3xl relative z-10 uppercase transform ">
                                     {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                                 </div>
                             </div>
 
                             <div className="space-y-4">
                                 <div className="flex flex-col md:flex-row items-center gap-4">
-                                    <h1 className="text-3xl lg:text-7xl font-black text-white tracking-tighter uppercase italic transform -skew-x-12 leading-none group-hover:text-gradient-primary">
+                                    <h1 className="text-3xl lg:text-7xl font-black text-white tracking-tighter uppercase transform leading-none group-hover:text-gradient-primary">
                                         {user.name || 'ANONYMOUS'}
                                     </h1>
                                     <div className="hidden md:block w-3 h-3 rounded-full bg-[#6C5CE7] shadow-[0_0_15px_#6C5CE7] animate-pulse" />
                                 </div>
                                 <div className="flex flex-wrap justify-center md:justify-start gap-4">
-                                    <span className="px-5 py-2 bg-white/[0.03] backdrop-blur-md rounded-xl text-[9px] font-black text-slate-500 tracking-[0.4em] border border-white/5 uppercase italic">VERIFIED USER</span>
-                                    <span className="px-5 py-2 bg-[#6C5CE7]/10 backdrop-blur-md rounded-xl text-[9px] font-black text-[#6C5CE7] tracking-[0.4em] border border-[#6C5CE7]/20 uppercase italic">E4 MEMBER</span>
+                                    <span className="px-5 py-2 bg-white/[0.03] backdrop-blur-md rounded-xl text-[9px] font-black text-slate-500 tracking-[0.4em] border border-white/5 uppercase ">VERIFIED USER</span>
+                                    <span className="px-5 py-2 bg-[#6C5CE7]/10 backdrop-blur-md rounded-xl text-[9px] font-black text-[#6C5CE7] tracking-[0.4em] border border-[#6C5CE7]/20 uppercase ">E4 MEMBER</span>
                                 </div>
                             </div>
                         </div>
@@ -236,7 +236,7 @@ const Login = () => {
                         {!isEditing && (
                             <button
                                 onClick={handleStartEdit}
-                                className="relative z-10 bg-white/[0.03] hover:bg-[#6C5CE7] text-white px-10 py-5 rounded-2xl border border-white/10 transition-all flex items-center gap-4 group/edit shadow-2xl font-black text-[10px] uppercase tracking-[0.4em] italic transform -skew-x-12 active:scale-95"
+                                className="relative z-10 bg-white/[0.03] hover:bg-[#6C5CE7] text-white px-10 py-5 rounded-2xl border border-white/10 transition-all flex items-center gap-4 group/edit shadow-2xl font-black text-[10px] uppercase tracking-[0.4em] transform active:scale-95"
                             >
                                 <Edit2 size={18} className="group-hover/edit:rotate-12 transition-transform" />
                                 EDIT PROFILE
@@ -252,7 +252,7 @@ const Login = () => {
                                 className="max-w-4xl mx-auto space-y-16"
                             >
                                 <div className="text-center space-y-4">
-                                    <h3 className="text-4xl font-black text-white uppercase tracking-tighter italic transform -skew-x-12">EDIT YOUR INFO</h3>
+                                    <h3 className="text-4xl font-black text-white uppercase tracking-tighter transform ">EDIT YOUR INFO</h3>
                                     <p className="text-[#6C5CE7] text-[10px] font-black uppercase tracking-[0.5em] opacity-60">UPDATE YOUR DETAILS</p>
                                 </div>
 
@@ -280,7 +280,7 @@ const Login = () => {
                                         </div>
                                     </div>
                                     <div className="flex flex-col sm:flex-row items-center justify-center gap-8 pt-8">
-                                        <button type="button" onClick={() => setIsEditing(false)} className="px-12 py-6 rounded-2xl text-slate-800 font-black hover:text-[#6C5CE7] transition-all uppercase text-[10px] tracking-[0.5em] italic opacity-60 hover:opacity-100">CANCEL</button>
+                                        <button type="button" onClick={() => setIsEditing(false)} className="px-12 py-6 rounded-2xl text-slate-800 font-black hover:text-[#6C5CE7] transition-all uppercase text-[10px] tracking-[0.5em] opacity-60 hover:opacity-100">CANCEL</button>
                                         <button type="submit" disabled={loading} className="btn-premium px-20 py-6 rounded-2xl shadow-4xl min-w-[300px]">
                                             {loading ? <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'SAVE CHANGES'}
                                         </button>
@@ -288,73 +288,42 @@ const Login = () => {
                                 </form>
                             </motion.div>
                         ) : (
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
+                            <div className="max-w-3xl mx-auto space-y-20">
                                 {/* Left: Profile Stats */}
                                 <div className="space-y-16">
                                     <div className="flex items-center gap-6 text-[#6C5CE7]">
                                         <Shield size={22} className="opacity-50" />
-                                        <h3 className="text-2xl font-black tracking-[0.4em] uppercase italic transform -skew-x-12">ACCOUNT INFO</h3>
+                                        <h3 className="text-2xl font-black tracking-[0.4em] uppercase transform ">ACCOUNT INFO</h3>
                                     </div>
 
-                                    <div className="space-y-12">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
                                         {[
                                             { label: 'YOUR NAME', value: user.name || 'NOT SET', icon: <User size={24} /> },
                                             { label: 'YOUR EMAIL', value: user.email || 'NOT SET', icon: <Mail size={24} /> },
                                             { label: 'YOUR PHONE', value: `+${user.phone || '91 0000000000'}`, icon: <Phone size={24} /> }
                                         ].map((item, i) => (
-                                            <div key={i} className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-8 group">
+                                            <div key={i} className="flex flex-col items-center sm:items-start text-center sm:text-left gap-8 group">
                                                 <div className="w-16 h-16 rounded-[2.5rem] bg-white/[0.03] text-[#6C5CE7] flex items-center justify-center shrink-0 border border-white/5 shadow-2xl group-hover:scale-110 group-hover:bg-[#6C5CE7] group-hover:text-white transition-all duration-700">
                                                     {item.icon}
                                                 </div>
                                                 <div className="space-y-2">
                                                     <p className={labelClasses.replace('mb-3', 'mb-1')}>{item.label}</p>
-                                                    <p className="text-xl md:text-2xl font-black text-white tracking-widest uppercase opacity-90 break-all px-4 sm:px-0 italic">{item.value}</p>
+                                                    <p className="text-xl md:text-2xl font-black text-white tracking-widest uppercase opacity-90 break-all px-4 sm:px-0 ">{item.value}</p>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
-                                </div>
 
-                                {/* Right: Loyalty Engine */}
-                                <div className="space-y-16">
-                                    <div className="flex items-center gap-6 text-[#FF7A00]">
-                                        <Trophy size={22} className="opacity-50" />
-                                        <h3 className="text-2xl font-black tracking-[0.4em] uppercase italic transform -skew-x-12">REWARDS</h3>
-                                    </div>
-
-                                    <div className="bg-white/[0.02] p-12 rounded-[3.5rem] border border-white/5 relative overflow-hidden group shadow-3xl">
-                                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF7A00]/5 blur-[100px] rounded-full pointer-events-none group-hover:bg-[#FF7A00]/10 transition-colors duration-1000" />
-                                        <div className="relative z-10 space-y-12">
-                                            <div>
-                                                <p className="text-[#FF7A00] font-black text-[10px] uppercase tracking-[0.5em] mb-8 italic opacity-60">YOUR POINTS</p>
-                                                <div className="flex items-baseline gap-6">
-                                                    <span className="text-8xl font-black text-white leading-none tracking-tighter group-hover:text-[#FF7A00] transition-colors duration-1000 italic">{user.points || 0}</span>
-                                                    <span className="text-2xl font-black text-slate-800 uppercase tracking-widest italic transform -skew-x-12">POINTS</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="bg-[#02040a] p-8 rounded-3xl flex items-center gap-6 border border-white/5 backdrop-blur-3xl transition-all duration-700 group-hover:border-[#FF7A00]/30 group-hover:-translate-y-2">
-                                                <div className="w-14 h-14 rounded-2xl bg-[#FF7A00]/10 flex items-center justify-center text-[#FF7A00] shrink-0 border border-[#FF7A00]/20 shadow-inner">
-                                                    <Zap size={28} fill="currentColor" />
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <p className="text-[14px] font-black text-white leading-tight uppercase italic transform -skew-x-12">GET <span className="text-[#FF7A00]">500 POINTS</span> FOR A <span className="text-[#6C5CE7]">FREE PASS</span></p>
-                                                    <p className="text-[9px] font-black text-slate-700 tracking-widest opacity-40">{500 - (user.points || 0) > 0 ? 500 - (user.points || 0) : 0} MORE POINTS TO GO</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-wrap justify-center sm:justify-end gap-6 pt-12">
+                                    <div className="flex flex-wrap justify-center sm:justify-start gap-6 pt-12 border-t border-white/5">
                                         <button
                                             onClick={handleDeleteAccount}
-                                            className="bg-red-500/5 hover:bg-red-500/20 text-red-500 px-10 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.5em] transition-all duration-700 border border-red-500/10 flex items-center gap-4 italic transform -skew-x-12 active:scale-95"
+                                            className="bg-red-500/5 hover:bg-red-500/20 text-red-500 px-10 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.5em] transition-all duration-700 border border-red-500/10 flex items-center gap-4 transform active:scale-95"
                                         >
                                             <Trash2 size={18} /> DELETE ACCOUNT
                                         </button>
                                         <button
                                             onClick={handleLogout}
-                                            className="bg-white/[0.03] hover:bg-white/[0.08] text-slate-500 hover:text-white px-10 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.5em] transition-all duration-700 border border-white/10 flex items-center gap-4 italic transform -skew-x-12 active:scale-95"
+                                            className="bg-white/[0.03] hover:bg-white/[0.08] text-slate-500 hover:text-white px-10 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.5em] transition-all duration-700 border border-white/10 flex items-center gap-4 transform active:scale-95"
                                         >
                                             <LogOut size={18} /> LOGOUT
                                         </button>
@@ -391,7 +360,7 @@ const Login = () => {
                     >
                         <Link to="/" className="inline-flex items-center gap-6 text-slate-500 hover:text-[#6C5CE7] transition-all group/back bg-white/[0.02] px-8 py-4 rounded-2xl border border-white/5 backdrop-blur-3xl shadow-3xl">
                             <ArrowRight className="rotate-180 group-hover:-translate-x-3 transition-transform" size={20} />
-                            <span className="font-black text-[10px] tracking-[0.5em] uppercase italic">EXIT</span>
+                            <span className="font-black text-[10px] tracking-[0.5em] uppercase ">EXIT</span>
                         </Link>
                     </motion.div>
 
@@ -403,7 +372,7 @@ const Login = () => {
                             className="bg-white/[0.03] backdrop-blur-3xl p-8 rounded-[3.5rem] border border-white/10 w-fit mb-16 shadow-4xl transform -rotate-6"
                         >
                             <img
-                                src="/E4LOGO.jpeg"
+                                src="/E4LOGOr.png"
                                 alt="E4 Logo"
                                 className="h-32 w-auto object-contain brightness-150 contrast-125"
                             />
@@ -412,7 +381,7 @@ const Login = () => {
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.5, duration: 1.5 }}
-                            className="text-6xl lg:text-9xl font-black mb-12 leading-[0.8] tracking-tighter uppercase italic transform -skew-x-12"
+                            className="text-6xl lg:text-9xl font-black mb-12 leading-[0.8] tracking-tighter uppercase transform "
                         >
                             EFOUR <br />
                             <span className="text-gradient-primary">ELURU.</span>
@@ -421,7 +390,7 @@ const Login = () => {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.7, duration: 1.5 }}
-                            className="text-2xl text-slate-600 font-bold border-l-2 border-[#6C5CE7] pl-10 leading-relaxed italic uppercase tracking-[0.2em] max-w-lg"
+                            className="text-2xl text-slate-600 font-bold border-l-2 border-[#6C5CE7] pl-10 leading-relaxed uppercase tracking-[0.2em] max-w-lg"
                         >
                             Experience premium entertainment. Please login to continue.
                         </motion.p>
@@ -455,12 +424,25 @@ const Login = () => {
                     <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[#6C5CE7]/10 to-transparent blur-3xl rounded-full" />
 
                     <div className="space-y-20">
-                        <div className="text-center space-y-6">
-                            <div className="w-20 h-20 bg-white/[0.03] rounded-[2rem] border border-white/10 flex items-center justify-center mx-auto mb-10 shadow-4xl transform rotate-12 group hover:rotate-0 transition-all duration-700">
-                                <Key className="text-[#6C5CE7] group-hover:scale-125 transition-transform" size={32} />
+                        <div className="text-center space-y-8">
+                            <div className="flex flex-col items-center gap-6 mb-12">
+                                <div className="flex items-center gap-8 mb-4">
+                                    <div className="relative group">
+                                        <div className="absolute -inset-4 bg-[#6C5CE7]/20 rounded-3xl blur-2xl opacity-40 group-hover:opacity-100 transition-opacity duration-700" />
+                                        <img
+                                            src="/E4LOGOr.png"
+                                            alt="E4 Logo"
+                                            className="w-24 h-24 rounded-2xl object-contain bg-black border border-white/10 shadow-3xl relative z-10 brightness-110"
+                                        />
+                                    </div>
+                                    <div className="text-left space-y-1">
+                                        <h3 className="text-3xl font-black text-[#FF7A00] tracking-tighter uppercase transform ">EFOUR <span className="text-[#FBBF24]">ELURU</span></h3>
+                                        <p className="text-[10px] font-black text-[#6C5CE7] tracking-[0.4em] uppercase opacity-60 ">NR PETA, ELURU</p>
+                                    </div>
+                                </div>
                             </div>
-                            <h2 className="text-5xl md:text-6xl font-black text-white tracking-tighter uppercase italic transform -skew-x-12">LOGIN</h2>
-                            <p className="text-[#6C5CE7] text-[10px] font-black uppercase tracking-[0.6em] italic opacity-50">E4 ACCOUNT</p>
+                            <h2 className="text-5xl md:text-6xl font-black text-white tracking-tighter uppercase transform ">LOGIN</h2>
+                            <p className="text-[#6C5CE7] text-[10px] font-black uppercase tracking-[0.6em] opacity-50">E4 ACCOUNT</p>
                         </div>
 
                         <form onSubmit={step === 1 ? handleSendOtp : handleVerifyOtp} className="space-y-12">
@@ -511,11 +493,11 @@ const Login = () => {
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center px-4">
-                                            <p className="text-[10px] font-black text-slate-700 tracking-[0.4em] uppercase italic opacity-60">PHONE: {phone}</p>
+                                            <p className="text-[10px] font-black text-slate-700 tracking-[0.4em] uppercase opacity-60">PHONE: {phone}</p>
                                             <button
                                                 type="button"
                                                 onClick={() => setStep(1)}
-                                                className="text-[10px] font-black text-[#6C5CE7] hover:text-[#FF7A00] tracking-[0.4em] uppercase transition-all italic border-b border-[#6C5CE7]/20"
+                                                className="text-[10px] font-black text-[#6C5CE7] hover:text-[#FF7A00] tracking-[0.4em] uppercase transition-all border-b border-[#6C5CE7]/20"
                                             >
                                                 CHANGE PHONE
                                             </button>
@@ -547,7 +529,7 @@ const Login = () => {
                                         type="button"
                                         disabled={otpTimer > 0 || loading}
                                         onClick={handleSendOtp}
-                                        className="text-[10px] font-black text-slate-700 hover:text-white tracking-[0.5em] uppercase disabled:opacity-20 transition-all italic"
+                                        className="text-[10px] font-black text-slate-700 hover:text-white tracking-[0.5em] uppercase disabled:opacity-20 transition-all "
                                     >
                                         {otpTimer > 0 ? `RETRY IN ${otpTimer} SEC` : 'RESEND OTP'}
                                     </button>
@@ -557,7 +539,7 @@ const Login = () => {
                     </div>
                 </motion.div>
 
-                <div className="absolute bottom-16 text-center text-[10px] font-black text-slate-900 tracking-[1.5em] uppercase w-full italic opacity-20">
+                <div className="absolute bottom-16 text-center text-[10px] font-black text-slate-900 tracking-[1.5em] uppercase w-full opacity-20">
                     &copy; 2026 EFOUR LOGIN
                 </div>
             </div>
@@ -578,3 +560,4 @@ const Login = () => {
 };
 
 export default Login;
+

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { BASE_URL } from '../utils/api';
 
 const useStore = create(
     persist(
@@ -65,7 +66,7 @@ const useStore = create(
 
                 set(state => ({ isLoading: { ...state.isLoading, rides: true } }));
                 try {
-                    const res = await fetch(`/api/e4/rides?all=true`);
+                    const res = await fetch(`${BASE_URL}/api/e4/rides?all=true`);
                     if (!res.ok) throw new Error(`API Error: ${res.status}`);
                     const data = await res.json();
                     let items = Array.isArray(data) ? data : (data.rides || data.data || []);
@@ -100,7 +101,7 @@ const useStore = create(
 
                 set(state => ({ isLoading: { ...state.isLoading, menu: true } }));
                 try {
-                    const res = await fetch(`/api/e4/dine?all=true`);
+                    const res = await fetch(`${BASE_URL}/api/e4/dine?all=true`);
                     if (!res.ok) throw new Error(`API Error: ${res.status}`);
                     const data = await res.json();
 

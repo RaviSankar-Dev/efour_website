@@ -15,7 +15,7 @@ export default {
                 'accent-teal': '#00A8A8',
             },
             fontFamily: {
-                'heading': ['Outfit', 'sans-serif'],
+                'heading': ['Inter', 'sans-serif'],
                 'body': ['Inter', 'sans-serif'],
             },
             gridTemplateColumns: {

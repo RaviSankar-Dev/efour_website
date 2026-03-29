@@ -24,8 +24,8 @@ const Footer = ({ onOpenTerms, onOpenAbout, onOpenPrivacy }) => {
             <div className="absolute bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] bg-[#FF7A00]/5 rounded-full blur-[140px] pointer-events-none" />
 
             <div className="container mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-24 mb-32">
-                    <div className="lg:col-span-2 space-y-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-12"> {/* Reduced gap-16 to gap-12, lg:gap-24 to lg:gap-16, mb-16 to mb-12 */}
+                    <div className="lg:col-span-2 space-y-8"> {/* Reduced space-y-12 to space-y-8 */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -35,19 +35,19 @@ const Footer = ({ onOpenTerms, onOpenAbout, onOpenPrivacy }) => {
                             <div className="relative group">
                                 <div className="absolute -inset-4 bg-[#6C5CE7]/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                                 <img
-                                    src="/E4LOGO.jpeg"
+                                    src="/E4LOGOr.png"
                                     alt="E4 Logo"
                                     className="w-24 h-24 rounded-2xl object-contain bg-black border border-white/10 shadow-2xl relative z-10 transition-all duration-700 group-hover:scale-105"
                                 />
                             </div>
                             <div className="space-y-1">
-                                <h3 className="text-3xl font-black text-[#FF7A00] tracking-tighter uppercase italic transform -skew-x-12">EFOUR <span className="text-[#FBBF24]">ELURU</span></h3>
-                                <p className="text-[10px] font-black text-[#6C5CE7] tracking-[0.4em] uppercase opacity-60 italic">NR PETA, ELURU</p>
+                                <h3 className="text-3xl font-black text-[#FF7A00] tracking-tighter uppercase transform ">EFOUR <span className="text-[#FBBF24]">ELURU</span></h3>
+                                <p className="text-[10px] font-black text-[#6C5CE7] tracking-[0.4em] uppercase opacity-60 ">NR PETA, ELURU</p>
                             </div>
                         </motion.div>
 
-                        <p className="text-[#94A3B8] text-lg font-bold uppercase tracking-widest leading-relaxed max-w-lg italic opacity-40 border-l border-[#6C5CE7]/30 pl-8">
-                            Redefining entertainment through world-class experiences, premium dining, and heart-pounding attractions.
+                        <p className="text-[#94A3B8] text-lg font-bold uppercase tracking-widest leading-relaxed max-w-lg opacity-40 border-l border-[#6C5CE7]/30 pl-8">
+                            Redefining entertainment through world-class experiences, premium rides, and heart-pounding attractions.
                         </p>
 
                         <div className="flex gap-6 pt-4">
@@ -81,6 +81,7 @@ const Footer = ({ onOpenTerms, onOpenAbout, onOpenPrivacy }) => {
                             {[
                                 { name: 'Your Tickets', path: '/login' },
                                 { name: 'Dine', path: '/dine' },
+                                { name: 'Dome', path: '/dome' },
                                 { name: 'Contact', path: '/contact' }
                             ].map((link) => (
                                 <li key={link.name}>
@@ -110,22 +111,22 @@ const Footer = ({ onOpenTerms, onOpenAbout, onOpenPrivacy }) => {
                             <div className="w-12 h-12 rounded-2xl bg-white/[0.03] flex items-center justify-center border border-white/10 text-[#FF7A00]">
                                 <MapPin size={20} />
                             </div>
-                            <span className="text-sm font-black uppercase tracking-[0.2em] italic text-[#94A3B8]">
-                                Opp to RTC Main Bus Stand, NR Peta, Eluru
+                            <span className="text-sm font-black uppercase tracking-[0.2em] text-[#94A3B8]">
+                                Opp to New RTC Main Bus Stand, NR Peta, Eluru
                             </span>
                         </div>
                         <div className="flex items-center gap-5">
                             <div className="w-12 h-12 rounded-2xl bg-white/[0.03] flex items-center justify-center border border-white/10 text-[#6C5CE7]">
                                 <Phone size={20} />
                             </div>
-                            <span className="text-xl font-black tracking-widest text-white italic">
+                            <span className="text-xl font-black tracking-widest text-white ">
                                 +91 70369 23456
                             </span>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-6 items-start lg:items-end">
-                        <p className="text-xs uppercase tracking-[0.3em] font-black italic">
+                        <p className="text-xs uppercase tracking-[0.3em] font-black ">
                             <span className="text-[#94A3B8] opacity-40">© 2026 EFOUR ELURU. ALL RIGHTS RESERVED. BY</span> <span className="text-white">JAYANARAYANA KURETI</span>
                         </p>
                         
@@ -151,7 +152,7 @@ const Footer = ({ onOpenTerms, onOpenAbout, onOpenPrivacy }) => {
 
                             <button
                                 onClick={scrollToTop}
-                                className="group flex items-center gap-6 text-sm uppercase tracking-[0.4em] font-black text-[#FF7A00] hover:text-white transition-all italic"
+                                className="group flex items-center gap-6 text-sm uppercase tracking-[0.4em] font-black text-[#FF7A00] hover:text-white transition-all "
                             >
                                 <span className="hidden sm:inline">Back to Top</span>
                                 <div className="w-12 h-12 rounded-2xl bg-[#FF7A00]/10 flex items-center justify-center text-[#FF7A00] group-hover:bg-[#FF7A00] group-hover:text-white transition-all duration-500">
@@ -165,7 +166,7 @@ const Footer = ({ onOpenTerms, onOpenAbout, onOpenPrivacy }) => {
 
             {/* Cinematic Background Typography */}
             <div className="absolute bottom-[-5%] left-0 w-full overflow-hidden pointer-events-none opacity-[0.02] select-none">
-                <h2 className="text-[20vw] font-black leading-none whitespace-nowrap italic transform -skew-x-12 translate-y-1/2">
+                <h2 className="text-[20vw] font-black leading-none whitespace-nowrap transform translate-y-1/2">
                     EFOUR ELURU
                 </h2>
             </div>
@@ -175,3 +176,4 @@ const Footer = ({ onOpenTerms, onOpenAbout, onOpenPrivacy }) => {
 
 
 export default Footer
+

@@ -21,15 +21,10 @@ const Contact = () => {
                     className="mb-32 text-center max-w-5xl mx-auto space-y-12"
                 >
                     <div className="flex flex-col items-center gap-6">
-                        <motion.div 
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            className="w-12 h-[1px] bg-[#6C5CE7]" 
-                        />
-                        <h1 className="text-3xl xs:text-5xl md:text-9xl font-black text-white italic tracking-tighter uppercase leading-[0.85] transform -skew-x-12">
+                        <h1 className="text-3xl xs:text-5xl md:text-9xl font-black text-white tracking-tighter uppercase leading-[0.85] transform ">
                             CONTACT <br /><span className="text-gradient-primary">US.</span>
                         </h1>
-                        <p className="max-w-2xl text-[#94A3B8] text-xs font-black uppercase tracking-[0.6em] italic opacity-40 leading-relaxed border-l-2 border-[#6C5CE7]/30 pl-10 mx-auto">
+                        <p className="max-w-2xl text-[#94A3B8] text-xs font-black uppercase tracking-[0.6em] opacity-40 leading-relaxed border-l-2 border-[#6C5CE7]/30 pl-10 mx-auto">
                             Located in the heart of Eluru, Efour is your main spot for world-class entertainment and great food.
                         </p>
                     </div>
@@ -46,7 +41,7 @@ const Contact = () => {
                         <div className="glass-card p-12 rounded-[4rem] h-full relative group overflow-hidden">
                             <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-[#6C5CE7]/10 to-transparent blur-[80px] opacity-50" />
 
-                            <h3 className="text-2xl font-black mb-16 flex items-center gap-6 text-white uppercase tracking-tighter italic transform -skew-x-12">
+                            <h3 className="text-2xl font-black mb-16 flex items-center gap-6 text-white uppercase tracking-tighter transform ">
                                 <Activity className="text-[#6C5CE7] animate-pulse" size={28} />
                                 CONTACT INFO
                             </h3>
@@ -57,9 +52,9 @@ const Contact = () => {
                                         <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#94A3B8] group-hover/item:text-[#6C5CE7] group-hover/item:scale-110 group-hover/item:bg-[#6C5CE7]/10 transition-all duration-500 shadow-xl">
                                             <MapPin size={24} />
                                         </div>
-                                        <p className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] italic">LOCATION</p>
+                                        <p className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] ">LOCATION</p>
                                     </div>
-                                    <p className="font-bold text-white text-lg leading-relaxed italic transform group-hover/item:translate-x-4 transition-all duration-500 opacity-60 group-hover:opacity-100">
+                                    <p className="font-bold text-white text-lg leading-relaxed transform group-hover/item:translate-x-4 transition-all duration-500 opacity-60 group-hover:opacity-100">
                                         Opp: New RTC Main Bus Stand,<br />
                                         NR Peta, ELURU - 534 006
                                     </p>
@@ -70,9 +65,9 @@ const Contact = () => {
                                         <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#94A3B8] group-hover/item:text-[#6C5CE7] group-hover/item:scale-110 group-hover/item:bg-[#6C5CE7]/10 transition-all duration-500 shadow-xl">
                                             <Phone size={24} />
                                         </div>
-                                        <p className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] italic">DIRECT LINE</p>
+                                        <p className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] ">DIRECT LINE</p>
                                     </div>
-                                    <p className="font-black text-white text-3xl tracking-tighter italic transform group-hover/item:translate-x-4 transition-all duration-500 group-hover:text-[#FF7A00]">
+                                    <p className="font-black text-white text-3xl tracking-tighter transform group-hover/item:translate-x-4 transition-all duration-500 group-hover:text-[#FF7A00]">
                                         +91 70369 23456
                                     </p>
                                 </div>
@@ -82,9 +77,9 @@ const Contact = () => {
                                         <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#94A3B8] group-hover/item:text-[#6C5CE7] group-hover/item:scale-110 group-hover/item:bg-[#6C5CE7]/10 transition-all duration-500 shadow-xl">
                                             <Clock size={24} />
                                         </div>
-                                        <p className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] italic">OPENING HOURS</p>
+                                        <p className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] ">OPENING HOURS</p>
                                     </div>
-                                    <p className="font-black text-white text-2xl tracking-tighter italic transform group-hover/item:translate-x-4 transition-all duration-500">
+                                    <p className="font-black text-white text-2xl tracking-tighter transform group-hover/item:translate-x-4 transition-all duration-500">
                                         9:00 AM - 11:00 PM
                                     </p>
                                 </div>
@@ -116,12 +111,12 @@ const Contact = () => {
                                 >
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#6C5CE7]/10 blur-[60px] rounded-full" />
                                     <div className="relative z-10 p-8 bg-white/[0.03] rounded-[3rem] border border-white/10 shadow-2xl transform hover:rotate-6 transition-transform duration-700">
-                                        <img src="/E4LOGO.jpeg" alt="E4 Logo" className="h-24 w-auto object-contain brightness-125 transition-all duration-700 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]" />
+                                        <img src="/E4LOGOr.png" alt="E4 Logo" className="h-24 w-auto object-contain brightness-125 transition-all duration-700 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]" />
                                     </div>
                                     <div className="relative z-10 text-center md:text-left space-y-8">
                                         <div>
-                                            <h4 className="font-black text-4xl text-white tracking-tighter uppercase italic transform -skew-x-12 mb-2">EFOUR ELURU</h4>
-                                            <p className="text-xs text-[#94A3B8] font-black tracking-[0.4em] uppercase opacity-30 italic">OUR LOCATION</p>
+                                            <h4 className="font-black text-4xl text-[#FF7A00] tracking-tighter uppercase transform mb-2">EFOUR <span className="text-[#FBBF24]">ELURU</span></h4>
+                                            <p className="text-xs text-[#6C5CE7] font-black tracking-[0.4em] uppercase opacity-60 ">NR PETA, ELURU</p>
                                         </div>
                                         <a
                                             href="https://www.google.com/maps/place/EFOUR/@16.7089355,81.0863275,17z/data=!3m1!4b1!4m6!3m5!1s0x3a36131a0e74054d:0x366c34d3c0b4589c!8m2!3d16.7089304!4d81.0889024!16s%2Fg%2F11wnjn71fc?entry=ttu"
@@ -153,19 +148,19 @@ const Contact = () => {
                             <div className="space-y-6">
                                 <div className="flex items-center gap-4 text-[#6C5CE7]">
                                     <Shield size={20} className="animate-pulse" />
-                                    <span className="text-xs font-black uppercase tracking-[0.8em] italic opacity-40">COMMUNICATIONS</span>
+                                    <span className="text-xs font-black uppercase tracking-[0.8em] opacity-40">COMMUNICATIONS</span>
                                 </div>
-                                <h2 className="text-4xl xs:text-5xl md:text-8xl font-black italic tracking-tighter uppercase leading-[0.85] transform -skew-x-12 text-white">
+                                <h2 className="text-4xl xs:text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85] transform text-white">
                                     GET IN <br /><span className="text-gradient-primary">TOUCH.</span>
                                 </h2>
                             </div>
 
-                            <p className="text-lg text-[#94A3B8] font-bold uppercase tracking-[0.3em] italic opacity-40 leading-relaxed border-l-2 border-[#6C5CE7]/30 pl-10">
+                            <p className="text-lg text-[#94A3B8] font-bold uppercase tracking-[0.3em] opacity-40 leading-relaxed border-l-2 border-[#6C5CE7]/30 pl-10">
                                 Our support team is here to help 24/7. Send us your message and we will get back to you as soon as possible.
                             </p>
 
                             <div className="pt-8">
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-10 text-2xl font-black text-white tracking-tighter italic uppercase group cursor-pointer">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-10 text-2xl font-black text-white tracking-tighter uppercase group cursor-pointer">
                                     <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[2.5rem] bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#6C5CE7] group-hover:scale-110 group-hover:bg-[#6C5CE7] group-hover:text-white transition-all duration-700 shadow-2xl shrink-0">
                                         <Mail size={28} />
                                     </div>
@@ -186,20 +181,20 @@ const Contact = () => {
                                     { label: 'YOUR EMAIL', type: 'email', placeholder: 'EMAIL@DOMAIN.COM' }
                                 ].map((field, i) => (
                                     <div key={i} className="space-y-4">
-                                        <label className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] italic ml-6 opacity-60">{field.label}</label>
+                                        <label className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] ml-6 opacity-60">{field.label}</label>
                                         <input
                                             type={field.type}
                                             placeholder={field.placeholder}
-                                            className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 md:px-10 py-4 md:py-6 text-white outline-none focus:border-[#6C5CE7]/50 focus:bg-white/[0.05] transition-all placeholder:text-slate-700 text-sm font-bold tracking-widest italic"
+                                            className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 md:px-10 py-4 md:py-6 text-white outline-none focus:border-[#6C5CE7]/50 focus:bg-white/[0.05] transition-all placeholder:text-slate-700 text-sm font-bold tracking-widest "
                                         />
                                     </div>
                                 ))}
                                 <div className="space-y-4">
-                                    <label className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] italic ml-6 opacity-60">YOUR MESSAGE</label>
+                                    <label className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] ml-6 opacity-60">YOUR MESSAGE</label>
                                     <textarea
                                         placeholder="TYPE YOUR MESSAGE HERE..."
                                         rows="4"
-                                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 md:px-10 py-4 md:py-6 text-white outline-none focus:border-[#6C5CE7]/50 focus:bg-white/[0.05] transition-all placeholder:text-slate-700 text-sm font-bold tracking-widest italic resize-none"
+                                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 md:px-10 py-4 md:py-6 text-white outline-none focus:border-[#6C5CE7]/50 focus:bg-white/[0.05] transition-all placeholder:text-slate-700 text-sm font-bold tracking-widest resize-none"
                                     />
                                 </div>
                             </div>
@@ -231,3 +226,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

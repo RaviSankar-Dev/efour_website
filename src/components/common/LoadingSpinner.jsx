@@ -43,7 +43,7 @@ const LoadingSpinner = () => {
                 </div>
             </div>
 
-            <p className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-[#AAB2C5] italic animate-blink-custom">
+            <p className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-[#AAB2C5] animate-blink-custom">
                 Synchronizing Eluru...
             </p>
         </div>
@@ -51,3 +51,4 @@ const LoadingSpinner = () => {
 };
 
 export default LoadingSpinner;
+

@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, MeshDistortMaterial, Environment, MeshWobbleMaterial, ContactShadows, PresentationControls } from '@react-three/drei'
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion'
-import { ArrowDown, Zap, Activity, Shield, Target, Plus, Star } from 'lucide-react'
+import { ArrowDown, Zap, Activity, Shield, Target, Plus, Star, Trophy } from 'lucide-react'
 import * as THREE from 'three'
 
 // --- Layer 1 Components ---
@@ -33,7 +33,7 @@ const BackgroundSystem = React.memo(({ mouseX, mouseY }) => {
 
             {/* Optimized Particle Field */}
             <div className="absolute inset-0 z-30">
-                {[...Array(20)].map((_, i) => (
+                {[...Array(12)].map((_, i) => (
                     <motion.div
                         key={i}
                         className="absolute w-[1px] h-[1px] bg-white rounded-full"
@@ -113,7 +113,7 @@ const Balloon = ({ position, color, popped }) => {
             <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
                 {/* Glossy Pink Balloon Body */}
                 <mesh visible={!popped}>
-                    <sphereGeometry args={[0.55, 32, 32]} />
+                    <sphereGeometry args={[0.55, 16, 16]} />
                     <meshStandardMaterial
                         color="#FF4B91"
                         metalness={0.2}
@@ -220,8 +220,8 @@ const Gun = ({ targetPos, shooting }) => {
 
 const Basketball = ({ isShooting }) => {
     const mesh = useRef();
-    const startPos = [-7, -1, 3];
-    const hoopPos = [5, 1.25, -4]; // Center of rim
+    const startPos = [7, -1, 3];
+    const hoopPos = [-5, -0.45, -4]; // Adjusted Y for lower hoop position
 
     useFrame((state) => {
         if (!mesh.current) return;
@@ -257,7 +257,7 @@ const Basketball = ({ isShooting }) => {
     return (
         <group ref={mesh}>
             <mesh castShadow>
-                <sphereGeometry args={[0.45, 32, 32]} />
+                <sphereGeometry args={[0.45, 16, 16]} />
                 <meshStandardMaterial
                     color="#FF7A18"
                     roughness={0.6}
@@ -279,14 +279,14 @@ const Basketball = ({ isShooting }) => {
 
 const Hoop = () => {
     return (
-        <group position={[5, 0.5, -4]}>
+        <group position={[-5, -1.2, -4]}>
             {/* The Main Support Pole */}
-            <mesh position={[0.8, -4, -1]}>
+            <mesh position={[-0.8, -4, -1]}>
                 <cylinderGeometry args={[0.15, 0.15, 12]} />
                 <meshStandardMaterial color="#444" metalness={0.8} roughness={0.2} />
             </mesh>
             {/* The Neck/Arm */}
-            <mesh position={[0.4, 1.5, -0.75]} rotation={[-Math.PI / 6, 0, 0]}>
+            <mesh position={[-0.4, 1.5, -0.75]} rotation={[-Math.PI / 6, 0, 0]}>
                 <cylinderGeometry args={[0.1, 0.1, 1]} />
                 <meshStandardMaterial color="#444" metalness={0.8} roughness={0.2} />
             </mesh>
@@ -421,7 +421,7 @@ const Sculpture = () => {
                     <group>
                         {/* Primary Brand Orange Blob */}
                         <mesh position={[-4, 2, -4]} scale={2.5}>
-                            <sphereGeometry args={[1, 64, 64]} />
+                            <sphereGeometry args={[1, 32, 32]} />
                             <MeshDistortMaterial
                                 color="#FF7A18"
                                 speed={2}
@@ -438,7 +438,7 @@ const Sculpture = () => {
 
                         {/* Secondary Electric Purple/Indigo Blob */}
                         <mesh position={[4, -2, -6]} scale={3}>
-                            <sphereGeometry args={[1, 64, 64]} />
+                            <sphereGeometry args={[1, 32, 32]} />
                             <MeshDistortMaterial
                                 color="#6366F1"
                                 speed={1.5}
@@ -453,7 +453,7 @@ const Sculpture = () => {
 
                         {/* Highlight Cyan/Neon Blue Blob */}
                         <mesh position={[0, 4, -8]} scale={4}>
-                            <sphereGeometry args={[1, 64, 64]} />
+                            <sphereGeometry args={[1, 32, 32]} />
                             <MeshDistortMaterial
                                 color="#0EA5E9"
                                 speed={1}
@@ -470,7 +470,7 @@ const Sculpture = () => {
                     {/* --- Layer 2: Floating Glassmorphism Geometric Elements --- */}
                     <group>
                         <mesh position={[2, 1, 2]} rotation={[Math.PI / 4, Math.PI / 4, 0]} scale={0.8}>
-                            <torusGeometry args={[1.5, 0.05, 16, 100]} />
+                            <torusGeometry args={[1.5, 0.05, 8, 48]} />
                             <meshPhysicalMaterial
                                 transmission={1}
                                 thickness={0.5}
@@ -482,7 +482,7 @@ const Sculpture = () => {
                             />
                         </mesh>
                         <mesh position={[-3, -3, 0]} rotation={[-Math.PI / 4, 0, Math.PI / 6]} scale={0.6}>
-                            <torusGeometry args={[2, 0.04, 16, 100]} />
+                            <torusGeometry args={[2, 0.04, 8, 48]} />
                             <meshPhysicalMaterial
                                 transmission={1}
                                 thickness={0.2}
@@ -526,6 +526,47 @@ const Sculpture = () => {
 }
 
 import { useMotionValue, useSpring } from 'framer-motion';
+import useStore from '../store/useStore';
+
+const CompactRewards = () => {
+    const { user } = useStore();
+    const points = user?.points || 0;
+    const morePoints = Math.max(0, 500 - points);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1, duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-6 md:right-12 top-24 md:top-36 z-50 flex flex-col items-end pointer-events-auto"
+        >
+            <div className="flex flex-col items-end w-52 md:w-64 space-y-8">
+                <div className="flex flex-col items-end">
+                    <p className="text-[10px] font-black text-[#FF7A00] tracking-[0.4em] uppercase opacity-70 mb-2">YOUR POINTS</p>
+                    <div className="flex items-baseline gap-3">
+                        <span className="text-7xl font-black text-[#FF7A00] leading-none drop-shadow-[0_0_20px_rgba(255,122,0,0.4)]">{points}</span>
+                        <span className="text-xl font-black text-slate-700 uppercase tracking-widest transform opacity-30">POINTS</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-5 pr-2">
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-[#FF7A00] shrink-0 drop-shadow-[0_0_15px_rgba(255,122,0,0.3)]">
+                        <Zap size={28} fill="currentColor" />
+                    </div>
+                    <div className="space-y-1">
+                        <p className="text-[10px] font-black text-white uppercase leading-tight">
+                            GET <span className="text-[#FF7A00]">500 POINTS</span> FOR A <br />
+                            <span className="text-[#6C5CE7]">FREE PASS</span>
+                        </p>
+                        <p className="text-[8px] font-black text-slate-700 tracking-widest uppercase opacity-40 ">
+                            {morePoints} MORE POINTS TO GO
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </motion.div>
+    );
+};
 
 const Hero = () => {
     const containerRef = useRef(null)
@@ -559,7 +600,7 @@ const Hero = () => {
         <section 
             ref={containerRef} 
             onMouseMove={handleMouseMove}
-            className="relative h-screen w-full overflow-hidden flex flex-col items-center justify-center bg-[#02040a] pt-24 md:pt-[140px]"
+            className="relative h-screen w-full overflow-hidden flex flex-col items-center justify-center bg-[#02040a] pt-16 md:pt-[100px]"
         >
             {/* Layer 1: Advanced Background System */}
             <BackgroundSystem mouseX={smoothedMouseX} mouseY={smoothedMouseY} />
@@ -626,17 +667,17 @@ const Hero = () => {
                             className="flex items-center gap-4 mb-10 px-6 py-2 bg-white/[0.03] backdrop-blur-3xl rounded-full border border-white/5 shadow-2xl"
                         >
                             <span className="w-1.5 h-1.5 rounded-full bg-[#6C5CE7] animate-pulse shadow-[0_0_10px_#6C5CE7]" />
-                            <span className="text-[9px] md:text-[11px] font-black uppercase text-slate-400 antialiased tracking-[0.5em] italic">
+                            <span className="text-[9px] md:text-[11px] font-black uppercase text-slate-400 antialiased tracking-[0.5em] ">
                                 ELURU'S PREMIER ENTERTAINMENT HUB
                             </span>
                         </motion.div>
 
-                        <h1 className="text-4xl xs:text-5xl md:text-[5.5rem] lg:text-[6.8rem] font-black mb-12 leading-[0.9] tracking-[-0.04em] text-white text-center antialiased italic relative group">
+                        <h1 className="text-4xl xs:text-5xl md:text-[5.5rem] lg:text-[6.8rem] font-black mb-12 leading-[0.9] tracking-[-0.04em] text-white text-center antialiased relative group">
                             {/* Layered Text Shadows for Depth */}
                             <span className="relative z-10 block filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
                                 EAT. ENJOY.<br />
                                 <span className="premium-text-gradient block mt-2 opacity-95 group-hover:opacity-100 transition-opacity duration-1000">
-                                    ENTERTAIN.
+                                    ENTERTAIN. ELURU.
                                 </span>
                             </span>
                             
@@ -658,7 +699,7 @@ const Hero = () => {
                                 {/* Inner Glass Reflection */}
                                 <div className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-25deg] group-hover/btn:left-[150%] transition-all duration-[1.5s] ease-in-out" />
                                 
-                                <span className="relative z-10 flex items-center gap-6 text-sm font-black uppercase tracking-[0.4em] text-white italic">
+                                <span className="relative z-10 flex items-center gap-6 text-sm font-black uppercase tracking-[0.4em] text-white ">
                                     BOOK YOUR RIDE 
                                     <motion.div
                                         animate={{ y: [0, 5, 0] }}
@@ -681,7 +722,7 @@ const Hero = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 2.5 }}
             >
-                <span className="text-[10px] font-black text-slate-600 tracking-[0.6em] uppercase opacity-40 group-hover/scroll:opacity-100 group-hover/scroll:text-[#6C5CE7] transition-all italic">SCROLL</span>
+                <span className="text-[10px] font-black text-slate-600 tracking-[0.6em] uppercase opacity-40 group-hover/scroll:opacity-100 group-hover/scroll:text-[#6C5CE7] transition-all ">SCROLL</span>
                 <div className="w-[2px] h-16 bg-white/[0.03] relative rounded-full overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-[#6C5CE7] to-transparent opacity-20" />
                     <motion.div 
@@ -691,6 +732,9 @@ const Hero = () => {
                     />
                 </div>
             </motion.div>
+
+            {/* Rewards Layer - External to other containers for perfect visibility */}
+            <CompactRewards />
 
             <style dangerouslySetInnerHTML={{
                 __html: `
@@ -719,3 +763,4 @@ const Hero = () => {
 }
 
 export default Hero
+

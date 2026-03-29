@@ -434,7 +434,7 @@ const SplashScreen = ({ onFinish }) => {
                     font-family: 'Outfit', sans-serif;
                     font-size: clamp(28px, 7vw, 56px);
                     font-weight: 900;
-                    font-style: italic;
+                    font-style: ;
                     letter-spacing: -0.03em;
                     background: linear-gradient(135deg, #FFFFFF 0%, #FF7A18 50%, #FF3D3D 100%);
                     -webkit-background-clip: text;
@@ -591,7 +591,7 @@ const SplashScreen = ({ onFinish }) => {
                 {/* ── Center brand ── */}
                 <div className="spl-brand">
                     <div className="spl-logo-ring">
-                        <img src="/E4LOGO.jpeg" alt="Efour Logo" className="spl-logo-img" />
+                        <img src="/E4LOGOr.png" alt="Efour Logo" className="spl-logo-img" />
                     </div>
                     <div className="spl-title">EFOUR</div>
                     <div className="spl-tagline">Eat · Enjoy · Entertain</div>
@@ -648,3 +648,4 @@ const SplashScreen = ({ onFinish }) => {
 };
 
 export default SplashScreen;
+

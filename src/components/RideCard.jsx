@@ -120,3 +120,4 @@ const RideCard = ({ ride, priority = false }) => {
 };
 
 export default memo(RideCard);
+

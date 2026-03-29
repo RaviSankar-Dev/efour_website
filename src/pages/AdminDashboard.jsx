@@ -565,17 +565,15 @@ const AdminDashboard = () => {
             {/* --- SIDEBAR --- */}
             <aside className={`fixed inset-y-0 left-0 z-40 w-72 bg-[#0F172A]/80 backdrop-blur-2xl border-r border-white/10 transform transition-all duration-500 ease-in-out md:translate-x-0 md:sticky md:top-0 h-screen shadow-2xl ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex items-center gap-5 p-8 h-28 border-b border-white/5">
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 group overflow-hidden">
-                        <img src="/E4LOGO.jpeg" alt="Logo" className="w-full h-full object-contain brightness-110 group-hover:scale-110 transition-transform duration-500" />
-                    </div>
+                        <img src="/E4LOGOr.png" alt="Logo" className="w-full h-full object-contain brightness-110 group-hover:scale-110 transition-transform duration-500" />
                     <div>
-                        <p className="text-[10px] font-black text-[#FF7A18] uppercase tracking-[0.4em] italic leading-none mb-1">Admin Panel</p>
+                        <p className="text-[10px] font-black text-[#FF7A18] uppercase tracking-[0.4em] leading-none mb-1">Admin Panel</p>
 
                     </div>
                 </div>
 
                 <nav className="p-6 space-y-3 overflow-y-auto h-[calc(100vh-180px)]">
-                    <p className="px-4 py-3 text-[10px] font-black text-[#AAB2C5]/30 uppercase tracking-[0.3em] mb-2 italic">Main Sections</p>
+                    <p className="px-4 py-3 text-[10px] font-black text-[#AAB2C5]/30 uppercase tracking-[0.3em] mb-2 ">Main Sections</p>
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
@@ -597,7 +595,7 @@ const AdminDashboard = () => {
                 <div className="absolute bottom-6 left-6 right-6 p-1 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
                     <button
                         onClick={() => { localStorage.clear(); window.location.href = '/'; }}
-                        className="flex items-center justify-center gap-3 w-full py-4 text-red-400 hover:bg-red-500/10 rounded-xl transition-all text-[10px] font-black uppercase tracking-[0.3em] italic"
+                        className="flex items-center justify-center gap-3 w-full py-4 text-red-400 hover:bg-red-500/10 rounded-xl transition-all text-[10px] font-black uppercase tracking-[0.3em] "
                     >
                         <Power size={18} /> Logout
                     </button>
@@ -630,7 +628,7 @@ const AdminDashboard = () => {
                             className="flex items-center gap-3 px-5 py-3.5 text-[#AAB2C5] hover:bg-white/5 hover:text-white rounded-2xl transition-all border border-white/5 bg-white/2 group"
                         >
                             <Home size={18} className="group-hover:text-[#FF7A18] transition-colors" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden lg:block italic">Go to Site</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden lg:block ">Go to Site</span>
                         </Link>
 
                         <button
@@ -643,7 +641,7 @@ const AdminDashboard = () => {
                         </button>
                         {headerDropdown === 'notifications' && (
                             <div className="glass-card absolute right-0 top-full mt-4 w-80 rounded-[2rem] border border-white/10 shadow-3xl py-4 z-50 overflow-hidden">
-                                <p className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#AAB2C5]/40 italic">No Notifications</p>
+                                <p className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#AAB2C5]/40 ">No Notifications</p>
                             </div>
                         )}
 
@@ -653,9 +651,9 @@ const AdminDashboard = () => {
                                 onClick={() => setHeaderDropdown(prev => prev === 'user' ? null : 'user')}
                                 className="flex items-center gap-4 group"
                             >
-                                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#FF7A18]/20 to-[#5B8CFF]/10 text-white flex items-center justify-center font-black text-xs border border-white/10 group-hover:border-[#FF7A18]/50 transition-all italic">AD</div>
+                                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#FF7A18]/20 to-[#5B8CFF]/10 text-white flex items-center justify-center font-black text-xs border border-white/10 group-hover:border-[#FF7A18]/50 transition-all ">AD</div>
                                 <div className="hidden md:block text-left">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F8FAFC] italic">Eluru Admin</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F8FAFC] ">Eluru Admin</p>
                                     <p className="text-[8px] font-black uppercase tracking-widest text-[#AAB2C5]/50">Admin Account</p>
                                 </div>
                                 <ChevronDown size={16} className={`text-[#AAB2C5] hidden md:block transition-transform duration-500 ${headerDropdown === 'user' ? 'rotate-180 text-white' : ''}`} />
@@ -665,7 +663,7 @@ const AdminDashboard = () => {
                                     <button
                                         type="button"
                                         onClick={() => { setHeaderDropdown(null); localStorage.clear(); window.location.href = '/'; }}
-                                        className="flex items-center gap-3 w-full px-6 py-4 text-[10px] font-black uppercase tracking-widest text-red-400 hover:bg-white/5 transition-all italic"
+                                        className="flex items-center gap-3 w-full px-6 py-4 text-[10px] font-black uppercase tracking-widest text-red-400 hover:bg-white/5 transition-all "
                                     >
                                         <Power size={18} /> Logout
                                     </button>
@@ -700,12 +698,12 @@ const AdminDashboard = () => {
                                         <div className="p-3 bg-white/5 border border-white/10 rounded-2xl animate-pulse-subtle">
                                             {React.createElement(tabs.find(t => t.id === activeTab)?.icon || LayoutDashboard, { size: 24 })}
                                         </div>
-                                        <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">Admin Panel</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.5em] ">Admin Panel</span>
                                     </div>
-                                    <h2 className="text-6xl md:text-8xl font-black italic tracking-tighter uppercase leading-none transform -skew-x-6">
+                                    <h2 className="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-none transform ">
                                         {activeTab}
                                     </h2>
-                                    <p className="text-[#AAB2C5] text-xs font-black uppercase tracking-widest max-w-lg italic opacity-70">
+                                    <p className="text-[#AAB2C5] text-xs font-black uppercase tracking-widest max-w-lg opacity-70">
                                         Manage your {activeTab} here. All data is safe.
                                     </p>
 
@@ -749,7 +747,7 @@ const AdminDashboard = () => {
                                                 });
                                                 setIsModalOpen(true);
                                             }}
-                                            className="btn-premium px-12 py-5 rounded-[2rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl flex items-center gap-4 group/add italic"
+                                            className="btn-premium px-12 py-5 rounded-[2rem] font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl flex items-center gap-4 group/add "
                                         >
                                             <Plus size={20} className="group-hover:rotate-90 transition-transform duration-500" />
                                             {activeTab === 'rides' ? 'Add Ride' : 'Add Dine'}
@@ -1178,7 +1176,7 @@ const AdminDashboard = () => {
                                                     {/* Price Tag - Floating Badge */}
                                                     {activeTab !== 'dine' && (
                                                         <div className="absolute top-5 right-5 z-20">
-                                                            <div className="bg-[#FF7A18] px-5 py-2 rounded-2xl text-[10px] font-black text-white shadow-[0_10px_20px_rgba(255,122,24,0.3)] tracking-[0.2em] uppercase italic border border-white/20 backdrop-blur-md">
+                                                            <div className="bg-[#FF7A18] px-5 py-2 rounded-2xl text-[10px] font-black text-white shadow-[0_10px_20px_rgba(255,122,24,0.3)] tracking-[0.2em] uppercase border border-white/20 backdrop-blur-md">
                                                                 ₹{item.price}
                                                             </div>
                                                         </div>
@@ -1187,7 +1185,7 @@ const AdminDashboard = () => {
                                                     {/* Category / ID Badge */}
                                                     {activeTab !== 'dine' && (
                                                         <div className="absolute top-5 left-5 z-20">
-                                                            <div className="bg-white/5 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-2xl text-[8px] font-black text-[#AAB2C5] tracking-[0.3em] uppercase italic">
+                                                            <div className="bg-white/5 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-2xl text-[8px] font-black text-[#AAB2C5] tracking-[0.3em] uppercase ">
                                                                 ID: <span className="text-white font-mono">{String(item.id || '').padStart(3, '0')}</span>
                                                             </div>
                                                         </div>
@@ -1208,7 +1206,7 @@ const AdminDashboard = () => {
                                                             className="flex-1 py-3 bg-white/10 hover:bg-[#FF7A18] rounded-xl text-white backdrop-blur-xl border border-white/20 flex items-center justify-center transition-all group/btn shadow-xl"
                                                         >
                                                             <Edit2 size={16} className="group-hover/btn:scale-110 transition-transform" />
-                                                            <span className="ml-2 text-[9px] font-black uppercase tracking-widest italic">MOD</span>
+                                                            <span className="ml-2 text-[9px] font-black uppercase tracking-widest ">MOD</span>
                                                         </button>
                                                         <button 
                                                             onClick={() => handleDelete(item.id, 'product')} 
@@ -1224,11 +1222,11 @@ const AdminDashboard = () => {
                                                     <div className="space-y-1">
                                                         <div className="flex items-center gap-2 mb-1">
                                                             <div className={`w-1.5 h-1.5 rounded-full ${isOpen ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
-                                                            <p className="text-[8px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.4em] italic">
+                                                            <p className="text-[8px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.4em] ">
                                                                 {activeTab === 'dine' ? 'Cuisine: ' : 'Class: '} <span className="text-white/60">{item.cuisine || item.category || 'General'}</span>
                                                             </p>
                                                         </div>
-                                                        <h3 className="text-xl font-black text-white uppercase italic tracking-tighter leading-tight group-hover:text-[#FF7A18] transition-colors line-clamp-1 transform -skew-x-2">
+                                                        <h3 className="text-xl font-black text-white uppercase tracking-tighter leading-tight group-hover:text-[#FF7A18] transition-colors line-clamp-1 transform ">
                                                             {item.name}
                                                         </h3>
                                                     </div>
@@ -1236,10 +1234,10 @@ const AdminDashboard = () => {
                                                     {/* Status & Control Row */}
                                                     <div className="flex items-center justify-between pt-4 border-t border-white/5">
                                                         <div className="space-y-1">
-                                                            <div className={`text-[9px] font-black uppercase tracking-[0.2em] italic ${isOpen ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                            <div className={`text-[9px] font-black uppercase tracking-[0.2em] ${isOpen ? 'text-emerald-400' : 'text-red-400'}`}>
                                                                 {activeTab === 'dine' ? (isOpen ? 'Terminal Open' : 'Terminal Closed') : (isOpen ? 'Protocol Active' : 'Protocol Locked')}
                                                             </div>
-                                                            <div className="text-[8px] font-black text-[#AAB2C5]/30 uppercase tracking-widest italic flex items-center gap-1.5">
+                                                            <div className="text-[8px] font-black text-[#AAB2C5]/30 uppercase tracking-widest flex items-center gap-1.5">
                                                                 <MapPin size={8} /> {item.stall || 'Sector E4'}
                                                             </div>
                                                         </div>
@@ -1272,7 +1270,7 @@ const AdminDashboard = () => {
                                 <div className="space-y-6">
                                     <div className="flex justify-between items-center bg-[#0F172A]/40 backdrop-blur-3xl p-6 rounded-[2rem] border border-white/10 shadow-2xl">
                                         <div>
-                                            <h2 className="text-2xl font-black text-white uppercase tracking-[0.2em] italic">Employees</h2>
+                                            <h2 className="text-2xl font-black text-white uppercase tracking-[0.2em] ">Employees</h2>
                                             <p className="text-[#AAB2C5]/50 text-xs font-bold uppercase tracking-widest mt-1">Manage EFOUR ELURU operations</p>
                                         </div>
                                         <div className="flex items-center gap-4">
@@ -1295,7 +1293,7 @@ const AdminDashboard = () => {
 
                                     <div className="bg-[#0F172A]/40 backdrop-blur-3xl rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl">
                                         <div className="p-6 border-b border-white/5 flex justify-between items-center">
-                                            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Authorized Employees List</h3>
+                                            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] ">Authorized Employees List</h3>
                                             <span className="px-4 py-1.5 bg-white/5 rounded-full text-[10px] font-bold text-[#AAB2C5] uppercase tracking-widest">{employeesList.length} Employees</span>
                                         </div>
                                         <div className="overflow-x-auto">
@@ -1313,10 +1311,10 @@ const AdminDashboard = () => {
                                                         <tr key={emp._id || emp.id} className="hover:bg-white/5 transition-colors group">
                                                             <td className="px-8 py-6">
                                                                 <div className="flex items-center gap-4">
-                                                                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center font-black text-emerald-400 border border-emerald-500/20 italic">
+                                                                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center font-black text-emerald-400 border border-emerald-500/20 ">
                                                                         {emp.name ? emp.name.charAt(0).toUpperCase() : 'E'}
                                                                     </div>
-                                                                    <span className="text-sm font-black text-white uppercase italic">{emp.name || 'Unnamed Employee'}</span>
+                                                                    <span className="text-sm font-black text-white uppercase ">{emp.name || 'Unnamed Employee'}</span>
                                                                 </div>
                                                             </td>
                                                             <td className="px-8 py-6 text-sm font-mono font-bold text-[#AAB2C5]">
@@ -1345,7 +1343,7 @@ const AdminDashboard = () => {
                                                     ))}
                                                     {employeesList.length === 0 && (
                                                         <tr>
-                                                            <td colSpan={4} className="px-8 py-16 text-center text-[#AAB2C5]/30 text-[10px] font-black uppercase tracking-[0.4em] italic">
+                                                            <td colSpan={4} className="px-8 py-16 text-center text-[#AAB2C5]/30 text-[10px] font-black uppercase tracking-[0.4em] ">
                                                                 No employees found in the matrix
                                                             </td>
                                                         </tr>
@@ -1364,13 +1362,13 @@ const AdminDashboard = () => {
                                         <table className="w-full whitespace-nowrap">
                                             <thead className="bg-white/2 border-b border-white/5">
                                                 <tr>
-                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Id Ride</th>
-                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Customer Core</th>
-                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Payload Details</th>
-                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Timestamp</th>
-                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Value</th>
-                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">State</th>
-                                                    <th className="px-10 py-6 text-right text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Operations</th>
+                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Id Ride</th>
+                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Customer Core</th>
+                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Payload Details</th>
+                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Timestamp</th>
+                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Value</th>
+                                                    <th className="px-10 py-6 text-left text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">State</th>
+                                                    <th className="px-10 py-6 text-right text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Operations</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-white/5">
@@ -1386,22 +1384,22 @@ const AdminDashboard = () => {
                                                         <>
                                                             {displayList.filter(Boolean).map((item, idx) => (
                                                                 <tr key={item._id || item.id || idx} className="hover:bg-white/5 transition-all group">
-                                                                    <td className="px-10 py-8 text-[12px] font-black text-[#AAB2C5] font-mono italic">
+                                                                    <td className="px-10 py-8 text-[12px] font-black text-[#AAB2C5] font-mono ">
                                                                         <span className="text-[#FF7A18]">#</span>{String(item._id || item.id || '').slice(-6).toUpperCase()}
                                                                     </td>
                                                                     <td className="px-10 py-8">
-                                                                        <div className="text-sm font-black text-[#F8FAFC] uppercase tracking-tighter italic">{item.userDetails?.name || item.name || 'Guest'}</div>
+                                                                        <div className="text-sm font-black text-[#F8FAFC] uppercase tracking-tighter ">{item.userDetails?.name || item.name || 'Guest'}</div>
                                                                         <div className="text-[10px] font-black text-[#AAB2C5]/30 uppercase tracking-widest mt-1">{item.userDetails?.phone || item.phone}</div>
                                                                     </td>
-                                                                    <td className="px-10 py-8 text-[10px] font-black text-[#AAB2C5] uppercase tracking-widest italic max-w-xs truncate">
+                                                                    <td className="px-10 py-8 text-[10px] font-black text-[#AAB2C5] uppercase tracking-widest max-w-xs truncate">
                                                                         {isBookingsTab
                                                                             ? (item.facility || 'Ride Reserve')
                                                                             : (item.items?.map(i => `${i.name} [${i.quantity}]`).join(', '))}
                                                                     </td>
-                                                                    <td className="px-10 py-8 text-[10px] font-black text-[#AAB2C5] uppercase tracking-widest italic">
+                                                                    <td className="px-10 py-8 text-[10px] font-black text-[#AAB2C5] uppercase tracking-widest ">
                                                                         {new Date(item.date || item.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true })}
                                                                     </td>
-                                                                    <td className="px-10 py-8 text-sm font-black text-white italic tracking-tighter">
+                                                                    <td className="px-10 py-8 text-sm font-black text-white tracking-tighter">
                                                                         ₹{item.totalPrice || item.totalAmount}
                                                                     </td>
                                                                     <td className="px-10 py-8">
@@ -1421,9 +1419,9 @@ const AdminDashboard = () => {
                                                                 <tr>
                                                                     <td colSpan="7" className="px-10 py-8 border-t border-white/5">
                                                                         <div className="flex items-center justify-between">
-                                                                            <button disabled={currentPage === 1} onClick={() => setPage(prev => prev - 1)} className="px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-all disabled:opacity-20 italic">Decouple</button>
-                                                                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#AAB2C5]/30 italic">Eluru Index {currentPage} / {totalPages}</span>
-                                                                            <button disabled={currentPage === totalPages || totalPages === 0} onClick={() => setPage(prev => prev + 1)} className="px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-all disabled:opacity-20 italic">Recouple</button>
+                                                                            <button disabled={currentPage === 1} onClick={() => setPage(prev => prev - 1)} className="px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-all disabled:opacity-20 ">Decouple</button>
+                                                                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#AAB2C5]/30 ">Eluru Index {currentPage} / {totalPages}</span>
+                                                                            <button disabled={currentPage === totalPages || totalPages === 0} onClick={() => setPage(prev => prev + 1)} className="px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-all disabled:opacity-20 ">Recouple</button>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -1461,8 +1459,8 @@ const AdminDashboard = () => {
                         >
                             <div className="px-10 py-8 border-b border-white/5 flex justify-between items-center bg-white/2">
                                 <div>
-                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF7A18] italic block mb-2">Protocol Override</span>
-                                    <h3 className="text-3xl font-black italic tracking-tighter uppercase transform -skew-x-6">
+                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF7A18] block mb-2">Protocol Override</span>
+                                    <h3 className="text-3xl font-black tracking-tighter uppercase transform ">
                                         {isModalOpen === 'employee' ? (editingItem ? 'Edit Employee' : 'Add Employee') : editingItem ? 'Edit Metadata' : (activeTab === 'rides' ? 'Add New Ride' : 'Add New Dine')}
                                     </h3>
                                 </div>
@@ -1472,19 +1470,19 @@ const AdminDashboard = () => {
                                 {isModalOpen === 'employee' ? (
                                     <>
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Employee Name</label>
+                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Employee Name</label>
                                             <input required type="text" className="w-full bg-white/5 px-6 py-5 rounded-2xl border border-white/10 focus:border-[#FF7A18]/50 outline-none transition-all font-black text-sm uppercase tracking-widest text-white shadow-inner"
                                                 value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="Enter Name" />
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Mobile Number</label>
+                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Mobile Number</label>
                                             <input required type="tel" className="w-full bg-white/5 px-6 py-5 rounded-2xl border border-white/10 focus:border-[#FF7A18]/50 outline-none transition-all font-black text-sm uppercase tracking-widest text-[#AAB2C5] font-mono shadow-inner"
                                                 value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })} placeholder="10 Digits" />
                                         </div>
                                     </>
                                 ) : (
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">{activeTab === 'rides' ? 'Ride Name' : 'Dine Name'}</label>
+                                        <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">{activeTab === 'rides' ? 'Ride Name' : 'Dine Name'}</label>
                                         <input required type="text" className="w-full bg-white/5 px-6 py-5 rounded-2xl border border-white/10 focus:border-[#FF7A18]/50 outline-none transition-all font-black text-sm uppercase tracking-widest text-white shadow-inner"
                                             value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="Enter Designation" />
                                     </div>
@@ -1493,7 +1491,7 @@ const AdminDashboard = () => {
                                     <div className="grid grid-cols-2 gap-8">
                                         {activeTab !== 'dine' && (
                                             <div className="space-y-3">
-                                                <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">{activeTab === 'rides' ? 'Value Core [₹]' : 'Unit Price [₹]'}</label>
+                                                <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">{activeTab === 'rides' ? 'Value Core [₹]' : 'Unit Price [₹]'}</label>
                                                 <input required type="number" className="w-full bg-white/5 px-6 py-5 rounded-2xl border border-white/10 focus:border-[#FF7A18]/50 outline-none transition-all font-black text-sm uppercase tracking-widest text-white shadow-inner"
                                                     value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} placeholder="0" />
                                             </div>
@@ -1506,12 +1504,12 @@ const AdminDashboard = () => {
                                 {isModalOpen !== 'employee' && false && (
                                     <div className="grid grid-cols-2 gap-8">
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Station ID</label>
+                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Station ID</label>
                                             <input required type="text" className="w-full bg-white/5 px-6 py-5 rounded-2xl border border-white/10 focus:border-[#5B8CFF]/50 outline-none transition-all font-black text-[10px] uppercase tracking-widest text-white shadow-inner"
                                                 value={formData.stall} onChange={e => setFormData({ ...formData, stall: e.target.value })} placeholder="e.g. ST-01 ELURU" />
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Cuisine Specialty</label>
+                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Cuisine Specialty</label>
                                             <input required type="text" className="w-full bg-white/5 px-6 py-5 rounded-2xl border border-white/10 focus:border-[#FF7A18]/50 outline-none transition-all font-black text-[10px] uppercase tracking-widest text-white shadow-inner"
                                                 value={formData.cuisine || ''} onChange={e => setFormData({ ...formData, cuisine: e.target.value })} placeholder="Enter Cuisine" />
                                         </div>
@@ -1519,7 +1517,7 @@ const AdminDashboard = () => {
                                 )}
                                 {activeTab === 'dine' && false && (
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Contact Number</label>
+                                        <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Contact Number</label>
                                         <input required type="tel" className="w-full bg-white/5 px-6 py-5 rounded-2xl border border-white/10 focus:border-[#FF7A18]/50 outline-none transition-all font-black text-sm uppercase tracking-widest text-[#AAB2C5] font-mono shadow-inner"
                                             value={formData.contactNumber || ''} onChange={e => setFormData({ ...formData, contactNumber: e.target.value })} placeholder="Enter Phone Number" />
                                     </div>
@@ -1541,11 +1539,11 @@ const AdminDashboard = () => {
                                                             </button>
                                                         </>
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-[#AAB2C5]/20 text-[10px] font-black italic text-center px-4">NO DATA</div>
+                                                        <div className="w-full h-full flex items-center justify-center text-[#AAB2C5]/20 text-[10px] font-black text-center px-4">NO DATA</div>
                                                     )}
                                                 </div>
                                                 <div className="flex-1 space-y-3">
-                                                    <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Item Image</label>
+                                                    <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Item Image</label>
                                                     <div className="flex gap-4">
                                                         <label className="flex-1 flex items-center justify-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#FF7A18]/50 px-5 py-4 rounded-xl cursor-pointer transition-all group/upload relative overflow-hidden">
                                                             <Upload size={18} className="text-[#AAB2C5] group-hover/upload:text-[#FF7A18] transition-colors relative z-10" />
@@ -1554,20 +1552,20 @@ const AdminDashboard = () => {
                                                             <div className="absolute inset-0 bg-gradient-to-r from-[#FF7A18]/0 via-[#FF7A18]/5 to-[#FF7A18]/0 translate-x-[-100%] group-hover/upload:translate-x-[100%] transition-transform duration-1000" />
                                                         </label>
                                                     </div>
-                                                    <p className="text-[8px] font-black text-emerald-400 uppercase tracking-widest italic opacity-50">Upload complete.</p>
+                                                    <p className="text-[8px] font-black text-emerald-400 uppercase tracking-widest opacity-50">Upload complete.</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Description</label>
-                                            <textarea className="w-full bg-white/5 px-6 py-5 rounded-2xl border border-white/10 focus:border-[#FF7A18]/50 outline-none transition-all font-black text-xs uppercase tracking-widest text-white shadow-inner leading-relaxed resize-none italic"
+                                            <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Description</label>
+                                            <textarea className="w-full bg-white/5 px-6 py-5 rounded-2xl border border-white/10 focus:border-[#FF7A18]/50 outline-none transition-all font-black text-xs uppercase tracking-widest text-white shadow-inner leading-relaxed resize-none "
                                                 value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} rows="4" placeholder="Enter Description..."></textarea>
                                         </div>
 
                                         {activeTab === 'dine' && (
                                             <div className="space-y-6 pt-4 border-t border-white/5">
                                                 <div className="flex items-center justify-between">
-                                                    <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] italic">Menu Images / Add Menu</label>
+                                                    <label className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.3em] ">Menu Images / Add Menu</label>
                                                     <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Optional</span>
                                                 </div>
                                                 
@@ -1590,12 +1588,12 @@ const AdminDashboard = () => {
                                                         <input type="file" multiple className="hidden" onChange={handleMenuImagesChange} accept="image/*" />
                                                     </label>
                                                 </div>
-                                                <p className="text-[8px] font-black text-[#AAB2C5]/20 uppercase tracking-[0.3em] italic">Upload scans or photos of your physical menu items.</p>
+                                                <p className="text-[8px] font-black text-[#AAB2C5]/20 uppercase tracking-[0.3em] ">Upload scans or photos of your physical menu items.</p>
                                             </div>
                                         )}
                                     </>
                                 )}
-                                <button type="submit" className="btn-premium w-full py-6 rounded-3xl font-black uppercase tracking-[0.4em] text-[10px] shadow-3xl italic mt-6 group flex items-center justify-center gap-4">
+                                <button type="submit" className="btn-premium w-full py-6 rounded-3xl font-black uppercase tracking-[0.4em] text-[10px] shadow-3xl mt-6 group flex items-center justify-center gap-4">
                                     {isModalOpen === 'employee' ? (editingItem ? 'Update Employee' : 'Add Employee') : editingItem ? 'Save Changes' : (activeTab === 'rides' ? 'Add Ride' : 'Add Item')}
                                     <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                 </button>
@@ -1619,16 +1617,16 @@ const StatCard = ({ title, value, icon: Icon, color, bg }) => (
                 <Icon size={28} />
             </div>
             <div className="flex flex-col items-end">
-                <span className="text-[10px] font-black text-[#AAB2C5]/30 uppercase tracking-[0.4em] italic mb-1">Status</span>
+                <span className="text-[10px] font-black text-[#AAB2C5]/30 uppercase tracking-[0.4em] mb-1">Status</span>
                 <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10B981]" />
-                    <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest italic">Online</span>
+                    <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest ">Online</span>
                 </div>
             </div>
         </div>
         <div>
-            <h3 className="text-5xl font-black italic tracking-tighter text-white mb-2 transform -skew-x-6">{value}</h3>
-            <p className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.5em] italic leading-none">{title}</p>
+            <h3 className="text-5xl font-black tracking-tighter text-white mb-2 transform ">{value}</h3>
+            <p className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.5em] leading-none">{title}</p>
         </div>
     </div>
 );
@@ -1641,10 +1639,11 @@ const StatusBadge = ({ status }) => {
         cancelled: 'bg-red-500/10 text-red-500 border-red-500/20'
     };
     return (
-        <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] italic border ${styles[status] || 'bg-white/5 text-[#AAB2C5] border-white/10'}`}>
+        <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] border ${styles[status] || 'bg-white/5 text-[#AAB2C5] border-white/10'}`}>
             {status}
         </span>
     );
 };
 
 export default AdminDashboard;
+

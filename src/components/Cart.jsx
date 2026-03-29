@@ -118,9 +118,9 @@ const Cart = () => {
             const key = data.access_key || data?.data?.access_key;
 
             if (paymentUrl) {
-                window.open(paymentUrl, '_blank');
+                window.location.href = paymentUrl;
             } else if (key) {
-                window.open(`https://pay.easebuzz.in/pay/${key}`, '_blank');
+                window.location.href = `https://pay.easebuzz.in/pay/${key}`;
             } else {
                 navigate(`/success?orderId=${orderId}&status=success`);
             }
@@ -215,10 +215,10 @@ const Cart = () => {
                                             </div>
                                         </div>
                                         <div>
-                                            <h2 className="text-3xl font-black text-[#F8FAFC] tracking-tighter uppercase italic transform -skew-x-12 leading-none mb-1">YOUR <span className="text-[#FF7A18]">CART</span></h2>
+                                            <h2 className="text-3xl font-black text-[#F8FAFC] tracking-tighter uppercase transform leading-none mb-1">YOUR <span className="text-[#FF7A18]">CART</span></h2>
                                             <div className="flex items-center gap-2">
                                                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]" />
-                                                <p className="text-[9px] text-[#AAB2C5] font-black uppercase tracking-[0.3em] opacity-40 italic">{cart.length} ITEMS</p>
+                                                <p className="text-[9px] text-[#AAB2C5] font-black uppercase tracking-[0.3em] opacity-40 ">{cart.length} ITEMS</p>
                                             </div>
                                         </div>
                                     </div>
@@ -237,10 +237,10 @@ const Cart = () => {
                                             <div className="w-24 h-24 bg-white/5 rounded-[2.5rem] flex items-center justify-center text-white/5 mb-8 border border-white/5">
                                                 <ShoppingBag size={48} />
                                             </div>
-                                            <h3 className="text-xl font-black text-[#F8FAFC] uppercase tracking-tighter italic opacity-20 mb-4 transform -skew-x-12">YOUR CART IS EMPTY</h3>
+                                            <h3 className="text-xl font-black text-[#F8FAFC] uppercase tracking-tighter opacity-20 mb-4 transform ">YOUR CART IS EMPTY</h3>
                                             <button
                                                 onClick={() => { toggleCart(); navigate('/#rides'); }}
-                                                className="text-[#FF7A18] font-black uppercase tracking-[0.5em] text-[10px] italic hover:opacity-100 opacity-60 transition-opacity"
+                                                className="text-[#FF7A18] font-black uppercase tracking-[0.5em] text-[10px] hover:opacity-100 opacity-60 transition-opacity"
                                             >
                                                 BOOK NOW
                                             </button>
@@ -267,8 +267,8 @@ const Cart = () => {
                                                     <div className="flex-grow flex flex-col justify-between py-1">
                                                         <div className="flex justify-between items-start">
                                                             <div>
-                                                                <h3 className="font-black text-[#F8FAFC] text-lg uppercase italic transform -skew-x-12 leading-tight group-hover:text-[#FF7A18] transition-colors">{item.name}</h3>
-                                                                <p className="text-[9px] text-[#AAB2C5]/30 font-black uppercase tracking-[0.2em] mt-1 italic">{item.stall}</p>
+                                                                <h3 className="font-black text-[#F8FAFC] text-lg uppercase transform leading-tight group-hover:text-[#FF7A18] transition-colors">{item.name}</h3>
+                                                                <p className="text-[9px] text-[#AAB2C5]/30 font-black uppercase tracking-[0.2em] mt-1 ">{item.stall}</p>
                                                             </div>
                                                             <button
                                                                 onClick={() => removeFromCart(item.id)}
@@ -279,7 +279,7 @@ const Cart = () => {
                                                         </div>
 
                                                         <div className="flex items-center justify-between mt-4">
-                                                            <span className="font-black text-2xl text-[#FF7A18] transform -skew-x-12 italic">₹{item.price}</span>
+                                                            <span className="font-black text-2xl text-[#FF7A18] transform ">₹{item.price}</span>
                                                             <div className="flex items-center gap-4 bg-white/5 rounded-2xl p-1.5 border border-white/10 backdrop-blur-md">
                                                                 <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-8 h-8 flex items-center justify-center hover:bg-white hover:text-[#070B14] text-[#F8FAFC] rounded-xl transition-all border border-white/5">
                                                                     <Minus size={14} />
@@ -310,12 +310,12 @@ const Cart = () => {
                                                         className="space-y-3 overflow-hidden pb-4"
                                                     >
                                                         <div className="flex justify-between items-center opacity-40">
-                                                            <span className="text-[#AAB2C5] font-black uppercase tracking-[0.4em] text-[10px] italic">Rides Booking</span>
-                                                            <span className="text-[#F8FAFC] font-black italic">₹{subtotal.toFixed(2)}</span>
+                                                            <span className="text-[#AAB2C5] font-black uppercase tracking-[0.4em] text-[10px] ">Rides Booking</span>
+                                                            <span className="text-[#F8FAFC] font-black ">₹{subtotal.toFixed(2)}</span>
                                                         </div>
                                                         <div className="flex justify-between items-center opacity-40">
-                                                            <span className="text-[#FF7A18] font-black uppercase tracking-[0.4em] text-[10px] italic">Gov Taxes (GST)</span>
-                                                            <span className="text-[#F8FAFC] font-black italic">₹{gstAmount.toFixed(2)}</span>
+                                                            <span className="text-[#FF7A18] font-black uppercase tracking-[0.4em] text-[10px] ">Gov Taxes (GST)</span>
+                                                            <span className="text-[#F8FAFC] font-black ">₹{gstAmount.toFixed(2)}</span>
                                                         </div>
                                                     </motion.div>
                                                 )}
@@ -324,15 +324,15 @@ const Cart = () => {
                                             <div className="flex flex-col gap-1 pt-2 border-t border-white/5">
                                                 <div className="flex justify-between items-end">
                                                     <div>
-                                                        <span className="text-[#AAB2C5] font-black uppercase tracking-[0.5em] text-[11px] italic block mb-1">TOTAL PRICE</span>
+                                                        <span className="text-[#AAB2C5] font-black uppercase tracking-[0.5em] text-[11px] block mb-1">TOTAL PRICE</span>
                                                         <button 
                                                             onClick={() => setShowTaxBreakdown(!showTaxBreakdown)}
-                                                            className="px-3 py-1 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 text-[8px] font-black uppercase tracking-[0.2em] text-[#FF7A18] hover:text-white transition-all italic flex items-center gap-2"
+                                                            className="px-3 py-1 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 text-[8px] font-black uppercase tracking-[0.2em] text-[#FF7A18] hover:text-white transition-all flex items-center gap-2"
                                                         >
                                                             INC. ALL TAXES {showTaxBreakdown ? '−' : '+'}
                                                         </button>
                                                     </div>
-                                                    <span className="text-4xl font-black text-[#F8FAFC] tracking-tighter uppercase italic transform -skew-x-12">₹{finalTotal % 1 === 0 ? finalTotal : finalTotal.toFixed(2)}</span>
+                                                    <span className="text-4xl font-black text-[#F8FAFC] tracking-tighter uppercase transform ">₹{finalTotal % 1 === 0 ? finalTotal : finalTotal.toFixed(2)}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -347,7 +347,7 @@ const Cart = () => {
 
                                             <button
                                                 onClick={clearCart}
-                                                className="w-full text-[10px] font-black text-[#AAB2C5] uppercase tracking-[0.5em] hover:text-[#FF3D3D] transition-all italic opacity-30 hover:opacity-100 flex items-center justify-center gap-3"
+                                                className="w-full text-[10px] font-black text-[#AAB2C5] uppercase tracking-[0.5em] hover:text-[#FF3D3D] transition-all opacity-30 hover:opacity-100 flex items-center justify-center gap-3"
                                             >
                                                 <Trash2 size={12} /> CLEAR ALL
                                             </button>
@@ -372,9 +372,9 @@ const Cart = () => {
                                                     <div className="space-y-2">
                                                         <div className="flex items-center gap-3 text-[#FF7A18]">
                                                             <Fingerprint size={20} />
-                                                            <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">LOGIN</span>
+                                                            <span className="text-[10px] font-black uppercase tracking-[0.5em] ">LOGIN</span>
                                                         </div>
-                                                        <h3 className="text-4xl font-black text-[#F8FAFC] uppercase tracking-tighter italic transform -skew-x-12 leading-none">
+                                                        <h3 className="text-4xl font-black text-[#F8FAFC] uppercase tracking-tighter transform leading-none">
                                                             EFOUR <br /><span className="text-[#FF7A18]">LOGIN</span>
                                                         </h3>
                                                     </div>
@@ -390,7 +390,7 @@ const Cart = () => {
                                                     {authStep === 1 ? (
                                                         <div className="space-y-6">
                                                             <div className="space-y-3">
-                                                                <label className="block text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.4em] mb-4 italic">PHONE NUMBER</label>
+                                                                <label className="block text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.4em] mb-4 ">PHONE NUMBER</label>
                                                                 <div className="relative group">
                                                                     <div className="absolute -inset-1 bg-gradient-to-r from-[#FF7A18]/20 to-transparent rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
                                                                     <div className="relative flex items-center bg-white/[0.03] border border-white/10 rounded-2xl p-1 transition-all group-focus-within:border-[#FF7A18]/50 overflow-hidden">
@@ -402,7 +402,7 @@ const Cart = () => {
                                                                             value={phone}
                                                                             onChange={(e) => setPhone(e.target.value)}
                                                                             placeholder="Enter Number"
-                                                                            className="w-full p-4 bg-transparent outline-none text-[#F8FAFC] font-black uppercase tracking-widest text-sm placeholder-[#AAB2C5]/20 italic"
+                                                                            className="w-full p-4 bg-transparent outline-none text-[#F8FAFC] font-black uppercase tracking-widest text-sm placeholder-[#AAB2C5]/20 "
                                                                             autoFocus
                                                                             required
                                                                         />
@@ -413,24 +413,24 @@ const Cart = () => {
                                                     ) : (
                                                         <div className="space-y-8">
                                                             <div className="space-y-3 text-center">
-                                                                <label className="block text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.4em] mb-6 italic">ENTER OTP</label>
+                                                                <label className="block text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.4em] mb-6 ">ENTER OTP</label>
                                                                 <div className="relative flex justify-center">
                                                                     <input
                                                                         type="text"
                                                                         value={otp}
                                                                         onChange={(e) => setOtp(e.target.value)}
                                                                         placeholder="••••••"
-                                                                        className="w-full bg-white/[0.03] border border-white/10 p-6 rounded-[2.5rem] font-black outline-none focus:border-[#5B8CFF] text-[#F8FAFC] text-center tracking-[1em] text-3xl transition-all placeholder-[#AAB2C5]/10 italic"
+                                                                        className="w-full bg-white/[0.03] border border-white/10 p-6 rounded-[2.5rem] font-black outline-none focus:border-[#5B8CFF] text-[#F8FAFC] text-center tracking-[1em] text-3xl transition-all placeholder-[#AAB2C5]/10 "
                                                                         maxLength={6}
                                                                         required
                                                                         autoFocus
                                                                     />
                                                                 </div>
-                                                                <p className="text-[9px] text-[#AAB2C5] mt-6 tracking-[0.4em] font-black uppercase opacity-40 italic">TRANSMITTED TO: <span className="text-[#FF7A18]">{phone}</span></p>
+                                                                <p className="text-[9px] text-[#AAB2C5] mt-6 tracking-[0.4em] font-black uppercase opacity-40 ">TRANSMITTED TO: <span className="text-[#FF7A18]">{phone}</span></p>
                                                             </div>
 
                                                             <div className="space-y-3">
-                                                                <label className="block text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.4em] mb-3 italic">EMAIL (OPTIONAL)</label>
+                                                                <label className="block text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.4em] mb-3 ">EMAIL (OPTIONAL)</label>
                                                                 <div className="relative bg-white/[0.03] border border-white/10 rounded-2xl p-1 flex items-center">
                                                                     <div className="w-10 h-10 flex items-center justify-center text-[#5B8CFF]">
                                                                         <Mail size={16} />
@@ -440,7 +440,7 @@ const Cart = () => {
                                                                         value={email}
                                                                         onChange={(e) => setEmail(e.target.value)}
                                                                         placeholder="example@mail.com"
-                                                                        className="w-full p-3 bg-transparent outline-none text-[#F8FAFC] font-black text-[11px] uppercase tracking-widest placeholder-[#AAB2C5]/10 italic"
+                                                                        className="w-full p-3 bg-transparent outline-none text-[#F8FAFC] font-black text-[11px] uppercase tracking-widest placeholder-[#AAB2C5]/10 "
                                                                     />
                                                                 </div>
                                                             </div>
@@ -450,7 +450,7 @@ const Cart = () => {
                                                     <button
                                                         type="submit"
                                                         disabled={authLoading}
-                                                        className={`w-full py-6 rounded-3xl font-black uppercase tracking-[0.4em] text-[11px] flex items-center justify-center gap-4 mt-12 transition-all duration-500 shadow-2xl italic ${authStep === 1
+                                                        className={`w-full py-6 rounded-3xl font-black uppercase tracking-[0.4em] text-[11px] flex items-center justify-center gap-4 mt-12 transition-all duration-500 shadow-2xl ${authStep === 1
                                                             ? 'btn-premium'
                                                             : 'bg-[#5B8CFF] text-white hover:bg-white hover:text-[#070B14] shadow-[#5B8CFF]/20'
                                                             }`}
@@ -477,3 +477,4 @@ const Cart = () => {
 };
 
 export default Cart;
+

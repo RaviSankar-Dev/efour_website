@@ -18,6 +18,7 @@ import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Analytics from './pages/Analytics';
 import Failed from './pages/Failed';
+import Dome from './pages/Dome';
 
 
 import ScrollToTop from './components/common/ScrollToTop';
@@ -100,6 +101,7 @@ function App() {
                         <Route element={<Layout><Outlet /></Layout>}>
                             <Route path="/" element={<Home />} />
                             <Route path="/dine" element={<Dine />} />
+                            <Route path="/dome" element={<Dome />} />
                             <Route path="/contact" element={<Contact />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/tickets" element={<YourTickets />} />
@@ -148,3 +150,4 @@ function App() {
 }
 
 export default App;
+

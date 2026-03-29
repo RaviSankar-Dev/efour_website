@@ -157,7 +157,7 @@ const TermsModal = ({ isOpen, onClose }) => {
                                     <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
                                         <FileText size={24} className="text-white" />
                                     </div>
-                                    <h2 className="text-3xl font-black text-white italic tracking-tighter uppercase">Terms & Conditions</h2>
+                                    <h2 className="text-3xl font-black text-white tracking-tighter uppercase">Terms & Conditions</h2>
                                 </div>
                                 <button
                                     onClick={onClose}
@@ -169,7 +169,7 @@ const TermsModal = ({ isOpen, onClose }) => {
 
                             {/* Content */}
                             <div className="p-8 md:p-10 overflow-y-auto bg-transparent flex-grow custom-scrollbar">
-                                <p className="text-white/40 text-sm font-bold uppercase tracking-[0.2em] mb-10 italic border-l-2 border-white/10 pl-6">
+                                <p className="text-white/40 text-sm font-bold uppercase tracking-[0.2em] mb-10 border-l-2 border-white/10 pl-6">
                                     Usage of <span className="text-white">EFOUR ELURU</span> (efour-eluru.com) is subject to these Terms & Conditions. Acceptance is implied by using the site.
                                 </p>
 
@@ -199,7 +199,7 @@ const TermsModal = ({ isOpen, onClose }) => {
                             <div className="px-10 py-6 bg-white/[0.02] border-t border-white/5">
                                 <button
                                     onClick={onClose}
-                                    className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-black uppercase tracking-[0.4em] text-[12px] hover:bg-white/10 transition-all flex items-center justify-center gap-4 italic"
+                                    className="w-full py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-black uppercase tracking-[0.4em] text-[12px] hover:bg-white/10 transition-all flex items-center justify-center gap-4 "
                                 >
                                     AGREE & CONTINUE <Zap size={16} />
                                 </button>
@@ -219,3 +219,4 @@ const TermsModal = ({ isOpen, onClose }) => {
 };
 
 export default TermsModal;
+

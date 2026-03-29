@@ -6,7 +6,7 @@ import { X, Info, Store, Users, Building2, ArrowUpRight } from 'lucide-react';
 const About = () => {
     const navigate = useNavigate();
     const onClose = () => navigate(-1);
-    
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -17,7 +17,7 @@ const About = () => {
             <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[70%] bg-[#6C5CE7]/5 rounded-full blur-[200px] pointer-events-none" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[70%] bg-[#FF7A00]/5 rounded-full blur-[200px] pointer-events-none" />
             <div className="absolute inset-0 noise-overlay opacity-[0.02]" />
-            
+
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 60 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -30,7 +30,7 @@ const About = () => {
                         <div className="w-12 h-12 rounded-xl bg-[#6C5CE7]/10 flex items-center justify-center border border-[#6C5CE7]/20 shadow-inner">
                             <Info size={24} className="text-[#6C5CE7]" />
                         </div>
-                        <h2 className="text-2xl font-black text-white uppercase italic tracking-tighter transform -skew-x-12 leading-none">OUR STORY</h2>
+                        <h2 className="text-2xl font-black text-white uppercase tracking-tighter transform leading-none">OUR STORY</h2>
                     </div>
                     <button
                         onClick={onClose}
@@ -44,11 +44,26 @@ const About = () => {
                 <div className="p-8 lg:p-12 overflow-y-auto bg-transparent flex-grow flex flex-col items-center custom-scrollbar max-h-[60vh]">
                     <div className="mb-12 max-w-2xl text-center relative">
                         <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-[#6C5CE7]/10 blur-[80px] rounded-full pointer-events-none" />
-                        <span className="text-[10px] font-black tracking-[0.5em] text-[#6C5CE7] uppercase mb-4 block italic">SINCE 2026</span>
-                        <h3 className="text-5xl sm:text-7xl font-black text-white mb-8 leading-[0.85] tracking-tighter italic transform -skew-x-12">
-                            EAT. ENJOY. <br /> <span className="text-[#6C5CE7]">ENTERTAIN.</span>
+                        <div className="flex flex-col items-center gap-6 mb-12">
+                            <div className="flex items-center gap-8 mb-4">
+                                <div className="relative group">
+                                    <div className="absolute -inset-4 bg-[#6C5CE7]/20 rounded-3xl blur-2xl opacity-40 group-hover:opacity-100 transition-opacity duration-700" />
+                                    <img
+                                        src="/E4LOGOr.png"
+                                        alt="E4 Logo"
+                                        className="w-24 h-24 rounded-2xl object-contain bg-black border border-white/10 shadow-3xl relative z-10 brightness-110"
+                                    />
+                                </div>
+                                <div className="text-left space-y-1">
+                                    <h3 className="text-3xl font-black text-[#FF7A00] tracking-tighter uppercase transform ">EFOUR <span className="text-[#FBBF24]">ELURU</span></h3>
+                                    <p className="text-[10px] font-black text-[#6C5CE7] tracking-[0.4em] uppercase opacity-60 ">NR PETA, ELURU</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 className="text-5xl sm:text-7xl font-black text-white mb-8 leading-[0.85] tracking-tighter transform ">
+                            EAT. ENJOY. <br /> <span className="text-[#6C5CE7]">ENTERTAIN. ELURU.</span>
                         </h3>
-                        <p className="text-lg text-slate-500 leading-relaxed font-bold uppercase tracking-[0.1em] max-w-xl mx-auto border-l-2 border-[#6C5CE7]/30 pl-8 text-left italic opacity-70">
+                        <p className="text-lg text-slate-500 leading-relaxed font-bold uppercase tracking-[0.1em] max-w-xl mx-auto border-l-2 border-[#6C5CE7]/30 pl-8 text-left opacity-70">
                             EFOUR IS A PREMIER FOOD COURT AND PLAY ZONE BRINGING FAMILIES TOGETHER THROUGH DIVERSE CUISINES AND RECREATION UNDER ONE ROOF.
                         </p>
                     </div>
@@ -56,16 +71,16 @@ const About = () => {
                     <div className="grid sm:grid-cols-2 gap-6 w-full mb-12">
                         <div className="bg-[#6C5CE7]/5 p-8 rounded-[2rem] shadow-3xl border border-[#6C5CE7]/10 relative overflow-hidden group hover:bg-[#6C5CE7]/10 transition-colors duration-700">
                             <Store size={36} className="text-[#6C5CE7] mb-6 group-hover:scale-110 transition-transform duration-700" />
-                            <h4 className="text-2xl font-black text-white mb-4 italic uppercase transform -skew-x-12 tracking-tighter">FOR VENDORS</h4>
-                            <p className="text-slate-500 leading-relaxed font-bold text-sm uppercase tracking-tight italic opacity-60">
+                            <h4 className="text-2xl font-black text-white mb-4 uppercase transform tracking-tighter">FOR VENDORS</h4>
+                            <p className="text-slate-500 leading-relaxed font-bold text-sm uppercase tracking-tight opacity-60">
                                 Promote your culinary business directly to thousands. Benefit from an enhanced e-Experience with direct customer reviews.
                             </p>
                         </div>
 
                         <div className="bg-[#FF7A00]/5 p-8 rounded-[2rem] shadow-3xl border border-[#FF7A00]/10 relative overflow-hidden group hover:bg-[#FF7A00]/10 transition-colors duration-700">
                             <Users size={36} className="text-[#FF7A00] mb-6 group-hover:scale-110 transition-transform duration-700" />
-                            <h4 className="text-2xl font-black text-white mb-4 italic uppercase transform -skew-x-12 tracking-tighter">FOR USERS</h4>
-                            <p className="text-slate-500 leading-relaxed font-bold text-sm uppercase tracking-tight italic opacity-60">
+                            <h4 className="text-2xl font-black text-white mb-4 uppercase transform tracking-tighter">FOR USERS</h4>
+                            <p className="text-slate-500 leading-relaxed font-bold text-sm uppercase tracking-tight opacity-60">
                                 A wide range of services suited to your needs —from diverse cuisines to customized entertainment packages.
                             </p>
                         </div>
@@ -77,12 +92,12 @@ const About = () => {
                             <div className="w-12 h-12 rounded-xl bg-white/[0.03] flex items-center justify-center border border-white/5 shadow-inner">
                                 <Building2 size={24} className="text-[#6C5CE7]" />
                             </div>
-                            <h4 className="text-2xl font-black text-white uppercase italic transform -skew-x-12 tracking-tighter">OUR VISION</h4>
+                            <h4 className="text-2xl font-black text-white uppercase transform tracking-tighter">OUR VISION</h4>
                         </div>
 
                         <div className="bg-[#02040a] p-8 rounded-[1.5rem] mb-12 border border-white/5 shadow- inner relative group-hover:translate-x-2 transition-transform duration-1000">
                             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-[#6C5CE7] rounded-full blur-[2px]" />
-                            <p className="text-xl sm:text-2xl italic text-slate-500 font-bold leading-relaxed uppercase tracking-[0.08em] opacity-80">
+                            <p className="text-xl sm:text-2xl text-slate-500 font-bold leading-relaxed uppercase tracking-[0.08em] opacity-80">
                                 "We designed an ample space for all cuisines and play zone activities to suit all ages and promote local talent."
                             </p>
                         </div>
@@ -96,10 +111,10 @@ const About = () => {
                                 />
                             </div>
                             <div className="text-center sm:text-left pt-4">
-                                <h3 className="text-3xl sm:text-4xl font-black text-white leading-[0.85] mb-3 tracking-tighter uppercase italic transform -skew-x-12 group-hover:text-[#6C5CE7] transition-colors duration-700">JAYANARAYANA <br /> KURETI</h3>
+                                <h3 className="text-3xl sm:text-4xl font-black text-white leading-[0.85] mb-3 tracking-tighter uppercase transform group-hover:text-[#6C5CE7] transition-colors duration-700">JAYANARAYANA <br /> KURETI</h3>
                                 <div className="flex items-center justify-center sm:justify-start gap-4">
                                     <div className="w-8 h-[2px] bg-[#6C5CE7] rounded-full shadow-[0_0_10px_#6C5CE7]" />
-                                    <span className="text-base font-bold text-slate-800 uppercase tracking-[0.3em] italic opacity-60">FOUNDER & CEO</span>
+                                    <span className="text-base font-bold text-white uppercase tracking-[0.3em] opacity-80">FOUNDER & CEO</span>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +125,7 @@ const About = () => {
                 <div className="px-8 py-6 bg-white/[0.03] border-t border-white/5 relative z-10">
                     <button
                         onClick={onClose}
-                        className="btn-premium w-full py-6 rounded-[1.5rem] font-black uppercase tracking-[0.4em] text-[11px] shadow-4xl hover:-translate-y-1 transition-all duration-700 italic flex items-center justify-center gap-4"
+                        className="btn-premium w-full py-6 rounded-[1.5rem] font-black uppercase tracking-[0.4em] text-[11px] shadow-4xl hover:-translate-y-1 transition-all duration-700 flex items-center justify-center gap-4"
                     >
                         GO BACK <ArrowUpRight size={18} className="group-hover:rotate-45 transition-transform duration-700" />
                     </button>
@@ -131,3 +146,4 @@ const About = () => {
 };
 
 export default About;
+

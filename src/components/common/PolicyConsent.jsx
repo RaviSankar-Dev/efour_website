@@ -59,7 +59,7 @@ const PolicyConsent = () => {
                                     </button>
                                 </div>
 
-                                <p className="text-gray-400 text-[13px] font-bold leading-relaxed mb-10 italic">
+                                <p className="text-gray-400 text-[13px] font-bold leading-relaxed mb-10 ">
                                     By continuing to explore the E4 Terminal, you acknowledge our use of cookies and agree to the 
                                     <Link to="/privacy" className="mx-1 text-white border-b border-white/10">Privacy Policy</Link>
                                     and 
@@ -69,7 +69,7 @@ const PolicyConsent = () => {
                                 <div className="flex flex-col gap-4">
                                     <button
                                         onClick={handleAccept}
-                                        className="relative overflow-hidden group/btn w-full bg-white text-black py-5 rounded-[1.5rem] text-[12px] font-black uppercase tracking-[0.2em] transition-all hover:bg-[#FF7A18] hover:text-white active:scale-[0.98] shadow-2xl flex items-center justify-center gap-3 italic"
+                                        className="relative overflow-hidden group/btn w-full bg-white text-black py-5 rounded-[1.5rem] text-[12px] font-black uppercase tracking-[0.2em] transition-all hover:bg-[#FF7A18] hover:text-white active:scale-[0.98] shadow-2xl flex items-center justify-center gap-3 "
                                     >
                                         ACCEPT
                                         <Zap size={16} className="fill-current" />
@@ -91,3 +91,4 @@ const PolicyConsent = () => {
 };
 
 export default PolicyConsent;
+

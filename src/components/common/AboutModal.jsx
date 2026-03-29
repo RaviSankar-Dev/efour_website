@@ -89,7 +89,7 @@ const AboutModal = ({ isOpen, onClose }) => {
                                     </div>
 
                                     <div className="bg-white/50 backdrop-blur-sm p-8 rounded-3xl mb-10 border border-black/5 shadow-inner">
-                                        <p className="text-xl sm:text-2xl italic text-[#4A5568] font-medium leading-relaxed">
+                                        <p className="text-xl sm:text-2xl text-[#4A5568] font-medium leading-relaxed">
                                             "We designed an ample space for all cuisines and play zone activities to suit all ages and promote local talent."
                                         </p>
                                     </div>
@@ -124,7 +124,7 @@ const AboutModal = ({ isOpen, onClose }) => {
                             <div className="px-10 py-8 bg-white/2 border-t border-white/5">
                                 <button
                                     onClick={onClose}
-                                    className="btn-premium w-full py-6 rounded-3xl font-bold uppercase tracking-[0.4em] text-[14px] transform hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 italic shadow-2xl shadow-[#FF7A18]/20"
+                                    className="btn-premium w-full py-6 rounded-3xl font-bold uppercase tracking-[0.4em] text-[14px] transform hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 shadow-2xl shadow-[#FF7A18]/20"
                                 >
                                     CLOSE INFORMATION <ArrowUpRight size={18} />
                                 </button>
@@ -138,3 +138,4 @@ const AboutModal = ({ isOpen, onClose }) => {
 };
 
 export default AboutModal;
+

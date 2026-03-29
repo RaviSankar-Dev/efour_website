@@ -25,7 +25,7 @@ const Home = () => {
     }, [search]);
 
     useEffect(() => {
-        fetchRides(true);
+        fetchRides(false); // Use cache if available (5 mins) instead of forcing fetch
     }, [fetchRides]);
 
     const visibleRides = useMemo(() => {
@@ -33,7 +33,7 @@ const Home = () => {
         return rides
             .filter(r => (r?.status ? r.status === 'on' : true))
             .filter(r => (term ? (r?.title || '').toLowerCase().includes(term) : true));
-    }, [rides, search]);
+    }, [rides, debouncedSearch]);
 
 
     return (
@@ -42,7 +42,7 @@ const Home = () => {
             <Hero />
 
             {/* --- RIDES SECTION --- */}
-            <section id="rides" className="relative py-24 md:py-48 overflow-hidden selection:bg-[#6C5CE7]/30">
+            <section id="rides" className="relative py-16 md:py-24 overflow-hidden selection:bg-[#6C5CE7]/30">
                 {/* Background Depth Layers */}
                 <div className="absolute inset-0 z-0 pointer-events-none">
                     <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#6C5CE7]/20 to-transparent" />
@@ -52,9 +52,9 @@ const Home = () => {
                 </div>
 
                 <div className="relative z-10 container mx-auto px-6">
-                    <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-16 mb-24 border-b border-white/5 pb-16">
+                    <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-16 mb-12 border-b border-white/5 pb-12">
                         <div className="space-y-6">
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0, x: -30 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 1 }}
@@ -63,11 +63,11 @@ const Home = () => {
                                 <div className="w-10 h-[1px] bg-[#6C5CE7]" />
                                 <span className="text-[10px] font-black uppercase text-[#6C5CE7] tracking-[0.4em]">All Rides</span>
                             </motion.div>
-                            
-                            <h2 className="text-4xl xs:text-5xl md:text-8xl font-black italic tracking-tighter uppercase leading-[0.85] text-white">
+
+                            <h2 className="text-4xl xs:text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85] text-white">
                                 OUR <span className="text-gradient-primary">RIDES.</span>
                             </h2>
-                            <p className="text-[#94A3B8] text-lg font-bold italic max-w-lg opacity-40 border-l border-white/5 pl-8">
+                            <p className="text-[#94A3B8] text-lg font-bold max-w-lg opacity-40 border-l border-white/5 pl-8">
                                 Have fun with your family and friends. We have rides for everyone to enjoy.
                             </p>
                         </div>
@@ -105,8 +105,8 @@ const Home = () => {
                                 <div className="w-24 h-24 bg-white/[0.02] border border-white/10 rounded-3xl flex items-center justify-center mx-auto mb-10 text-slate-700">
                                     <Sparkles size={48} />
                                 </div>
-                                <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-4 italic">No Rides Found</h3>
-                                <p className="text-[#94A3B8] font-bold italic opacity-30 uppercase tracking-widest text-xs">Try searching for something else</p>
+                                <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-4 ">No Rides Found</h3>
+                                <p className="text-[#94A3B8] font-bold opacity-30 uppercase tracking-widest text-xs">Try searching for something else</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-8">
@@ -126,3 +126,4 @@ const Home = () => {
 };
 
 export default Home;
+

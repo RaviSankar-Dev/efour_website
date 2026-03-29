@@ -27,6 +27,7 @@ const Header = () => {
     const navLinks = [
         { name: 'HOME', path: '/' },
         { name: 'DINE', path: '/dine' },
+        { name: 'DOME', path: '/dome' },
         ...(user ? [{ name: 'YOUR TICKETS', path: '/tickets' }] : []),
         { name: 'CONTACT', path: '/contact' },
     ];
@@ -46,7 +47,7 @@ const Header = () => {
             <div className="container mx-auto max-w-7xl h-20 md:h-32 flex justify-between items-center px-6 md:px-12 relative">
                 <Link to="/" className="w-28 md:w-56 flex items-center group shrink-0 relative z-30">
                     <img
-                        src="/E4LOGO.jpeg"
+                        src="/E4LOGOr.png"
                         alt="E4 Logo"
                         className="h-[4.5rem] md:h-28 w-auto object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all duration-700 group-hover:scale-105 group-hover:rotate-2"
                         loading="eager"
@@ -148,9 +149,9 @@ const FooterInfoBar = () => {
             <div className="container mx-auto flex justify-between items-center">
                 <div className="flex items-center gap-8 group transition-all hover:text-[#6C5CE7]">
                     <div className="w-2 h-2 rounded-full bg-[#6C5CE7] animate-pulse shadow-[0_0_20px_#6C5CE7]" />
-                     <span className="text-xs font-black uppercase tracking-[0.5em] italic opacity-40">EFOUR ELURU @ 2026</span>
+                     <span className="text-xs font-black uppercase tracking-[0.5em] opacity-40">EFOUR ELURU @ 2026</span>
                 </div>
-                <div className="flex items-center gap-12 text-xs font-black uppercase tracking-[0.4em] italic opacity-40">
+                <div className="flex items-center gap-12 text-xs font-black uppercase tracking-[0.4em] opacity-40">
                     <span className="flex items-center gap-4 hover:opacity-100 transition-opacity hover:text-[#6C5CE7]"><Clock size={14} /> UNTIL 11:00 PM</span>
                     <span className="flex items-center gap-4 hover:opacity-100 transition-opacity hover:text-[#FF7A00]"><MapPin size={14} /> NR PETA, ELURU</span>
                 </div>
@@ -196,3 +197,4 @@ import BottomNav from './BottomNav';
 import Toast from '../common/Toast';
 
 export default Layout;
+

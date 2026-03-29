@@ -120,14 +120,14 @@ const Events = () => {
                             transition={{ duration: 1.2 }}
                         >
                             <div className="flex items-center gap-6 mb-8">
-                                <span className="text-[#6C5CE7] font-black uppercase tracking-[0.6em] text-xs italic">SPECIAL EVENTS</span>
+                                <span className="text-[#6C5CE7] font-black uppercase tracking-[0.6em] text-xs ">SPECIAL EVENTS</span>
                                 <div className="w-12 h-[1px] bg-white/10" />
                             </div>
-                            <h1 className="text-4xl md:text-9xl font-black italic tracking-tighter text-white leading-[0.85] transform -skew-x-12 mb-10 uppercase">
+                            <h1 className="text-4xl md:text-9xl font-black tracking-tighter text-white leading-[0.85] transform mb-10 uppercase">
                                 CELEBRATE <br />
                                 <span className="text-gradient-primary">WITH US.</span>
                             </h1>
-                            <p className="text-[#94A3B8] text-xl font-bold italic opacity-40 max-w-lg border-l border-[#6C5CE7]/30 pl-10">
+                            <p className="text-[#94A3B8] text-xl font-bold opacity-40 max-w-lg border-l border-[#6C5CE7]/30 pl-10">
                                 Beautiful spaces for your parties. Private, premium, and perfect for your special day.
                             </p>
                         </motion.div>
@@ -140,12 +140,12 @@ const Events = () => {
                         {loadingEvents ? (
                             <div className="p-32 text-center bg-white/[0.02] backdrop-blur-3xl rounded-[4rem] border border-white/5 shadow-3xl">
                                 <div className="w-16 h-16 border-[3px] border-[#6C5CE7]/20 border-t-[#6C5CE7] rounded-full animate-spin mx-auto mb-8" />
-                                <p className="text-[#6C5CE7] font-black uppercase tracking-[0.6em] text-[10px] animate-pulse italic">Loading...</p>
+                                <p className="text-[#6C5CE7] font-black uppercase tracking-[0.6em] text-[10px] animate-pulse ">Loading...</p>
                             </div>
                         ) : !room ? (
                             <div className="p-32 text-center bg-white/[0.02] backdrop-blur-3xl rounded-[4rem] border border-white/5 shadow-3xl">
                                 <Info size={48} className="text-slate-800 mx-auto mb-8" />
-                                <p className="text-white font-black uppercase tracking-widest italic opacity-20">NO ROOMS AVAILABLE RIGHT NOW</p>
+                                <p className="text-white font-black uppercase tracking-widest opacity-20">NO ROOMS AVAILABLE RIGHT NOW</p>
                             </div>
                         ) : (
                             <>
@@ -161,7 +161,7 @@ const Events = () => {
                                             <select
                                                 value={selectedRoom}
                                                 onChange={(e) => { setSelectedRoom(e.target.value); setSelectedSlotHour(''); }}
-                                                className="bg-[#050810] text-white border border-white/10 rounded-2xl px-10 py-5 text-[10px] font-black uppercase tracking-[0.2em] shadow-3xl focus:border-[#6C5CE7]/50 outline-none appearance-none cursor-pointer transition-all pr-16 italic transform -skew-x-12"
+                                                className="bg-[#050810] text-white border border-white/10 rounded-2xl px-10 py-5 text-[10px] font-black uppercase tracking-[0.2em] shadow-3xl focus:border-[#6C5CE7]/50 outline-none appearance-none cursor-pointer transition-all pr-16 transform "
                                             >
                                                 {eventsList.map(r => <option key={r.id || r._id || r.name} value={r.name} className="bg-black">{r.name}</option>)}
                                             </select>
@@ -179,7 +179,7 @@ const Events = () => {
                                     </div>
 
                                     <div className="flex items-center justify-between mb-10 px-4">
-                                        <h2 className="text-4xl md:text-7xl font-black italic text-white tracking-tighter uppercase leading-none transform -skew-x-12 group-hover:text-[#FF7A00] transition-colors duration-1000">
+                                        <h2 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none transform group-hover:text-[#FF7A00] transition-colors duration-1000">
                                             {room.name}
                                         </h2>
                                         <div className="w-24 h-[1px] bg-white/10" />
@@ -194,7 +194,7 @@ const Events = () => {
                                         </div>
                                     </div>
 
-                                    <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[3rem] flex gap-8 text-slate-500 text-sm font-bold backdrop-blur-3xl italic relative overflow-hidden group/policy">
+                                    <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[3rem] flex gap-8 text-slate-500 text-sm font-bold backdrop-blur-3xl relative overflow-hidden group/policy">
                                         <div className="absolute top-0 left-0 w-1 h-full bg-[#6C5CE7] opacity-20 group-hover/policy:opacity-100 transition-opacity" />
                                         <Info size={24} className="flex-shrink-0 mt-1 text-[#6C5CE7]" />
                                         <p className="opacity-40 group-hover:opacity-100 transition-opacity duration-1000 leading-relaxed">
@@ -212,12 +212,12 @@ const Events = () => {
                                     className="glass-card p-12 md:p-16 rounded-[4rem] border border-white/10 shadow-3xl"
                                 >
                                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10 mb-16">
-                                        <h3 className="text-4xl font-black italic text-white uppercase tracking-tighter transform -skew-x-12">PICK A TIME</h3>
+                                        <h3 className="text-4xl font-black text-white uppercase tracking-tighter transform ">PICK A TIME</h3>
                                         <div className="relative group/input">
                                             <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 text-[#6C5CE7] group-hover/input:scale-110 transition-transform" size={20} />
                                             <input
                                                 type="date"
-                                                className="pl-16 pr-10 py-6 bg-white/[0.03] border border-white/10 rounded-2xl font-black uppercase tracking-widest text-white text-xs outline-none focus:border-[#6C5CE7]/50 shadow-inner w-full lg:w-auto italic transition-all appearance-none"
+                                                className="pl-16 pr-10 py-6 bg-white/[0.03] border border-white/10 rounded-2xl font-black uppercase tracking-widest text-white text-xs outline-none focus:border-[#6C5CE7]/50 shadow-inner w-full lg:w-auto transition-all appearance-none"
                                                 value={selectedDate}
                                                 onChange={(e) => {
                                                     setSelectedDate(e.target.value);
@@ -227,7 +227,7 @@ const Events = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-wrap gap-8 text-[9px] font-black uppercase tracking-[0.4em] text-slate-700 mb-16 border-b border-white/5 pb-12 italic">
+                                    <div className="flex flex-wrap gap-8 text-[9px] font-black uppercase tracking-[0.4em] text-slate-700 mb-16 border-b border-white/5 pb-12 ">
                                         <div className="flex items-center gap-3"><div className="w-3 h-3 rounded-full bg-[#6C5CE7]/20 border border-[#6C5CE7] shadow-[0_0_10px_#6C5CE7]" /> AVAILABLE</div>
                                         <div className="flex items-center gap-3"><div className="w-3 h-3 rounded-full bg-slate-800/30 border border-slate-700" /> RESERVED</div>
                                         <div className="flex items-center gap-3"><div className="w-3 h-3 rounded-full bg-[#FF7A00] shadow-[0_0_15px_#FF7A00]" /> SELECTED</div>
@@ -237,12 +237,12 @@ const Events = () => {
                                         {loadingSlots ? (
                                             <div className="col-span-full py-20 text-center">
                                                 <div className="w-10 h-10 border-2 border-white/5 border-t-[#6C5CE7] rounded-full animate-spin mx-auto mb-6" />
-                                                <p className="text-slate-800 font-black uppercase tracking-widest text-[9px] italic">UPDATING TIMES</p>
+                                                <p className="text-slate-800 font-black uppercase tracking-widest text-[9px] ">UPDATING TIMES</p>
                                             </div>
                                         ) : slots.length === 0 ? (
                                             <div className="col-span-full py-24 text-center bg-white/[0.02] rounded-[3rem] border border-white/5">
                                                 <Calendar size={40} className="text-slate-900 mx-auto mb-6" />
-                                                <p className="text-slate-800 font-black uppercase tracking-widest text-[10px] italic">NO TIMES AVAILABLE FOR {selectedDate}</p>
+                                                <p className="text-slate-800 font-black uppercase tracking-widest text-[10px] ">NO TIMES AVAILABLE FOR {selectedDate}</p>
                                             </div>
                                         ) : (
                                             slots.map(slot => {
@@ -267,8 +267,8 @@ const Events = () => {
                                                         onClick={() => setSelectedSlotHour(slot.hour)}
                                                         className={cardClass}
                                                     >
-                                                        <span className="font-black italic text-2xl uppercase tracking-tighter mb-2 leading-none">{slot.label}</span>
-                                                        <span className={`text-[10px] font-black uppercase tracking-widest italic flex items-center gap-2 ${isSelected ? 'text-white' : isAvailable ? 'text-[#6C5CE7]' : 'text-current'}`}>
+                                                        <span className="font-black text-2xl uppercase tracking-tighter mb-2 leading-none">{slot.label}</span>
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isSelected ? 'text-white' : isAvailable ? 'text-[#6C5CE7]' : 'text-current'}`}>
                                                             {isAvailable ? `₹${(slot.price || room.price || 0).toLocaleString('en-IN')}` : 'RESERVED'}
                                                         </span>
 
@@ -300,7 +300,7 @@ const Events = () => {
                                     <div className="w-14 h-14 bg-white/[0.03] rounded-2xl flex items-center justify-center text-[#6C5CE7] border border-white/5 shadow-inner">
                                         <Zap size={24} />
                                     </div>
-                                    <h2 className="text-4xl font-black italic text-white tracking-tighter uppercase transform -skew-x-12 leading-none">RESERVE.</h2>
+                                    <h2 className="text-4xl font-black text-white tracking-tighter uppercase transform leading-none">RESERVE.</h2>
                                 </div>
 
                                 <form onSubmit={handleBook} className="space-y-12">
@@ -313,17 +313,17 @@ const Events = () => {
                                         >
                                             {selectedSlotHour ? (
                                                 <div className="flex flex-col gap-4 items-center">
-                                                    <span className="text-2xl font-black italic text-[#FF7A00] uppercase tracking-tighter leading-none">
+                                                    <span className="text-2xl font-black text-[#FF7A00] uppercase tracking-tighter leading-none">
                                                         {new Date(selectedDate).toLocaleDateString('en-GB')}<br />
                                                         <span className="text-4xl text-white mt-2 block">{slots.find(s => s.hour === selectedSlotHour)?.label}</span>
                                                     </span>
                                                     <div className="h-[1px] w-12 bg-white/10" />
-                                                    <span className="text-[10px] text-slate-500 font-black uppercase tracking-[0.5em] italic leading-none">CHOSEN TIME</span>
+                                                    <span className="text-[10px] text-slate-500 font-black uppercase tracking-[0.5em] leading-none">CHOSEN TIME</span>
                                                 </div>
                                             ) : (
                                                 <div className="flex flex-col items-center gap-6 py-4">
                                                     <div className="w-1 px-8 rounded-full bg-white/5 animate-pulse" />
-                                                    <span className="text-xs text-slate-700 font-black uppercase tracking-widest italic leading-relaxed max-w-[200px]">
+                                                    <span className="text-xs text-slate-700 font-black uppercase tracking-widest leading-relaxed max-w-[200px]">
                                                         PLEASE PICK A DATE AND TIME ABOVE.
                                                     </span>
                                                 </div>
@@ -333,14 +333,14 @@ const Events = () => {
 
                                     <div className="space-y-10">
                                         <div className="group/field">
-                                            <label className="text-xs uppercase tracking-[0.5em] font-black text-slate-600 mb-5 block italic group-focus-within/field:text-[#6C5CE7] transition-colors">YOUR NAME</label>
+                                            <label className="text-xs uppercase tracking-[0.5em] font-black text-slate-600 mb-5 block group-focus-within/field:text-[#6C5CE7] transition-colors">YOUR NAME</label>
                                             <div className="relative">
                                                 <User className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-800 group-focus-within/field:text-[#6C5CE7] transition-colors" size={24} />
                                                 <input
                                                     type="text"
                                                     required
                                                     placeholder="FULL NAME"
-                                                    className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-20 pr-10 py-7 text-white placeholder-slate-900 text-xs font-black uppercase tracking-widest italic outline-none focus:border-[#6C5CE7]/40 transition-all shadow-inner"
+                                                    className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-20 pr-10 py-7 text-white placeholder-slate-900 text-xs font-black uppercase tracking-widest outline-none focus:border-[#6C5CE7]/40 transition-all shadow-inner"
                                                     value={customerName}
                                                     onChange={(e) => setCustomerName(e.target.value)}
                                                 />
@@ -348,7 +348,7 @@ const Events = () => {
                                         </div>
 
                                         <div className="group/field">
-                                            <label className="text-xs uppercase tracking-[0.5em] font-black text-slate-600 mb-5 block italic group-focus-within/field:text-[#6C5CE7] transition-colors">GUEST COUNT</label>
+                                            <label className="text-xs uppercase tracking-[0.5em] font-black text-slate-600 mb-5 block group-focus-within/field:text-[#6C5CE7] transition-colors">GUEST COUNT</label>
                                             <div className="relative">
                                                 <Zap className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-800 group-focus-within/field:text-[#6C5CE7] transition-colors" size={24} />
                                                 <input
@@ -356,7 +356,7 @@ const Events = () => {
                                                     required
                                                     placeholder="GUESTS"
                                                     min="1"
-                                                    className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-20 pr-10 py-7 text-white placeholder-slate-900 text-xs font-black uppercase tracking-widest italic outline-none focus:border-[#6C5CE7]/40 transition-all shadow-inner"
+                                                    className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-20 pr-10 py-7 text-white placeholder-slate-900 text-xs font-black uppercase tracking-widest outline-none focus:border-[#6C5CE7]/40 transition-all shadow-inner"
                                                     value={expectedGuests}
                                                     onChange={(e) => setExpectedGuests(e.target.value)}
                                                 />
@@ -367,24 +367,24 @@ const Events = () => {
                                     {/* Valuation Engine */}
                                     <div className="flex justify-between items-end py-12 border-t border-white/5 mt-12">
                                         <div className="flex flex-col">
-                                             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-700 italic mb-2">PRICE</span>
-                                            <span className="text-slate-900 font-black text-xs uppercase italic">TOTAL ORDER</span>
+                                             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-700 mb-2">PRICE</span>
+                                            <span className="text-slate-900 font-black text-xs uppercase ">TOTAL ORDER</span>
                                         </div>
                                         {selectedSlotHour ? (
                                             <div className="flex flex-col items-end">
-                                                <span className="text-5xl md:text-6xl font-black text-white italic tracking-tighter leading-none group-hover:text-[#FF7A00] transition-colors duration-700">
+                                                <span className="text-5xl md:text-6xl font-black text-white tracking-tighter leading-none group-hover:text-[#FF7A00] transition-colors duration-700">
                                                     ₹{(slots.find(s => s.hour === selectedSlotHour)?.price || room?.price || 0).toLocaleString('en-IN')}
                                                 </span>
                                             </div>
                                         ) : (
-                                            <span className="text-5xl font-black text-slate-900 italic tracking-tighter opacity-20">&mdash;</span>
+                                            <span className="text-5xl font-black text-slate-900 tracking-tighter opacity-20">&mdash;</span>
                                         )}
                                     </div>
 
                                     <button
                                         type="submit"
                                         disabled={!selectedSlotHour || booked}
-                                        className={`w-full py-8 rounded-[2.5rem] font-black uppercase tracking-[0.5em] text-xs italic flex items-center justify-center gap-6 transition-all duration-1000 shadow-3xl transform active:scale-95 ${selectedSlotHour
+                                        className={`w-full py-8 rounded-[2.5rem] font-black uppercase tracking-[0.5em] text-xs flex items-center justify-center gap-6 transition-all duration-1000 shadow-3xl transform active:scale-95 ${selectedSlotHour
                                             ? 'btn-premium hover:-translate-y-3'
                                             : 'bg-white/[0.02] text-slate-800 cursor-not-allowed border border-white/5'
                                             }`}
@@ -401,13 +401,13 @@ const Events = () => {
 
                                 <div className="mt-20 flex items-center justify-between border-t border-white/5 pt-16">
                                     <div className="flex flex-col">
-                                        <span className="text-[9px] uppercase text-slate-800 font-black tracking-[0.5em] mb-2 italic">SUPPORT</span>
-                                        <span className="text-xs font-black text-white/40 italic tracking-widest">+91 70369 23456</span>
+                                        <span className="text-[9px] uppercase text-slate-800 font-black tracking-[0.5em] mb-2 ">SUPPORT</span>
+                                        <span className="text-xs font-black text-white/40 tracking-widest">+91 70369 23456</span>
                                     </div>
                                     <div className="w-[1px] h-12 bg-white/5" />
                                     <div className="flex flex-col items-end">
-                                        <span className="text-[10px] uppercase text-slate-800 font-black tracking-[0.5em] mb-2 italic">EMAIL</span>
-                                        <span className="text-xs font-black text-white/40 italic tracking-widest group-hover:text-[#6C5CE7] transition-colors">efoureluru@gmail.com</span>
+                                        <span className="text-[10px] uppercase text-slate-800 font-black tracking-[0.5em] mb-2 ">EMAIL</span>
+                                        <span className="text-xs font-black text-white/40 tracking-widest group-hover:text-[#6C5CE7] transition-colors">efoureluru@gmail.com</span>
                                     </div>
                                 </div>
                             </div>
@@ -421,4 +421,5 @@ const Events = () => {
 
 
 export default Events;
+
 

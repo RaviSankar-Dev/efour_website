@@ -31,8 +31,8 @@ const Privacy = () => {
                             <ShieldCheck size={24} className="text-[#6C5CE7] group-hover:scale-110 transition-transform duration-700" />
                         </div>
                         <div>
-                            <span className="text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.5em] mb-1 block italic opacity-60 leading-none">YOUR PROTECTION</span>
-                            <h2 className="text-2xl font-black italic tracking-tighter uppercase transform -skew-x-12 text-white leading-none">PRIVACY POLICY</h2>
+                            <span className="text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.5em] mb-1 block opacity-60 leading-none">YOUR PROTECTION</span>
+                            <h2 className="text-2xl font-black tracking-tighter uppercase transform text-white leading-none">PRIVACY POLICY</h2>
                         </div>
                     </div>
                     <button
@@ -45,8 +45,24 @@ const Privacy = () => {
 
                 {/* Content */}
                 <div className="p-8 lg:p-12 overflow-y-auto bg-transparent flex-grow custom-scrollbar max-h-[60vh]">
+                    <div className="flex flex-col items-center gap-6 mb-12">
+                        <div className="flex items-center gap-8 mb-4">
+                            <div className="relative group">
+                                <div className="absolute -inset-4 bg-[#6C5CE7]/20 rounded-3xl blur-2xl opacity-40 group-hover:opacity-100 transition-opacity duration-700" />
+                                <img
+                                    src="/E4LOGOr.png"
+                                    alt="E4 Logo"
+                                    className="w-24 h-24 rounded-2xl object-contain bg-black border border-white/10 shadow-3xl relative z-10 brightness-110"
+                                />
+                            </div>
+                            <div className="text-left space-y-1">
+                                <h3 className="text-3xl font-black text-[#FF7A00] tracking-tighter uppercase transform ">EFOUR <span className="text-[#FBBF24]">ELURU</span></h3>
+                                <p className="text-[10px] font-black text-[#6C5CE7] tracking-[0.4em] uppercase opacity-60 ">NR PETA, ELURU</p>
+                            </div>
+                        </div>
+                    </div>
                     <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] mb-10 shadow-inner group hover:border-[#6C5CE7]/20 transition-all duration-700">
-                        <p className="text-slate-600 text-base font-bold italic uppercase tracking-[0.08em] leading-relaxed border-l-2 border-[#6C5CE7]/30 pl-8">
+                        <p className="text-slate-600 text-base font-bold uppercase tracking-[0.08em] leading-relaxed border-l-2 border-[#6C5CE7]/30 pl-8">
                             <span className="text-white">EFOUR ELURU</span> protects all your information and data shared with us via this website. Policy started on <span className="text-[#6C5CE7]">MARCH 01, 2026.</span>
                         </p>
                     </div>
@@ -57,11 +73,11 @@ const Privacy = () => {
                                 <div className="w-10 h-10 rounded-xl bg-[#6C5CE7]/5 flex items-center justify-center border border-[#6C5CE7]/10 shadow-inner">
                                     <UserCheck size={20} />
                                 </div>
-                                <h3 className="font-black text-white uppercase tracking-[0.3em] italic text-[12px]">YOUR DATA</h3>
+                                <h3 className="font-black text-white uppercase tracking-[0.3em] text-[12px]">YOUR DATA</h3>
                             </div>
                             <ul className="space-y-4">
                                 {['NAME & MOBILE', 'EMAIL & ADDRESS', 'SURVEY DATA'].map((item, idx) => (
-                                    <li key={idx} className="flex items-center gap-3 text-[11px] text-slate-500 font-bold uppercase tracking-[0.15em] italic opacity-80 group-hover:text-white transition-colors">
+                                    <li key={idx} className="flex items-center gap-3 text-[11px] text-slate-500 font-bold uppercase tracking-[0.15em] opacity-80 group-hover:text-white transition-colors">
                                         <div className="w-1.5 h-1.5 rounded-full bg-[#6C5CE7] shadow-[0_0_10px_#6C5CE7]" />
                                         {item}
                                     </li>
@@ -74,9 +90,9 @@ const Privacy = () => {
                                 <div className="w-10 h-10 rounded-xl bg-[#FF7A00]/5 flex items-center justify-center border border-[#FF7A00]/10 shadow-inner">
                                     <ShieldCheck size={20} />
                                 </div>
-                                <h3 className="font-black text-white uppercase tracking-[0.3em] italic text-[12px]">SECURITY</h3>
+                                <h3 className="font-black text-white uppercase tracking-[0.3em] text-[12px]">SECURITY</h3>
                             </div>
-                            <p className="text-[11px] text-slate-500 font-bold uppercase tracking-[0.12em] italic leading-relaxed opacity-80 group-hover:text-white transition-colors">
+                            <p className="text-[11px] text-slate-500 font-bold uppercase tracking-[0.12em] leading-relaxed opacity-80 group-hover:text-white transition-colors">
                                 We use suitable physical and electronic procedures to safeguard your info. We won't sell your data unless required by law.
                             </p>
                         </div>
@@ -87,7 +103,7 @@ const Privacy = () => {
                             <div className="w-10 h-10 rounded-xl bg-[#6C5CE7]/5 flex items-center justify-center border border-[#6C5CE7]/10 shadow-inner">
                                 <History size={20} />
                             </div>
-                            <h3 className="font-black text-white uppercase tracking-[0.3em] italic text-[12px]">HOW WE USE DATA</h3>
+                            <h3 className="font-black text-white uppercase tracking-[0.3em] text-[12px]">HOW WE USE DATA</h3>
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                             {[
@@ -97,8 +113,8 @@ const Privacy = () => {
                                 { id: '04', text: 'MARKET ANALYSIS' }
                             ].map((item, idx) => (
                                 <div key={idx} className="space-y-2 group/item">
-                                    <span className="text-[#6C5CE7] font-black italic text-[14px] tracking-tighter opacity-40 group-hover/item:opacity-100 transition-opacity">{item.id}</span>
-                                    <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.15em] italic opacity-70 group-hover/item:text-white transition-colors">{item.text}</p>
+                                    <span className="text-[#6C5CE7] font-black text-[14px] tracking-tighter opacity-40 group-hover/item:opacity-100 transition-opacity">{item.id}</span>
+                                    <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.15em] opacity-70 group-hover/item:text-white transition-colors">{item.text}</p>
                                 </div>
                             ))}
                         </div>
@@ -110,9 +126,9 @@ const Privacy = () => {
                                 <div className="w-10 h-10 rounded-xl bg-[#FF7A00]/5 flex items-center justify-center border border-[#FF7A00]/10 shadow-inner">
                                     <History size={20} />
                                 </div>
-                                <h3 className="font-black text-white uppercase tracking-[0.3em] italic text-[12px]">DATA RETENTION</h3>
+                                <h3 className="font-black text-white uppercase tracking-[0.3em] text-[12px]">DATA RETENTION</h3>
                             </div>
-                            <p className="text-[11px] text-slate-500 font-bold uppercase tracking-[0.12em] italic leading-relaxed opacity-80 group-hover:text-white transition-colors">
+                            <p className="text-[11px] text-slate-500 font-bold uppercase tracking-[0.12em] leading-relaxed opacity-80 group-hover:text-white transition-colors">
                                 We store data only as long as necessary for the purpose it was collected or as required by regulatory policies.
                             </p>
                         </div>
@@ -122,9 +138,9 @@ const Privacy = () => {
                                 <div className="w-10 h-10 rounded-xl bg-[#6C5CE7]/5 flex items-center justify-center border border-[#6C5CE7]/10 shadow-inner">
                                     <ThumbsUp size={20} />
                                 </div>
-                                <h3 className="font-black text-white uppercase tracking-[0.3em] italic text-[12px]">CONSENT</h3>
+                                <h3 className="font-black text-white uppercase tracking-[0.3em] text-[12px]">CONSENT</h3>
                             </div>
-                            <p className="text-[11px] text-slate-500 font-bold uppercase tracking-[0.12em] italic leading-relaxed opacity-80 group-hover:text-white transition-colors">
+                            <p className="text-[11px] text-slate-500 font-bold uppercase tracking-[0.12em] leading-relaxed opacity-80 group-hover:text-white transition-colors">
                                 By using EFOUR ELURU, you consent to our policy. You can withdraw your consent at any time.
                             </p>
                         </div>
@@ -138,8 +154,8 @@ const Privacy = () => {
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white/[0.01] p-6 rounded-[1.5rem] border border-white/5 shadow-4xl hover:bg-white/[0.03] transition-all duration-700 group">
                                 <item.icon size={24} className="mb-4 opacity-60 group-hover:opacity-100 transition-opacity" style={{ color: item.color }} />
-                                <h4 className="text-[11px] font-black text-white uppercase tracking-[0.3em] mb-3 italic leading-none">{item.title}</h4>
-                                <p className="text-[10px] text-slate-800 font-bold uppercase tracking-[0.08em] leading-relaxed italic opacity-60 group-hover:opacity-100 transition-opacity">{item.desc}</p>
+                                <h4 className="text-[11px] font-black text-white uppercase tracking-[0.3em] mb-3 leading-none">{item.title}</h4>
+                                <p className="text-[10px] text-slate-800 font-bold uppercase tracking-[0.08em] leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -151,16 +167,16 @@ const Privacy = () => {
                                 <Building2 size={24} />
                             </div>
                             <div>
-                                <h4 className="text-[10px] font-black text-slate-800 uppercase tracking-[0.5em] mb-1 italic opacity-40 leading-none">IDENTITY</h4>
-                                <h3 className="text-white font-black text-xl uppercase tracking-tighter italic transform -skew-x-12 leading-none">EFOUR ELURU HQ</h3>
+                                <h4 className="text-[10px] font-black text-slate-800 uppercase tracking-[0.5em] mb-1 opacity-40 leading-none">IDENTITY</h4>
+                                <h3 className="text-white font-black text-xl uppercase tracking-tighter transform leading-none">EFOUR ELURU HQ</h3>
                             </div>
                         </div>
                         <div className="flex flex-col gap-3 w-full sm:w-auto relative z-10">
-                            <div className="flex items-center gap-3 text-[10px] font-black text-white italic bg-black/40 px-6 py-3 rounded-xl border border-white/5 backdrop-blur-4xl shadow- inner group/mail">
+                            <div className="flex items-center gap-3 text-[10px] font-black text-white bg-black/40 px-6 py-3 rounded-xl border border-white/5 backdrop-blur-4xl shadow- inner group/mail">
                                 <Mail size={14} className="text-[#6C5CE7] group-hover:rotate-12 transition-transform" />
                                 CEO@EFOUR-ELURU.COM
                             </div>
-                            <div className="flex items-center gap-3 text-[10px] font-black text-white italic bg-black/40 px-6 py-3 rounded-xl border border-white/5 backdrop-blur-4xl shadow- inner group/phone">
+                            <div className="flex items-center gap-3 text-[10px] font-black text-white bg-black/40 px-6 py-3 rounded-xl border border-white/5 backdrop-blur-4xl shadow- inner group/phone">
                                 <Phone size={14} className="text-[#FF7A00] group-hover:rotate-12 transition-transform" />
                                 +91 70369 23456
                             </div>
@@ -172,7 +188,7 @@ const Privacy = () => {
                 <div className="px-8 py-6 bg-white/[0.03] border-t border-white/5 relative z-10">
                     <button
                         onClick={onClose}
-                        className="btn-premium w-full py-6 rounded-[1.5rem] font-black uppercase tracking-[0.4em] text-[11px] shadow-4xl hover:-translate-y-1 transition-all duration-700 italic flex items-center justify-center gap-4"
+                        className="btn-premium w-full py-6 rounded-[1.5rem] font-black uppercase tracking-[0.4em] text-[11px] shadow-4xl hover:-translate-y-1 transition-all duration-700 flex items-center justify-center gap-4"
                     >
                         I UNDERSTAND <Zap size={18} className="group-hover:scale-125 transition-transform" />
                     </button>
@@ -192,3 +208,4 @@ const Privacy = () => {
 };
 
 export default Privacy;
+

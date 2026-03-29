@@ -46,3 +46,4 @@ const OptimizedImage = ({ src, alt, className, width, height, priority = false }
 };
 
 export default OptimizedImage;
+

@@ -54,15 +54,15 @@ const PaymentGateway = ({ amount, isOpen, onClose }) => {
                         <div className="space-y-1">
                             <div className="flex items-center gap-2 text-[#FF7A18]">
                                 <Globe size={14} className="animate-pulse" />
-                                <span className="text-[10px] font-black tracking-[0.4em] uppercase italic opacity-60">NETWORK_PAY_v4.2</span>
+                                <span className="text-[10px] font-black tracking-[0.4em] uppercase opacity-60">NETWORK_PAY_v4.2</span>
                             </div>
-                            <h2 className="text-3xl font-black text-[#F8FAFC] tracking-tighter uppercase italic transform -skew-x-12 leading-none">
+                            <h2 className="text-3xl font-black text-[#F8FAFC] tracking-tighter uppercase transform leading-none">
                                 EFOUR <span className="text-[#FF7A18]">ELURU</span>
                             </h2>
                         </div>
                         <div className="text-right">
-                            <span className="text-[9px] font-black text-[#AAB2C5] uppercase tracking-[0.3em] block mb-1 opacity-40 italic">CREDIT_SYNC_REQUIRED</span>
-                            <span className="text-3xl font-black text-white italic transform -skew-x-12">₹{amount}</span>
+                            <span className="text-[9px] font-black text-[#AAB2C5] uppercase tracking-[0.3em] block mb-1 opacity-40 ">CREDIT_SYNC_REQUIRED</span>
+                            <span className="text-3xl font-black text-white transform ">₹{amount}</span>
                         </div>
                     </div>
                 </div>
@@ -83,8 +83,8 @@ const PaymentGateway = ({ amount, isOpen, onClose }) => {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <p className="font-black text-[#F8FAFC] uppercase tracking-widest italic text-xl transform -skew-x-12">SYNCHRONIZING_ASSETS</p>
-                                <p className="text-[#AAB2C5] text-[10px] font-black uppercase tracking-[0.3em] opacity-40 italic">PLEASE MAINTAIN CONNECTION INTEGRITY</p>
+                                <p className="font-black text-[#F8FAFC] uppercase tracking-widest text-xl transform ">SYNCHRONIZING_ASSETS</p>
+                                <p className="text-[#AAB2C5] text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ">PLEASE MAINTAIN CONNECTION INTEGRITY</p>
                             </div>
                         </div>
                     ) : (
@@ -105,7 +105,7 @@ const PaymentGateway = ({ amount, isOpen, onClose }) => {
                                         <div className={`transition-transform duration-500 ${method === item.id ? 'scale-110' : 'group-hover:scale-110'}`}>
                                             {item.icon}
                                         </div>
-                                        <span className="text-[9px] font-black uppercase tracking-[0.3em] italic">{item.label}</span>
+                                        <span className="text-[9px] font-black uppercase tracking-[0.3em] ">{item.label}</span>
                                     </button>
                                 ))}
                             </div>
@@ -121,7 +121,7 @@ const PaymentGateway = ({ amount, isOpen, onClose }) => {
                                             >
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-2 h-2 rounded-full bg-[#FF7A18]/20 group-hover:bg-[#FF7A18] transition-colors" />
-                                                    <span className="font-black text-[#F8FAFC] uppercase tracking-widest italic text-sm">{gateway}</span>
+                                                    <span className="font-black text-[#F8FAFC] uppercase tracking-widest text-sm">{gateway}</span>
                                                 </div>
                                                 <div className="w-8 h-8 rounded-lg border border-white/10 flex items-center justify-center text-[#AAB2C5]/20 group-hover:text-[#FF7A18] group-hover:border-[#FF7A18]/20">
                                                     <Zap size={14} />
@@ -133,11 +133,11 @@ const PaymentGateway = ({ amount, isOpen, onClose }) => {
                                 {method === 'card' && (
                                     <div className="space-y-4">
                                         <div className="relative group">
-                                            <input type="text" placeholder="CARD_SERIAL_IDENTIFIER" className="w-full p-5 bg-white/[0.02] border border-white/5 rounded-2xl outline-none focus:border-[#FF7A18]/50 text-[#F8FAFC] font-black uppercase tracking-widest italic text-xs placeholder-[#AAB2C5]/10" />
+                                            <input type="text" placeholder="CARD_SERIAL_IDENTIFIER" className="w-full p-5 bg-white/[0.02] border border-white/5 rounded-2xl outline-none focus:border-[#FF7A18]/50 text-[#F8FAFC] font-black uppercase tracking-widest text-xs placeholder-[#AAB2C5]/10" />
                                         </div>
                                         <div className="flex gap-4">
-                                            <input type="text" placeholder="EXP_CYCLE" className="w-1/2 p-5 bg-white/[0.02] border border-white/5 rounded-2xl outline-none focus:border-[#FF7A18]/50 text-[#F8FAFC] font-black uppercase tracking-widest italic text-xs placeholder-[#AAB2C5]/10" />
-                                            <input type="password" placeholder="SEC_TOKEN" className="w-1/2 p-5 bg-white/[0.02] border border-white/5 rounded-2xl outline-none focus:border-[#FF7A18]/50 text-[#F8FAFC] font-black uppercase tracking-widest italic text-xs placeholder-[#AAB2C5]/10" />
+                                            <input type="text" placeholder="EXP_CYCLE" className="w-1/2 p-5 bg-white/[0.02] border border-white/5 rounded-2xl outline-none focus:border-[#FF7A18]/50 text-[#F8FAFC] font-black uppercase tracking-widest text-xs placeholder-[#AAB2C5]/10" />
+                                            <input type="password" placeholder="SEC_TOKEN" className="w-1/2 p-5 bg-white/[0.02] border border-white/5 rounded-2xl outline-none focus:border-[#FF7A18]/50 text-[#F8FAFC] font-black uppercase tracking-widest text-xs placeholder-[#AAB2C5]/10" />
                                         </div>
                                     </div>
                                 )}
@@ -145,14 +145,14 @@ const PaymentGateway = ({ amount, isOpen, onClose }) => {
 
                             <button
                                 onClick={handlePay}
-                                className="btn-premium w-full py-6 rounded-3xl text-[11px] font-black uppercase tracking-[0.4em] shadow-[0_20px_60px_rgba(255,122,24,0.3)] relative overflow-hidden group/btn italic"
+                                className="btn-premium w-full py-6 rounded-3xl text-[11px] font-black uppercase tracking-[0.4em] shadow-[0_20px_60px_rgba(255,122,24,0.3)] relative overflow-hidden group/btn "
                             >
                                 <span className="relative z-10 flex items-center justify-center gap-4">
                                     EXECUTE_CREDIT_SYNC <ShieldCheck size={18} />
                                 </span>
                             </button>
 
-                            <div className="mt-8 flex items-center justify-center gap-4 text-[#AAB2C5] text-[9px] font-black tracking-[0.3em] uppercase opacity-30 italic">
+                            <div className="mt-8 flex items-center justify-center gap-4 text-[#AAB2C5] text-[9px] font-black tracking-[0.3em] uppercase opacity-30 ">
                                 <div className="flex items-center gap-2"><Lock size={12} /> <span>AES_256_ENC</span></div>
                                 <div className="w-1 h-1 rounded-full bg-white/20" />
                                 <div className="flex items-center gap-2"><Globe size={12} /> <span>ELURU_SECURED</span></div>
@@ -166,3 +166,4 @@ const PaymentGateway = ({ amount, isOpen, onClose }) => {
 };
 
 export default PaymentGateway;
+

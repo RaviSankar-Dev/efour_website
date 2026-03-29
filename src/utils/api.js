@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_API_URL || 'https://e3-e4-backend.ethree.in';
+export const BASE_URL = import.meta.env.VITE_API_URL || '';
 
 export const fetchWithAuth = async (url, options = {}) => {
     let token = localStorage.getItem('token');
@@ -11,17 +11,15 @@ export const fetchWithAuth = async (url, options = {}) => {
 
     // Ensure the URL is absolute ONLY if we explicitly want to bypass proxy/rewrite.
     // Otherwise, let the browser/server handle it relative to the origin.
-    const fullUrl = url.startsWith('http') ? url : url;
+    const fullUrl = url.startsWith('http') ? url : `${BASE_URL}${url}`;
 
     let res = await fetch(fullUrl, { ...options, headers });
 
     // If unauthorized, attempt to refresh the token using the HTTP-only cookie
     if (res.status === 401) {
         try {
-            const refreshRes = await fetch('/api/auth/refresh-token', {
-                method: 'POST',
-                // Important to ensure the browser sends the domain cookies
-                credentials: 'include'
+            const refreshRes = await fetch(`${BASE_URL}/api/auth/refresh-token`, {
+                method: 'POST'
             });
 
             if (refreshRes.ok) {
@@ -64,7 +62,7 @@ export const fetchWithAuth = async (url, options = {}) => {
 };
 
 export const sendOtp = async (mobile, additionalData = {}) => {
-    return fetch('/api/auth/send-otp', {
+    return fetch(`${BASE_URL}/api/auth/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobile, location: 'E4', ...additionalData })
@@ -72,9 +70,8 @@ export const sendOtp = async (mobile, additionalData = {}) => {
 };
 
 export const verifyOtp = async (mobile, otp, additionalData = {}) => {
-    return fetch('/api/auth/verify-otp', {
+    return fetch(`${BASE_URL}/api/auth/verify-otp`, {
         method: 'POST',
-        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobile, otp, location: 'E4', ...additionalData })
     });
@@ -84,10 +81,9 @@ export const logout = async () => {
     try {
         const token = localStorage.getItem('token');
         const headers = token ? { 'Authorization': `Bearer ${token}`, 'x-auth-token': token } : {};
-        const res = await fetch('/api/auth/logout', {
+        const res = await fetch(`${BASE_URL}/api/auth/logout`, {
             method: 'POST',
-            headers,
-            credentials: 'include'
+            headers
         });
         localStorage.removeItem('token');
         localStorage.removeItem('user');

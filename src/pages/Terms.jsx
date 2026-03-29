@@ -149,8 +149,8 @@ const Terms = () => {
                             <FileText size={24} className="text-white group-hover:scale-110 transition-transform duration-700" />
                         </div>
                         <div>
-                            <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.5em] mb-1 block italic leading-none">PROTOCOL 2026</span>
-                            <h2 className="text-2xl font-black italic tracking-tighter uppercase transform -skew-x-12 text-white leading-none">TERMS OF USE</h2>
+                            <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.5em] mb-1 block leading-none">PROTOCOL 2026</span>
+                            <h2 className="text-2xl font-black tracking-tighter uppercase transform text-white leading-none">TERMS OF USE</h2>
                         </div>
                     </div>
                     <button
@@ -163,9 +163,25 @@ const Terms = () => {
 
                 {/* Content */}
                 <div className="p-8 lg:p-12 overflow-y-auto bg-transparent flex-grow custom-scrollbar max-h-[70vh]">
+                    <div className="flex flex-col items-center gap-6 mb-12">
+                        <div className="flex items-center gap-8 mb-4">
+                            <div className="relative group">
+                                <div className="absolute -inset-4 bg-[#6C5CE7]/20 rounded-3xl blur-2xl opacity-40 group-hover:opacity-100 transition-opacity duration-700" />
+                                <img
+                                    src="/E4LOGOr.png"
+                                    alt="E4 Logo"
+                                    className="w-24 h-24 rounded-2xl object-contain bg-black border border-white/10 shadow-3xl relative z-10 brightness-110"
+                                />
+                            </div>
+                            <div className="text-left space-y-1">
+                                <h3 className="text-3xl font-black text-[#FF7A00] tracking-tighter uppercase transform ">EFOUR <span className="text-[#FBBF24]">ELURU</span></h3>
+                                <p className="text-[10px] font-black text-[#6C5CE7] tracking-[0.4em] uppercase opacity-60 ">NR PETA, ELURU</p>
+                            </div>
+                        </div>
+                    </div>
                     <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] mb-10 shadow-inner group transition-all duration-700">
-                        <p className="text-white/40 text-base font-bold italic uppercase tracking-[0.08em] leading-relaxed border-l-2 border-white/10 pl-8">
-                            Usage of <span className="text-white font-black italic">EFOUR ELURU</span> (efour-eluru.com) is subject to these Terms & Conditions. Acceptance is implied by using the site.
+                        <p className="text-white/40 text-base font-bold uppercase tracking-[0.08em] leading-relaxed border-l-2 border-white/10 pl-8">
+                            Usage of <span className="text-white font-black ">EFOUR ELURU</span> (efour-eluru.com) is subject to these Terms & Conditions. Acceptance is implied by using the site.
                         </p>
                     </div>
 
@@ -195,7 +211,7 @@ const Terms = () => {
                 <div className="px-8 py-6 bg-white/[0.03] border-t border-white/5 relative z-10">
                     <button
                         onClick={onClose}
-                        className="btn-premium w-full py-6 rounded-[1.5rem] font-black uppercase tracking-[0.4em] text-[11px] shadow-4xl hover:-translate-y-1 transition-all duration-700 italic flex items-center justify-center gap-4"
+                        className="btn-premium w-full py-6 rounded-[1.5rem] font-black uppercase tracking-[0.4em] text-[11px] shadow-4xl hover:-translate-y-1 transition-all duration-700 flex items-center justify-center gap-4"
                     >
                         I AGREE <Zap size={18} className="group-hover:scale-125 transition-transform" />
                     </button>
@@ -215,3 +231,4 @@ const Terms = () => {
 };
 
 export default Terms;
+

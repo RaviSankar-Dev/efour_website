@@ -55,3 +55,4 @@ const ActivityCard = memo(({ activity }) => {
 });
 
 export default ActivityCard;
+
