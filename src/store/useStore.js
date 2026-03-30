@@ -136,6 +136,43 @@ const useStore = create(
 
             user: null,
             setUser: (user) => set({ user }),
+            refreshUser: async () => {
+                const { getProfile } = await import('../utils/api');
+                try {
+                    const res = await getProfile();
+                    if (res.ok) {
+                        const data = await res.json();
+                        // Support both direct user object and wrapped user object
+                        const userObj = data.user || data;
+                        
+                        // Map structure consistently with Login.jsx
+                        const normalizedUser = {
+                            id: userObj.id || userObj._id || get().user?.id,
+                            name: userObj.name || get().user?.name || '',
+                            email: userObj.email || get().user?.email || '',
+                            phone: userObj.mobile || userObj.phone || get().user?.phone || '',
+                            role: userObj.role || get().user?.role || 'customer',
+                            points: userObj.points !== undefined ? Number(userObj.points) : (get().user?.points || 0)
+                        };
+
+                        set({ user: normalizedUser });
+                        localStorage.setItem('user', JSON.stringify(normalizedUser));
+                    }
+                } catch (err) {
+                    console.warn('Silent profile refresh failed', err);
+                }
+            },
+
+            addPoints: (amount) => {
+                const currentUser = get().user;
+                if (!currentUser) return;
+                const updated = {
+                    ...currentUser,
+                    points: (Number(currentUser.points) || 0) + Number(amount)
+                };
+                set({ user: updated });
+                localStorage.setItem('user', JSON.stringify(updated));
+            },
 
             tickets: [], // Store for confirmed tickets
             addTicket: (ticket) => set((state) => ({

@@ -26,6 +26,10 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const fetchRides = useStore(state => state.fetchRides);
 
+    // Dome Management States
+    const [domeCapacity, setDomeCapacity] = useState(6);
+    const [isDomeBookingOn, setIsDomeBookingOn] = useState(true);
+
     // Form States
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
@@ -36,6 +40,7 @@ const AdminDashboard = () => {
     // Pagination States
     const [recentTxPage, setRecentTxPage] = useState(1);
     const [bookingsPage, setBookingsPage] = useState(1);
+    const [domeBookingsPage, setDomeBookingsPage] = useState(1);
     const [liveOrdersPage, setLiveOrdersPage] = useState(1);
     const [analyticsBookingTab, setAnalyticsBookingTab] = useState('all'); // 'all' | 'rides' | 'events'
 
@@ -55,11 +60,13 @@ const AdminDashboard = () => {
             // In dev: use Vite proxy (`/api` -> backend) to avoid CORS.
             // In prod: use configured backend URL (or fallback to the deployed backend).
 
-            // Parallel Fetch – E4 orders via /orders/e4/all (Admin only)
-            const [ridesRes, dineRes, empRes] = await Promise.all([
+            // Parallel Fetch – E4 orders, rides, dine, and employees
+            const [ridesRes, dineRes, empRes, ordersRes, bookingsRes] = await Promise.all([
                 fetchWithAuth(`/api/e4/rides?all=true`),
                 fetchWithAuth(`/api/e4/dine?all=true`),
-                fetchWithAuth(`/api/employees/e4`).catch(() => ({ ok: false }))
+                fetchWithAuth(`/api/employees/e4`).catch(() => ({ ok: false })),
+                fetchWithAuth(`/api/orders/e4/all`).catch(() => ({ ok: false })),
+                fetchWithAuth(`/api/bookings/e4`).catch(() => ({ ok: false }))
             ]);
 
             // Process Rides
@@ -89,20 +96,6 @@ const AdminDashboard = () => {
                     : [];
             }
 
-            // Process Events (Commented out)
-            // let eventsProducts = [];
-            // if (eventsRes && eventsRes.ok) {
-            //     const data = await eventsRes.json();
-            //     eventsProducts = Array.isArray(data)
-            //         ? data.map(item => ({
-            //             ...item,
-            //             id: item._id || item.id,
-            //             category: 'event',
-            //             description: `Capacity: ${item.capacity || 'N/A'} - ${item.type || 'N/A'}`
-            //         }))
-            //         : [];
-            // }
-
             setProducts((rideProducts || []).concat(dineProducts || []).filter(Boolean));
 
             // Fetch employees if endpoint is valid
@@ -115,9 +108,21 @@ const AdminDashboard = () => {
                 }
             }
 
-            // Bookings and Orders have been removed per user request.
-            setBookings([]);
-            setOrders([]);
+            // Sync Orders and Bookings for Analytics
+            if (ordersRes && ordersRes.ok) {
+                try {
+                    const ordersData = await ordersRes.json();
+                    setOrders(Array.isArray(ordersData) ? ordersData : (ordersData.orders || []));
+                } catch (e) { console.error('Orders parse error', e); }
+            }
+
+            if (bookingsRes && bookingsRes.ok) {
+                try {
+                    const bData = await bookingsRes.json();
+                    setBookings(Array.isArray(bData) ? bData : (bData.bookings || []));
+                } catch (e) { console.error('Bookings parse error', e); }
+            }
+
 
         } catch (err) {
             console.error('Fetch error:', err);
@@ -169,13 +174,31 @@ const AdminDashboard = () => {
     }, []);
 
     // --- Search Filtering ---
-    const filteredOrders = (orders || []).filter(o =>
+    const allMergedBookings = [...(bookings || []), ...(orders || [])]
+        .filter(b => b && (b.category === 'play' || b.category === 'event' || b.facility || (b.items && JSON.stringify(b.items).toLowerCase().includes('ride'))))
+        .sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0));
+
+    const domeBookings = [...(bookings || []), ...(orders || [])]
+        .filter(b => {
+             const itemsStr = JSON.stringify(b.items || b.facility || '').toLowerCase();
+             return itemsStr.includes('dome');
+        })
+        .sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0));
+
+    const filteredOrders = (allMergedBookings || []).filter(o =>
         o && (
             (o.userDetails?.name || o.name || o.userId || '').toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (o._id || o.id || '').toString().includes(searchQuery)
+            (o.id || o._id || '').toString().includes(searchQuery)
         )
     );
-    const filteredBookings = (bookings || []).filter(b =>
+    const filteredBookings = (allMergedBookings || []).filter(b =>
+        b && (
+            (b.userDetails?.name || b.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (b._id || b.id || '').toString().includes(searchQuery)
+        )
+    );
+
+    const filteredDomeBookings = (domeBookings || []).filter(b =>
         b && (
             (b.userDetails?.name || b.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
             (b._id || b.id || '').toString().includes(searchQuery)
@@ -221,11 +244,15 @@ const AdminDashboard = () => {
                     console.error('Delete failed:', await res.text());
                     alert('Failed to delete item.');
                 }
-            } else if (type === 'booking') {
-                const res = await fetchWithAuth(`/api/bookings/${id}`, {
+            } else if (type === 'booking' || type === 'order') {
+                const endpoint = type === 'booking' ? `/api/bookings/${id}` : `/api/orders/${id}`;
+                const res = await fetchWithAuth(endpoint, {
                     method: 'DELETE'
                 });
-                if (res.ok) setBookings(prev => prev.filter(b => b._id !== id));
+                if (res.ok) {
+                    if (type === 'booking') setBookings(prev => prev.filter(b => b._id !== id && b.id !== id));
+                    setOrders(prev => prev.filter(o => o._id !== id && o.id !== id));
+                }
             }
         } catch (err) { console.error(err); alert('Failed to delete'); }
     };
@@ -409,11 +436,13 @@ const AdminDashboard = () => {
     // --- Helpers (match backend API: orders use amount, bookings use totalPrice) ---
     // Only count paid/confirmed orders in total revenue
     const isPaid = (o) => ['success', 'confirmed', 'paid', 'captured'].includes((o.status || o.orderStatus || '').toLowerCase());
-    const totalRevenue = orders.filter(isPaid).reduce((acc, curr) => acc + (curr.amount ?? curr.totalAmount ?? 0), 0) + 
-                         bookings.filter(isPaid).reduce((acc, curr) => acc + (curr.totalPrice ?? 0), 0);
+    const totalRevenue = orders.filter(isPaid).reduce((acc, curr) => acc + Number(curr.amount ?? curr.totalAmount ?? 0), 0) + 
+                         bookings.filter(isPaid).reduce((acc, curr) => acc + Number(curr.totalPrice ?? 0), 0);
     const activeRidesCount = products.filter(p => p.category === 'play' && (p.status || 'on').toLowerCase() === 'on').length;
     const tabs = [
         { id: 'analytics', label: 'Analytics', icon: LayoutDashboard },
+        { id: 'domes', label: 'Domes', icon: MapPin }, // Added Domes Tab
+        { id: 'orders', label: 'Transactions', icon: ShoppingCart },
         { id: 'rides', label: 'Rides', icon: Gamepad2 },
         { id: 'dine', label: 'Dining', icon: Utensils },
         { id: 'employees', label: 'Employees', icon: Users },
@@ -786,9 +815,17 @@ const AdminDashboard = () => {
 
                                 /* ── TODAY ── */
                                 const todayStr = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit', hour12: true });
-                                const todayRevenue = ad?.today?.revenue ?? ad?.dailySales?.todayRevenue ?? ad?.todayRevenue ?? 0;
-                                const todayPaid = ad?.today?.paidOrders ?? ad?.dailySales?.paidOrders ?? ad?.paidOrders ?? 0;
-                                const todayOrderCount = ad?.today?.totalOrders ?? ad?.dailySales?.totalOrders ?? ad?.totalOrders ?? 0;
+                                const todayObj = new Date();
+                                const todayLocalOrders = [...(orders || []), ...(bookings || [])].filter(o => o && new Date(o.createdAt || o.date || 0).toDateString() === todayObj.toDateString());
+                                
+                                const todayRevenue = ad?.today?.revenue ?? ad?.dailySales?.todayRevenue ?? ad?.todayRevenue ?? 
+                                    todayLocalOrders.filter(o => isPaid(o)).reduce((s, o) => s + Number(o.amount ?? o.totalAmount ?? o.totalPrice ?? 0), 0);
+                                
+                                const todayPaid = ad?.today?.paidOrders ?? ad?.dailySales?.paidOrders ?? ad?.paidOrders ?? 
+                                    todayLocalOrders.filter(o => isPaid(o)).length;
+                                
+                                const todayOrderCount = ad?.today?.totalOrders ?? ad?.dailySales?.totalOrders ?? ad?.totalOrders ?? 
+                                    todayLocalOrders.length;
 
                                 /* ── 14-DAY CHART ──
                                    Try API-provided array first; fall back to computing from local orders */
@@ -819,7 +856,7 @@ const AdminDashboard = () => {
                                 const ridesOnCount = ad?.stats?.ridesActive ?? ad?.rideStats?.online ?? products.filter(p => p.category === 'play' && (p.status || 'on').toLowerCase() === 'on').length;
                                 const ridesOffCount = ad?.stats?.ridesOffline ?? ad?.rideStats?.offline ?? (totalRidesCount - ridesOnCount);
                                 const dineCount = ad?.stats?.dineItems ?? products.filter(p => p.category !== 'play').length;
-                                const e4Revenue = ad?.stats?.totalRevenue ?? ad?.totalRevenue ?? totalRevenue;
+                                const e4Revenue = Number(ad?.stats?.totalRevenue ?? ad?.totalRevenue ?? totalRevenue);
 
                                 /* ── PLATFORM ── */
                                 const webSessions = platformStats.web !== null ? platformStats.web : (ad?.platform?.web ?? ad?.sessions?.web ?? 0);
@@ -846,7 +883,7 @@ const AdminDashboard = () => {
                                         .filter(Boolean)
                                         .sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0));
                                 })();
-                                const bookingRevTotal = ad?.stats?.totalRevenue ?? allBookings.reduce((s, b) => s + (b.amount ?? b.totalAmount ?? b.totalPrice ?? 0), 0);
+                                const bookingRevTotal = Number(ad?.stats?.totalRevenue ?? allBookings.reduce((s, b) => s + Number(b.amount ?? b.totalAmount ?? b.totalPrice ?? 0), 0));
 
                                 /* ── CSV EXPORT ── */
                                 const handleExportCSV = () => {
@@ -1360,11 +1397,150 @@ const AdminDashboard = () => {
                                             </table>
                                         </div>
                                     </div>
-                                </div>
-                            )}
+                            </div>
+                        )}
 
-                            {/* TABLES (BOOKINGS & ORDERS) */}
-                            {(activeTab === 'bookings' || activeTab === 'orders') && (
+                        {/* --- DOMES MANAGEMENT SECTION --- */}
+                        {activeTab === 'domes' && (
+                            <div className="space-y-8 animate-in fade-in duration-500">
+                                {/* DOME HEADER & CONTROLS */}
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                                    <div>
+                                        <h2 className="text-4xl font-black tracking-tighter text-white mb-2">Dome Bookings</h2>
+                                        <p className="text-[10px] font-black text-[#AAB2C5]/40 uppercase tracking-[0.4em] leading-none">Manage private immersive dome sessions and attendance.</p>
+                                    </div>
+                                    
+                                    <div className="flex items-center gap-4 bg-white/5 p-2 rounded-3xl border border-white/10 backdrop-blur-xl">
+                                        <div className="flex items-center gap-3 px-4 py-2 border-r border-white/10">
+                                            <span className={`text-[9px] font-black uppercase tracking-widest ${isDomeBookingOn ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                BOOKING: {isDomeBookingOn ? 'ON' : 'OFF'}
+                                            </span>
+                                            <button 
+                                                onClick={() => setIsDomeBookingOn(!isDomeBookingOn)}
+                                                className={`w-12 h-6 rounded-full relative transition-all duration-300 ${isDomeBookingOn ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}
+                                            >
+                                                <div className={`absolute top-1 w-4 h-4 rounded-full transition-all duration-300 ${isDomeBookingOn ? 'right-1 bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'left-1 bg-red-400'}`} />
+                                            </button>
+                                        </div>
+                                        
+                                        <div className="flex items-center gap-4 px-4 py-2 border-r border-white/10">
+                                            <span className="text-[9px] font-black text-[#AAB2C5]/40 uppercase tracking-widest">DOMES CAPACITY</span>
+                                            <div className="flex items-center gap-3">
+                                                <button onClick={() => setDomeCapacity(Math.max(1, domeCapacity - 1))} className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all font-bold group">
+                                                    <X size={14} className="group-hover:text-red-400" />
+                                                </button>
+                                                <span className="text-xl font-black text-white w-4 text-center">{domeCapacity}</span>
+                                                <button onClick={() => setDomeCapacity(domeCapacity + 1)} className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all font-bold group">
+                                                    <Plus size={14} className="group-hover:text-emerald-400" />
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <button 
+                                            onClick={fetchData}
+                                            className="px-6 py-2 flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-[#AAB2C5] hover:text-white transition-all group"
+                                        >
+                                            <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
+                                            Refresh Sessions
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* DOMES TABLE */}
+                                <div className="glass-card rounded-[3rem] border border-white/5 shadow-3xl overflow-hidden bg-[#0F172A]/40 backdrop-blur-3xl">
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left border-separate border-spacing-0 whitespace-nowrap">
+                                            <thead>
+                                                <tr className="bg-white/2">
+                                                    {['Session ID', 'Customer', 'Date & Time', 'Guests'].map(h => (
+                                                        <th key={h} className="px-10 py-8 text-[10px] font-black uppercase tracking-[0.4em] text-[#AAB2C5]/30 first:rounded-tl-[3rem] last:rounded-tr-[3rem]">
+                                                            {h}
+                                                        </th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {filteredDomeBookings.slice((domeBookingsPage - 1) * 10, domeBookingsPage * 10).map((b, i) => {
+                                                    const date = new Date(b.date || b.createdAt || 0);
+                                                    const guests = b.items?.find(it => it.name.toLowerCase().includes('dome'))?.quantity || 1;
+                                                    
+                                                    return (
+                                                        <motion.tr 
+                                                            key={b._id || b.id} 
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            transition={{ delay: i * 0.05 }}
+                                                            className="group border-b border-white/5 hover:bg-white/[0.02] transition-all"
+                                                        >
+                                                            <td className="px-10 py-8">
+                                                                <span className="text-xs font-black text-white/40 tracking-widest group-hover:text-[#FF7A18] transition-colors leading-none">
+                                                                    #{(b._id || b.id || '').toString().slice(-6)}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-10 py-8">
+                                                                <div className="flex flex-col gap-1">
+                                                                    <span className="text-sm font-black text-white uppercase tracking-wider leading-none">
+                                                                        {b.userDetails?.name || b.name || 'Anonymous'}
+                                                                    </span>
+                                                                    <span className="text-[10px] font-bold text-[#AAB2C5]/40 leading-none">
+                                                                        +{b.userDetails?.phone || b.mobile || '6303407430'}
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-10 py-8">
+                                                                <div className="flex items-center gap-4">
+                                                                    <span className="text-xs font-black text-white/80 uppercase tracking-widest leading-none">
+                                                                        {date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                                                                    </span>
+                                                                    <div className="w-px h-4 bg-white/10" />
+                                                                    <span className="text-xs font-black text-emerald-400 tracking-widest leading-none">
+                                                                        {date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-10 py-8">
+                                                                <div className="inline-flex items-center px-5 py-2.5 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 text-[10px] font-black text-emerald-400 uppercase tracking-widest leading-none">
+                                                                    {guests === 1 ? '1 PERS' : `${guests} PERS`}
+                                                                </div>
+                                                            </td>
+                                                        </motion.tr>
+                                                    );
+                                                })}
+                                                {filteredDomeBookings.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan={4} className="px-10 py-32 text-center">
+                                                            <div className="flex flex-col items-center gap-6 opacity-20">
+                                                                <Calendar size={60} />
+                                                                <p className="text-[10px] font-black uppercase tracking-[0.5em]">No Dome sessions booked yet</p>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                {/* Pagination (Domes) */}
+                                {filteredDomeBookings.length > 10 && (
+                                    <div className="flex items-center justify-center gap-3">
+                                        <button onClick={() => setDomeBookingsPage(Math.max(1, domeBookingsPage - 1))} className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-[#AAB2C5] hover:text-white">
+                                            <RefreshCw size={18} className="rotate-90" />
+                                        </button>
+                                        <div className="flex items-center gap-2 px-6 py-4 bg-white/5 rounded-2xl border border-white/10">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Page {domeBookingsPage}</span>
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#AAB2C5]/30 ">of {Math.ceil(filteredDomeBookings.length / 10)}</span>
+                                        </div>
+                                        <button onClick={() => setDomeBookingsPage(Math.min(Math.ceil(filteredDomeBookings.length / 10), domeBookingsPage + 1))} className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-[#AAB2C5] hover:text-white">
+                                            <RefreshCw size={18} className="-rotate-90" />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* TABLES (BOOKINGS & ORDERS) */}
+                            {activeTab === 'orders' && (
                                 <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                                     <div className="overflow-x-auto">
                                         <table className="w-full whitespace-nowrap">
@@ -1400,15 +1576,13 @@ const AdminDashboard = () => {
                                                                         <div className="text-[10px] font-black text-[#AAB2C5]/30 uppercase tracking-widest mt-1">{item.userDetails?.phone || item.phone}</div>
                                                                     </td>
                                                                     <td className="px-10 py-8 text-[10px] font-black text-[#AAB2C5] uppercase tracking-widest max-w-xs truncate">
-                                                                        {isBookingsTab
-                                                                            ? (item.facility || 'Ride Reserve')
-                                                                            : (item.items?.map(i => `${i.name} [${i.quantity}]`).join(', '))}
+                                                                        {item.facility || (item.items && Array.isArray(item.items) ? item.items.map(i => `${i.name} [${i.quantity || 1}]`).join(', ') : 'Order Details')}
                                                                     </td>
                                                                     <td className="px-10 py-8 text-[10px] font-black text-[#AAB2C5] uppercase tracking-widest ">
                                                                         {new Date(item.date || item.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true })}
                                                                     </td>
                                                                     <td className="px-10 py-8 text-sm font-black text-white tracking-tighter">
-                                                                        ₹{item.totalPrice || item.totalAmount}
+                                                                        ₹{item.amount ?? item.totalAmount ?? item.totalPrice ?? 0}
                                                                     </td>
                                                                     <td className="px-10 py-8">
                                                                         <StatusBadge status={item.status || item.orderStatus || 'pending'} />
@@ -1641,6 +1815,9 @@ const StatCard = ({ title, value, icon: Icon, color, bg }) => (
 
 const StatusBadge = ({ status }) => {
     const styles = {
+        success: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]',
+        paid: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]',
+        captured: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]',
         confirmed: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]',
         placed: 'bg-[#5B8CFF]/10 text-[#5B8CFF] border-[#5B8CFF]/20',
         pending: 'bg-amber-500/10 text-amber-500 border-amber-500/20',

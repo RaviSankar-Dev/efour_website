@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
-import { Star, Wind, ShieldCheck, Map, ArrowRight, Zap, Target, Globe } from 'lucide-react'
+import { Star, Wind, ShieldCheck, Map, ArrowRight, Zap, Target, Globe, ArrowUpRight } from 'lucide-react'
 import OptimizedImage from './common/OptimizedImage'
 
 const About = () => {
@@ -31,14 +31,6 @@ const About = () => {
                         transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
                         className="space-y-12"
                     >
-                        <div className="flex items-center gap-6">
-                            <div className="w-12 h-12 rounded-2xl bg-white/[0.03] flex items-center justify-center text-[#6C5CE7] border border-white/10 shadow-xl">
-                                <Globe size={20} />
-                            </div>
-                            <span className="text-[#6C5CE7] font-black tracking-[0.6em] uppercase text-xs ">
-                                ABOUT US
-                            </span>
-                        </div>
 
                         <h2 className="text-4xl xs:text-5xl md:text-8xl font-black leading-none tracking-tighter uppercase transform text-white">
                             <span className="text-gradient-primary">OUR VISION.</span>
@@ -53,7 +45,7 @@ const About = () => {
                             className="btn-premium px-8 md:px-12 py-4 md:py-6 rounded-2xl shadow-2xl"
                         >
                             <span className="flex items-center gap-4 text-xs md:text-sm">
-                                BOOK YOUR RIDE <ArrowRight size={18} />
+                                BOOK YOUR RIDE <ArrowUpRight size={18} />
                             </span>
                         </motion.button>
                     </motion.div>

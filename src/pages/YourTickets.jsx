@@ -170,7 +170,7 @@ const TicketCard = memo(({ ticket, item, onRefresh }) => {
                 <div className="absolute inset-0 backface-hidden rotate-y-180">
                     <div className="h-full w-full rounded-[2.5rem] bg-[#02040a] p-5 flex flex-col items-center justify-between shadow-4xl border border-white/10 relative overflow-hidden">
                         <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
-                        
+
                         {/* Background Light */}
                         <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                             <div className="absolute top-[-20%] left-[-20%] w-[70%] h-[70%] bg-[#6C5CE7] rounded-full blur-[120px]" />
@@ -211,7 +211,7 @@ const TicketCard = memo(({ ticket, item, onRefresh }) => {
                             </div>
                         </div>
 
-                        <button 
+                        <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onRefresh && onRefresh();
@@ -227,15 +227,15 @@ const TicketCard = memo(({ ticket, item, onRefresh }) => {
     );
 });
 
-const OrderCard = ({ order, onViewTickets }) => {
+const OrderCard = ({ order, onViewTickets, onViewInvoice }) => {
     const items = order.items || [];
     const date = safeDate(order.date || order.created_at || order.createdAt || order.purchaseDate);
-    
+
     // Aggressive price discovery
     const totalAmount = order.total_amount || order.amount_total || order.grand_total || order.total_price || order.amount || 0;
-    
+
     return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="w-full bg-[#0F111A] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-700 hover:border-white/10 group"
@@ -247,7 +247,7 @@ const OrderCard = ({ order, onViewTickets }) => {
                         <img src="/E4LOGOr.png" className="w-full h-full object-contain brightness-150" alt="E4" />
                     </div>
                     <div>
-                        <h3 className="text-white font-black text-lg md:text-xl uppercase tracking-tighter leading-none mb-1">ETHREE FOOD COURT</h3>
+                        <h3 className="text-white font-black text-lg md:text-xl uppercase tracking-tighter leading-none mb-1">EFOUR</h3>
                         <div className="flex items-center gap-1.5 opacity-40">
                             <MapPin size={10} className="text-[#6C5CE7]" />
                             <span className="text-[9px] font-black uppercase tracking-[0.2em]">Vijayawada Terminal</span>
@@ -293,11 +293,14 @@ const OrderCard = ({ order, onViewTickets }) => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <button className="py-4 bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/5 rounded-2xl font-black text-[9px] uppercase tracking-widest transition-all">
+                    <button
+                        onClick={() => onViewInvoice(order)}
+                        className="py-4 bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/5 rounded-2xl font-black text-[9px] uppercase tracking-widest transition-all"
+                    >
                         VIEW INVOICE
                     </button>
-                    <button 
-                        onClick={() => onViewTickets(order.id || order._id || 'ETH-332725')}
+                    <button
+                        onClick={() => onViewTickets(order)}
                         className="py-4 bg-[#6C5CE7] hover:bg-[#5B4BCB] text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] transition-all shadow-xl shadow-[#6C5CE7]/10 flex items-center justify-center gap-3 group/btn"
                     >
                         VIEW TICKETS <Zap size={12} className="group-hover:rotate-12 transition-transform" />
@@ -311,19 +314,18 @@ const OrderCard = ({ order, onViewTickets }) => {
 const YourTickets = () => {
     const { user, showToast } = useStore();
     const [loading, setLoading] = useState(true);
-    const [rawOrders, setRawOrders] = useState([]);
+    const [rawTickets, setRawTickets] = useState([]);
     const [selectedOrderTickets, setSelectedOrderTickets] = useState(null);
+    const [selectedInvoice, setSelectedInvoice] = useState(null);
     const [isDrilling, setIsDrilling] = useState(false);
 
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            // As per request: Stop calling /my-tickets, call specific order for now
-            const res = await getOrderDetails('ETH-332725');
+            const res = await getMyTickets();
             if (res.ok) {
                 const data = await res.json();
-                // Ensure it's in an array for mapping
-                setRawOrders([data]); 
+                setRawTickets(Array.isArray(data) ? data : (data.orders || data.data || []));
             }
         } catch (err) {
             console.warn('Failed to fetch orders list', err);
@@ -331,16 +333,20 @@ const YourTickets = () => {
         setLoading(false);
     };
 
-    const handleViewTickets = async (orderId) => {
+    const handleViewTickets = async (order) => {
         setIsDrilling(true);
+        const orderId = order._id || order.id || order.orderId;
         try {
             const res = await getOrderDetails(orderId);
             if (res.ok) {
                 const data = await res.json();
                 setSelectedOrderTickets(data);
+            } else {
+                // Fallback to locally passed order items if API fails
+                setSelectedOrderTickets(order.items || []);
             }
         } catch (err) {
-            showToast("Failed to retrieve pass details", "error");
+            setSelectedOrderTickets(order.items || []);
         }
         setIsDrilling(false);
     };
@@ -357,7 +363,7 @@ const YourTickets = () => {
             .flatMap(ticket => {
                 // Determine if this is an order with multiple items or a single ticket
                 const items = ticket.items || [];
-                
+
                 if (items.length > 0) {
                     // It's an order document
                     const status = (ticket.status || ticket.orderStatus || '').toLowerCase();
@@ -365,11 +371,11 @@ const YourTickets = () => {
 
                     return items.filter(item => item.id !== 'tax-gst-9').map(item => {
                         // Look for price in the item FIRST, then the parent ticket (order)
-                        const rawPrice = item.price || item.item_price || item.unit_price || 
-                                         item.product?.price || item.product?.unit_price ||
-                                         ticket.amount || ticket.total_amount || ticket.total_price || 
-                                         ticket.amount_total || ticket.total || 0;
-                        
+                        const rawPrice = item.price || item.item_price || item.unit_price ||
+                            item.product?.price || item.product?.unit_price ||
+                            ticket.amount || ticket.total_amount || ticket.total_price ||
+                            ticket.amount_total || ticket.total || 0;
+
                         const price = typeof rawPrice === 'string' ? parseFloat(rawPrice.replace(/[^0-9.]/g, '')) : (Number(rawPrice) || 0);
                         return {
                             ...item,
@@ -387,10 +393,10 @@ const YourTickets = () => {
                     if (status && !validStatuses.includes(status)) return [];
 
                     // Extract price - extremely aggressive search for potential price fields
-                    const rawPrice = ticket.price || ticket.item_price || ticket.amount || ticket.unit_price || 
-                                     ticket.total_amount || ticket.amount_total || ticket.price_total || 
-                                     ticket.grand_total || ticket.cost || ticket.price_paid || 0;
-                    
+                    const rawPrice = ticket.price || ticket.item_price || ticket.amount || ticket.unit_price ||
+                        ticket.total_amount || ticket.amount_total || ticket.price_total ||
+                        ticket.grand_total || ticket.cost || ticket.price_paid || 0;
+
                     const price = typeof rawPrice === 'string' ? parseFloat(rawPrice.replace(/[^0-9.]/g, '')) : (Number(rawPrice) || 0);
 
                     return [{
@@ -421,7 +427,7 @@ const YourTickets = () => {
 
 
 
-    if (loading && tickets.length === 0) {
+    if (loading && rawTickets.length === 0) {
         return (
             <div className="min-h-screen bg-[#02040a] pt-52 md:pt-64 pb-12 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden">
                 <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
@@ -431,7 +437,7 @@ const YourTickets = () => {
         );
     }
 
-    if (!user || rawOrders.length === 0) {
+    if (!user || rawTickets.length === 0) {
         return (
             <div className="min-h-screen bg-[#02040a] pt-52 md:pt-64 pb-12 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden">
                 <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
@@ -462,7 +468,7 @@ const YourTickets = () => {
             <div className="absolute inset-0 matrix-grid opacity-[0.05] pointer-events-none" />
             <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#6C5CE7]/5 rounded-full blur-[200px] pointer-events-none" />
             <div className="absolute bottom-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#FF7A00]/5 rounded-full blur-[200px] pointer-events-none" />
-            <div className="absolute inset-0 noise-overlay opacity-[0.02]" />            <div className="container mx-auto px-8 max-w-[1440px] relative z-10">
+            <div className="absolute inset-0 noise-overlay opacity-[0.02]" />            <div className={`container mx-auto px-8 max-w-[1440px] relative z-10 transition-all duration-700 ${(selectedOrderTickets || selectedInvoice) ? 'opacity-0 scale-95 pointer-events-none blur-2xl' : 'opacity-100 scale-100'}`}>
                 {/* Header Section */}
                 <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-12 mb-16">
                     <div className="space-y-6">
@@ -488,101 +494,272 @@ const YourTickets = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-10">
-                        {rawOrders.map((order, index) => (
-                            <OrderCard 
-                                key={index} 
-                                order={order} 
+                        {rawTickets.map((order, index) => (
+                            <OrderCard
+                                key={index}
+                                order={order}
                                 onViewTickets={handleViewTickets}
+                                onViewInvoice={(o) => setSelectedInvoice(o)}
                             />
                         ))}
                     </div>
                 )}
+            </div>
 
+            {/* Drill-down Modal for Tickets */}
+            <AnimatePresence>
                 {/* Drill-down Modal for Tickets */}
-                <AnimatePresence>
-                    {selectedOrderTickets && (
-                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-12">
-                            <motion.div 
+                {selectedOrderTickets && (() => {
+                    const baseItems = Array.isArray(selectedOrderTickets) ? selectedOrderTickets : (selectedOrderTickets.tickets || selectedOrderTickets.items || selectedOrderTickets.data || (typeof selectedOrderTickets === 'object' ? Object.values(selectedOrderTickets).find(v => Array.isArray(v)) : []) || []);
+                    const filteredItems = baseItems.filter(i => i.id !== 'tax-gst-9' && i.item_name !== 'GST' && i.name !== 'GST' && i.category !== 'tax');
+                    const itemsToRender = filteredItems.flatMap(item => {
+                        const qty = Number(item.quantity) || 1;
+                        return Array.from({ length: qty }, () => item);
+                    });
+                    const isSingle = itemsToRender.length === 1;
+
+                    return (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                            <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 onClick={() => setSelectedOrderTickets(null)}
-                                className="absolute inset-0 bg-[#02040a]/95 backdrop-blur-2xl"
+                                className="absolute inset-0 bg-[#02040a] backdrop-blur-[200px]"
                             />
-                            
-                            <motion.div 
+
+                            <motion.div
                                 initial={{ opacity: 0, scale: 0.9, y: 30 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                                className="w-full max-w-6xl max-h-[90vh] bg-white/[0.02] border border-white/10 rounded-[3.5rem] p-10 relative z-10 overflow-hidden flex flex-col"
+                                className={`w-[95%] ${isSingle ? 'max-w-md' : 'max-w-[90vw]'} max-h-[90vh] bg-[#0A0C14] border border-white/10 rounded-[3rem] p-8 md:p-12 relative z-10 overflow-hidden flex flex-col shadow-4xl my-auto animate-in fade-in zoom-in duration-500`}
                             >
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#6C5CE7] to-transparent opacity-30" />
-                                
+
                                 <div className="flex justify-between items-center mb-12">
                                     <div>
-                                        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">ACTIVE <span className="text-gradient-primary">PASSES</span></h2>
-                                        <p className="text-[#AAB2C5]/40 text-[10px] font-black uppercase tracking-widest mt-2">{selectedOrderTickets.id || selectedOrderTickets._id}</p>
+                                        <h2 className={`font-black uppercase tracking-tighter text-white font-outfit ${isSingle ? 'text-2xl md:text-3xl' : 'text-3xl md:text-5xl'}`}>ACTIVE <span className="text-gradient-primary">PASSES</span></h2>
+                                        <p className="text-[#AAB2C5]/40 text-[10px] font-black uppercase tracking-widest mt-2">
+                                            {Array.isArray(selectedOrderTickets) ? `ORDER ${selectedOrderTickets[0]?.orderId || 'DETAILS'}` : (selectedOrderTickets.id || selectedOrderTickets._id)}
+                                        </p>
                                     </div>
-                                    <button 
+                                    <button
                                         onClick={() => setSelectedOrderTickets(null)}
-                                        className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all hover:rotate-90 duration-500"
+                                        className={`${isSingle ? 'w-12 h-12' : 'w-16 h-16'} rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all hover:rotate-90 duration-500`}
                                     >
-                                        <X size={24} />
+                                        <X size={isSingle ? 18 : 24} />
                                     </button>
                                 </div>
 
-                                <div className="flex-grow overflow-y-auto px-4 pb-10 scrollbar-hide">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                                        {(selectedOrderTickets.items || []).filter(i => i.id !== 'tax-gst-9').map((item, idx) => (
-                                            <TicketCard 
-                                                key={idx}
-                                                ticket={selectedOrderTickets}
-                                                item={item}
-                                                onRefresh={() => handleViewTickets(selectedOrderTickets.id)}
-                                            />
-                                        ))}
-                                    </div>
+                                <div className="flex-grow overflow-y-auto px-4 pb-10 no-scrollbar">
+                                    {isSingle ? (
+                                        <div className="flex justify-center py-6">
+                                            {itemsToRender.map((item, idx) => {
+                                                const passId = item.code || item.id || item._id || 'PASS';
+                                                return (
+                                                    <div key={idx} className="w-full max-w-[320px] bg-white/[0.03] border border-white/10 rounded-[2.5rem] p-8 flex flex-col items-center gap-6 shadow-4xl group hover:border-[#6C5CE7]/30 transition-all duration-700">
+                                                        {/* <div className="w-full flex justify-between items-center mb-2">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="w-8 h-8 rounded-lg bg-[#6C5CE7]/10 flex items-center justify-center text-[#6C5CE7]">
+                                                                        <Zap size={14} />
+                                                                    </div>
+                                                                    <span className="text-[10px] font-black uppercase tracking-widest text-[#AAB2C5]/60">ACTIVE SCAN</span>
+                                                                </div>
+                                                                <span className="text-white font-black text-sm uppercase">₹{item.price || 0}</span>
+                                                            </div> */}
+                                                        <div className="relative group/qr">
+                                                            <div className="absolute -inset-8 bg-[#6C5CE7]/20 rounded-full blur-3xl opacity-0 group-hover/qr:opacity-100 transition-opacity" />
+                                                            <div className="bg-white p-4 rounded-[1.5rem] relative z-10 shadow-4xl group-hover/qr:scale-[1.05] transition-transform duration-700">
+                                                                <QRCode value={passId} size={150} fgColor="#02040a" />
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-center space-y-2">
+                                                            <h3 className="text-white font-black text-base md:text-lg uppercase tracking-tight">{item.name || item.item_name || 'E4 Ticket'}</h3>
+                                                            <div className="flex items-center justify-center gap-4 text-[9px] font-black uppercase tracking-[0.3em] opacity-30">
+                                                                <span>ID: {String(passId).slice(-8)}</span>
+                                                                {/* <div className="w-1 h-1 rounded-full bg-white" /> */}
+                                                                {/* <span>UNIT PRICE: ₹{item.price || item.unit_price || item.amount || 0}</span> */}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16">
+                                            {itemsToRender.map((item, idx) => {
+                                                const passId = item.code || item.id || item._id || 'PASS';
+                                                return (
+                                                    <div key={idx} className="bg-white/[0.03] border border-white/10 rounded-[2.5rem] p-8 flex flex-col items-center gap-6 shadow-4xl group hover:border-[#6C5CE7]/30 transition-all duration-700">
+                                                        {/* <div className="w-full flex justify-between items-center mb-2">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-8 h-8 rounded-lg bg-[#6C5CE7]/10 flex items-center justify-center text-[#6C5CE7]">
+                                                                    <Zap size={14} />
+                                                                </div>
+                                                                <span className="text-[10px] font-black uppercase tracking-widest text-[#AAB2C5]/60">ACTIVE SCAN</span>
+                                                            </div>
+                                                            <span className="text-white font-black text-sm uppercase">₹{item.price || 0}</span>
+                                                        </div> */}
+                                                        <div className="relative group/qr">
+                                                            <div className="absolute -inset-8 bg-[#6C5CE7]/20 rounded-full blur-3xl opacity-0 group-hover/qr:opacity-100 transition-opacity" />
+                                                            <div className="bg-white p-4 rounded-[1.5rem] relative z-10 shadow-4xl group-hover/qr:scale-[1.05] transition-transform duration-700">
+                                                                <QRCode value={passId} size={150} fgColor="#02040a" />
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-center space-y-2">
+                                                            <h3 className="text-white font-black text-lg uppercase tracking-tight">{item.name || item.item_name || 'E4 Ticket'}</h3>
+                                                            <div className="flex items-center justify-center gap-4 text-[9px] font-black uppercase tracking-[0.3em] opacity-30">
+                                                                <span>ID: {String(passId).slice(-8)}</span>
+                                                                {/* <div className="w-1 h-1 rounded-full bg-white" /> */}
+                                                                {/* <span>UNIT PRICE: ₹{item.price || item.unit_price || item.amount || 0}</span> */}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                         </div>
-                    )}
-                </AnimatePresence>
+                    );
+                })()}
 
-                {/* Empty State for Filter */}
-                {!loading && rawOrders.length === 0 && (
-                    <div className="py-48 flex flex-col items-center text-center max-w-lg mx-auto">
-                        <div className="w-32 h-32 rounded-[2.5rem] bg-white/[0.02] flex items-center justify-center mb-12 shadow-4xl border border-white/5 group animate-pulse-subtle">
-                            <Clock className="text-slate-900 group-hover:text-[#6C5CE7] transition-colors duration-700" size={48} />
+                {/* Invoice Modal matching the reference screenshot */}
+                {selectedInvoice && (() => {
+                    const order = selectedInvoice;
+                    const date = safeDate(order.date || order.created_at || order.createdAt || order.purchaseDate);
+                    const items = (order.items || []).filter(i => i.id !== 'tax-gst-9');
+                    const total = order.total_amount || order.amount_total || order.grand_total || order.total_price || order.amount || 0;
+                    const taxItem = (order.items || []).find(i => i.id === 'tax-gst-9' || i.name === 'GST' || i.item_name === 'GST');
+                    const realTax = taxItem ? (taxItem.price || taxItem.amount || 0) : Math.round(total * (0.09 / 1.09));
+                    const invoiceNo = order.id || order._id || 'ETH-705072';
+
+                    return (
+                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setSelectedInvoice(null)}
+                                className="absolute inset-0 bg-[#02040a] backdrop-blur-[200px]"
+                            />
+
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                                className="w-[90%] max-w-[400px] bg-white rounded-[2rem] overflow-hidden relative z-10 flex flex-col shadow-4xl animate-in fade-in zoom-in duration-500"
+                            >
+                                {/* Compact Header */}
+                                <div className="bg-[#1F2937] p-6 text-white relative">
+                                    <button
+                                        onClick={() => setSelectedInvoice(null)}
+                                        className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all z-20"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                    <div className="flex justify-between items-center pr-8">
+                                        <div className="flex gap-3 items-center">
+                                            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-1.5 shrink-0 shadow-lg">
+                                                <img src="/E4LOGOr.png" className="w-full h-full object-contain" alt="E4" />
+                                            </div>
+                                            <div className="space-y-0">
+                                                <h2 className="font-black text-sm tracking-tight uppercase">EFOUR</h2>
+                                                <p className="text-[7px] text-white/40 font-bold uppercase tracking-widest">Receipt</p>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <h1 className="text-xl font-black tracking-tighter uppercase">INVOICE</h1>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* High-Density Body */}
+                                <div className="p-5 space-y-4 max-h-[65vh] overflow-y-auto no-scrollbar">
+                                    <div className="grid grid-cols-2 gap-2.5">
+                                        <div className="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-0.5">
+                                            <p className="text-[7px] font-bold text-gray-400 uppercase tracking-widest"># NO.</p>
+                                            <p className="text-gray-900 font-black text-[10px] truncate">{invoiceNo}</p>
+                                        </div>
+                                        <div className="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-0.5">
+                                            <p className="text-[7px] font-bold text-gray-400 uppercase tracking-widest">📅 DATE</p>
+                                            <p className="text-gray-900 font-black text-[10px]">{date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white rounded-xl border border-gray-100 overflow-hidden text-[10px]">
+                                        {items.map((item, idx) => (
+                                            <div key={idx} className="grid grid-cols-12 gap-3 p-3 border-b border-gray-50 items-center last:border-0 hover:bg-gray-50/50 transition-colors">
+                                                <div className="col-span-8 text-gray-900 font-black uppercase truncate">{item.name}</div>
+                                                <div className="col-span-1 text-gray-400 font-bold text-center text-[8px]">x{item.quantity}</div>
+                                                <div className="col-span-3 text-gray-900 font-black text-right">₹{item.price * item.quantity}</div>
+                                            </div>
+                                        ))}
+                                        <div className="bg-[#1F2937] p-4 flex justify-between items-center text-white mt-2">
+                                            <div className="space-y-0.5">
+                                                <p className="text-[6px] text-white/40 font-bold uppercase tracking-widest">Tax Included (9%)</p>
+                                                <p className="text-[8px] font-bold">GST: ₹{realTax}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-[7px] text-white/40 font-bold uppercase tracking-widest">GRAND TOTAL</p>
+                                                <p className="text-2xl font-black tracking-tighter leading-none">₹{total}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-center gap-2 opacity-30 mt-4">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                        <span className="text-[7px] font-black uppercase tracking-[0.4em]">VERIFIED TRANSACTION</span>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => setSelectedInvoice(null)}
+                                    className="m-5 md:m-6 py-4 bg-[#1F2937] text-white rounded-xl font-black uppercase tracking-[0.3em] text-[9px] shadow-xl hover:bg-slate-800 transition-all active:scale-[0.98]"
+                                >
+                                    CLOSE
+                                </button>
+                            </motion.div>
                         </div>
-                        <p className="text-slate-700 font-black uppercase tracking-[0.5em] text-xs leading-relaxed border-t border-white/5 pt-10">No operational orders found.</p>
+                    );
+                })()}
+            </AnimatePresence>
+
+            {/* Empty State for Filter */}
+            {!loading && rawTickets.length === 0 && (
+                <div className={`py-48 flex flex-col items-center text-center max-w-lg mx-auto relative z-10 transition-all duration-700 ${(selectedOrderTickets || selectedInvoice) ? 'opacity-0 scale-95 blur-2xl' : 'opacity-100 scale-100'}`}>
+                    <div className="w-32 h-32 rounded-[2.5rem] bg-white/[0.02] flex items-center justify-center mb-12 shadow-4xl border border-white/5 group animate-pulse-subtle">
+                        <Clock className="text-slate-900 group-hover:text-[#6C5CE7] transition-colors duration-700" size={48} />
                     </div>
-                )}
-            </div>
+                    <p className="text-slate-700 font-black uppercase tracking-[0.5em] text-xs leading-relaxed border-t border-white/5 pt-10">No operational orders found.</p>
+                </div>
+            )}
 
             {/* Global Perspective Fix for 3D */}
             <style dangerouslySetInnerHTML={{
                 __html: `
-                .perspective-3000 { perspective: 3000px; }
-                .preserve-3d { transform-style: preserve-3d; }
-                .backface-hidden { backface-visibility: hidden; }
-                .rotate-y-180 { transform: rotateY(180deg); }
-                @keyframes pulse-subtle {
-                    0%, 100% { opacity: 1; transform: scale(1); }
-                    50% { opacity: 0.85; transform: scale(0.98); }
-                }
-                .animate-pulse-subtle {
-                    animation: pulse-subtle 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-                }
-                @keyframes shimmer {
-                    0% { transform: translateX(-100%) skewX(-15deg); }
-                    100% { transform: translateX(200%) skewX(-15deg); }
-                }
-                .animate-shimmer {
-                    animation: shimmer 3s infinite linear;
-                }
-                .backdrop-blur-4xl { backdrop-filter: blur(80px); }
-                .shadow-4xl { box-shadow: 0 40px 100px -20px rgba(0,0,0,0.8); }
-            `}} />
+                    .perspective-3000 { perspective: 3000px; }
+                    .preserve-3d { transform-style: preserve-3d; }
+                    .backface-hidden { backface-visibility: hidden; }
+                    .rotate-y-180 { transform: rotateY(180deg); }
+                    @keyframes pulse-subtle {
+                        0%, 100% { opacity: 1; transform: scale(1); }
+                        50% { opacity: 0.85; transform: scale(0.98); }
+                    }
+                    .animate-pulse-subtle {
+                        animation: pulse-subtle 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                    }
+                    @keyframes shimmer {
+                        0% { transform: translateX(-100%) skewX(-15deg); }
+                        100% { transform: translateX(200%) skewX(-15deg); }
+                    }
+                    .animate-shimmer {
+                        animation: shimmer 3s infinite linear;
+                    }
+                    .backdrop-blur-4xl { backdrop-filter: blur(80px); }
+                    .shadow-4xl { box-shadow: 0 40px 100px -20px rgba(0,0,0,0.8); }
+                `}} />
         </div>
     );
 };

@@ -1,244 +1,298 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, memo, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, User, X, ShieldCheck, Zap, Cpu, Sparkles, Activity } from 'lucide-react';
-import { BASE_URL } from '../utils/api';
-import { Link, useSearchParams, useLocation } from 'react-router-dom';
+import { ShieldCheck, User, Zap, ArrowRight, X, Clock, Cpu, QrCode } from 'lucide-react';
+import { fetchWithAuth } from '../utils/api';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
 import OptimizedImage from '../components/common/OptimizedImage';
+import QRCode from 'react-qr-code';
+
+// Replicating Professional TicketCard from YourTickets for consistency
+const EXPIRY_HOURS = 24;
+
+const CircularProgress = ({ pct, color }) => {
+    const r = 14;
+    const circ = 2 * Math.PI * r;
+    const strokePct = ((100 - pct) * circ) / 100;
+    return (
+        <svg width="36" height="36" className="rotate-[-90deg]">
+            <circle r={r} cx="22" cy="22" fill="transparent" stroke="currentColor" strokeWidth="3" strokeDasharray={circ} strokeDashoffset="0" className="text-white/5" />
+            <circle r={r} cx="22" cy="22" fill="transparent" stroke="currentColor" strokeWidth="3" strokeDasharray={circ} strokeDashoffset={strokePct} strokeLinecap="round" className={`${color} transition-all duration-1000 ease-linear`} />
+        </svg>
+    );
+};
+
+const TicketCard = memo(({ ticket, item }) => {
+    const [isFlipped, setIsFlipped] = useState(false);
+    const [timeLeft, setTimeLeft] = useState({ h: 24, m: 0, s: 0, pct: 100 });
+    
+    useEffect(() => {
+        const purchaseDate = new Date(ticket.date || ticket.createdAt || Date.now());
+        const expiryDate = new Date(purchaseDate.getTime() + EXPIRY_HOURS * 60 * 60 * 1000);
+        const calculateTime = () => {
+            const now = new Date();
+            const diff = expiryDate - now;
+            if (diff <= 0) return setTimeLeft({ h: 0, m: 0, s: 0, pct: 0 });
+            const h = Math.floor(diff / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            const pct = (diff / (EXPIRY_HOURS * 60 * 60 * 1000)) * 100;
+            setTimeLeft({ h, m, s, pct });
+        };
+        calculateTime();
+        const timer = setInterval(calculateTime, 1000);
+        return () => clearInterval(timer);
+    }, [ticket]);
+
+    const qrData = `${ticket.id || ticket._id || 'ID'}-${item.id || 'ITEM'}`;
+
+    return (
+        <div className="relative h-[280px] w-full perspective-3000 group">
+            <motion.div
+                animate={{ rotateY: isFlipped ? 180 : 0 }}
+                transition={{ duration: 1.2, type: 'spring', damping: 20, stiffness: 80 }}
+                className="relative w-full h-full preserve-3d cursor-pointer"
+                onClick={() => setIsFlipped(!isFlipped)}
+            >
+                {/* Front Side */}
+                <div className="absolute inset-0 backface-hidden">
+                    <div className="h-full w-full rounded-[2rem] bg-white/[0.04] backdrop-blur-4xl border border-white/10 p-5 flex flex-col justify-between overflow-hidden shadow-4xl hover:border-[#6C5CE7]/40 transition-all duration-700">
+                        <div className="flex justify-between items-start">
+                            <div className="px-2 py-1 rounded-lg bg-[#6C5CE7]/10 border border-[#6C5CE7]/30 flex items-center gap-1.5">
+                                <div className="w-1 h-1 rounded-full bg-[#6C5CE7] shadow-[0_0_8px_#6C5CE7]" />
+                                <span className="text-[7px] font-black uppercase tracking-[0.3em] text-[#6C5CE7]">CONFIRMED</span>
+                            </div>
+                            <span className="text-white font-black text-base">₹{item.price * item.quantity}</span>
+                        </div>
+                        <div className="flex-grow flex flex-col justify-center gap-3">
+                            <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <Cpu size={12} className="text-[#6C5CE7]" />
+                                    <span className="text-slate-500 text-[7px] font-black tracking-[0.3em] uppercase">E4 PASS</span>
+                                </div>
+                                <h3 className="text-white font-black text-lg tracking-tighter uppercase line-clamp-2 leading-tight">{item.name}</h3>
+                            </div>
+                            <div className="flex items-center gap-3 bg-black/20 p-2 rounded-2xl border border-white/5">
+                                <div className="relative shrink-0">
+                                    <CircularProgress pct={timeLeft.pct} color="text-[#6C5CE7]" />
+                                    <div className="absolute inset-0 flex items-center justify-center"><Clock className="text-white/10" size={12} /></div>
+                                </div>
+                                <div className="text-left font-mono">
+                                    <span className="text-[7px] font-black text-slate-700 block tracking-widest uppercase">Expires In</span>
+                                    <span className="text-sm font-black text-[#6C5CE7]">{String(timeLeft.h).padStart(2, '0')}:{String(timeLeft.m).padStart(2, '0')}:{String(timeLeft.s).padStart(2, '0')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-between items-center pt-3 border-t border-white/5">
+                            <div className="text-left">
+                                <span className="text-[6px] font-black text-slate-800 block uppercase">Quantity</span>
+                                <span className="text-white/70 font-black text-[10px] tracking-widest">X {item.quantity}</span>
+                            </div>
+                            <button className="px-4 py-2 bg-white/[0.05] border border-white/10 rounded-xl text-[8px] font-black text-white uppercase tracking-widest hover:bg-[#6C5CE7] transition-all">Show Pass</button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Back Side (QR) */}
+                <div className="absolute inset-0 backface-hidden rotate-y-180">
+                    <div className="h-full w-full rounded-[2rem] bg-[#02040a] p-6 flex flex-col items-center justify-between shadow-4xl border border-white/10">
+                        <div className="w-full flex justify-between items-center">
+                            <span className="text-slate-600 text-[8px] font-black uppercase tracking-[0.4em]">Pass Link</span>
+                            <ShieldCheck size={16} className="text-[#6C5CE7]" />
+                        </div>
+                        <div className="p-3 bg-white rounded-3xl">
+                            <QRCode value={qrData} size={120} fgColor="#02040a" />
+                        </div>
+                        <div className="text-center">
+                            <span className="text-[8px] font-black text-slate-800 block mb-1 uppercase tracking-widest">Ticket Key</span>
+                            <code className="text-white text-[10px] bg-white/5 px-4 py-1.5 rounded-xl border border-white/10 font-mono tracking-widest">#{(ticket.id || '').toUpperCase().slice(-8)}</code>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    );
+});
 
 const Success = () => {
     const [searchParams] = useSearchParams();
-    const location = useLocation();
     const orderId = searchParams.get('orderId');
-    const { clearCart } = useStore();
-
     const status = searchParams.get('status');
     const isSuccess = status === 'success';
+    const { clearCart, addPoints } = useStore();
+    const navigate = useNavigate();
+    const pointsAddedRef = useRef(false);
 
-    const [orderDetails, setOrderDetails] = React.useState(null);
-    const [loading, setLoading] = React.useState(true);
+    const [orderDetails, setOrderDetails] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const refreshUser = useStore(state => state.refreshUser);
 
     useEffect(() => {
         const fetchOrder = async () => {
-            if (!orderId) {
-                setLoading(false);
-                return;
-            }
+            if (!orderId) return setLoading(false);
             try {
-                const res = await fetch(`${BASE_URL}/api/payment/status/${orderId}`);
+                const res = await fetchWithAuth(`/api/payment/status/${orderId}`);
                 if (res.ok) {
                     const data = await res.json();
-                    setOrderDetails(data.order || data);
+                    const orderObj = data.order || data;
+                    setOrderDetails(orderObj);
+                    
+                    // Optimistic update for reward points (User Rule: 500 Bill = 10 Points)
+                    if (!pointsAddedRef.current && Number(orderObj.amount) >= 500) {
+                        const pts = Math.floor(Number(orderObj.amount) / 500) * 10;
+                        addPoints(pts);
+                        pointsAddedRef.current = true;
+                    }
+
+                    // Refresh user profile to sync with backend eventually
+                    await refreshUser();
                 }
             } catch (err) {
-                console.error('Failed to fetch order status', err);
+                console.error(err);
             } finally {
                 setLoading(false);
             }
         };
 
-        if (isSuccess) {
-            clearCart();
-        }
+        if (isSuccess) clearCart();
         fetchOrder();
-    }, [isSuccess, clearCart, orderId]);
+    }, [isSuccess, orderId, clearCart, refreshUser, addPoints]);
 
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-[#02040a] flex flex-col items-center justify-center p-8 pt-24 space-y-12 relative overflow-hidden">
-                <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
-                <div className="relative">
-                    <div className="absolute inset-0 bg-[#6C5CE7]/20 rounded-full blur-3xl animate-pulse" />
-                    <div className="animate-spin rounded-[2.5rem] h-24 w-24 border-t-2 border-b-2 border-[#6C5CE7] relative z-10 shadow-4xl"></div>
-                </div>
-                <p className="text-slate-600 font-black uppercase tracking-[0.6em] text-[12px] animate-pulse ">SYNCING QUANTUM STREAM...</p>
-            </div>
-        );
-    }
+    // Determine success based on either URL param OR backend state once loaded
+    const isVerifiedSuccess = useMemo(() => {
+        const urlStatus = status?.toLowerCase();
+        const apiStatus = (orderDetails?.status || orderDetails?.orderStatus || '').toLowerCase();
+        
+        // If URL explicitly says success, trust it
+        if (['success', 'paid', 'captured', 'confirmed'].includes(urlStatus)) return true;
+        
+        // If order details are loaded and say success, trust it
+        if (orderDetails && ['success', 'paid', 'captured', 'confirmed'].includes(apiStatus)) return true;
+        
+        // Fallback: If we have order details and URL status is empty/missing, check if it's NOT explicitly failed
+        if (orderDetails && !urlStatus && !['failed', 'cancelled', 'abort'].includes(apiStatus)) return true;
 
-    if (!isSuccess && status) {
-        return (
-            <div className="min-h-screen bg-[#02040a] flex items-center justify-center p-8 pt-32 relative overflow-hidden">
-                <div className="absolute inset-0 matrix-grid opacity-20 pointer-events-none" />
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: 40 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    className="bg-white/[0.02] backdrop-blur-4xl p-16 md:p-24 rounded-[4rem] border border-red-500/20 max-w-2xl w-full text-center shadow-4xl relative z-10 overflow-hidden"
-                >
-                    <div className="absolute inset-0 noise-overlay opacity-[0.02]" />
-                    <div className="w-32 h-32 bg-red-500/5 text-red-500 rounded-[2.5rem] flex items-center justify-center mx-auto mb-12 border border-red-500/20 shadow-4xl group">
-                        <X size={64} className="group-hover:scale-110 transition-transform duration-700" />
-                    </div>
+        return false;
+    }, [status, orderDetails]);
 
-                    <h1 className="text-6xl font-black text-white mb-8 tracking-tighter uppercase transform leading-none">
-                        TELEMETRY <br /><span className="text-red-500">ABORTED</span>
-                    </h1>
-                    <p className="text-slate-600 mb-16 font-black uppercase tracking-[0.5em] text-[11px] opacity-60 leading-relaxed border-l-2 border-red-500/20 pl-10 mx-auto text-left max-w-md">The synchronization cycle was terminated by the host. <br />Handshake sequence failed.</p>
+    if (loading) return (
+        <div className="min-h-screen bg-[#02040a] flex flex-col items-center justify-center space-y-8">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#6C5CE7]"></div>
+            <p className="text-[#AAB2C5] font-black uppercase tracking-[0.5em] text-[10px]">Verifying Protocol...</p>
+        </div>
+    );
 
-                    <div className="space-y-8">
-                        <Link to="/" className="w-full btn-premium py-8 rounded-[2.5rem] shadow-4xl bg-gradient-to-r from-red-600 to-rose-700 group flex items-center justify-center gap-6">
-                            RE-INITIATE <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-700" />
-                        </Link>
-                        <Link to="/contact" className="block text-[11px] text-slate-800 font-black uppercase tracking-[0.6em] hover:text-white transition-all underline underline-offset-8">
-                            UPLINK SUPPORT
-                        </Link>
-                    </div>
-                </motion.div>
-            </div>
-        );
-    }
+    if (!isVerifiedSuccess && !loading) return (
+        <div className="min-h-screen bg-[#02040a] flex items-center justify-center p-8">
+             <div className="bg-white/[0.02] p-16 rounded-[4rem] border border-red-500/20 max-w-xl text-center">
+                <div className="w-24 h-24 bg-red-500/10 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-red-500/20"><X size={48} /></div>
+                <h1 className="text-4xl font-black text-white mb-4 uppercase tracking-tighter">Transaction Failed</h1>
+                <p className="text-slate-600 mb-8 font-bold text-sm">Your payment sequence was interrupted. Please try again or contact support.</p>
+                <Link to="/" className="btn-premium px-12 py-5 rounded-3xl block w-full">Return Home</Link>
+             </div>
+        </div>
+    );
 
     return (
-        <div className="min-h-screen bg-[#02040a] flex items-center justify-center p-8 md:p-12 py-40 relative overflow-hidden selection:bg-[#6C5CE7]/30">
-            {/* Background Effects */}
-            <div className="absolute inset-0 matrix-grid opacity-[0.05] pointer-events-none" />
-            <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[70%] bg-[#6C5CE7]/5 rounded-full blur-[200px] pointer-events-none" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[70%] bg-[#FF7A00]/5 rounded-full blur-[200px] pointer-events-none" />
-            <div className="absolute inset-0 noise-overlay opacity-[0.02]" />
+        <div className="min-h-screen bg-[#02040a] py-20 px-6 md:px-12 relative overflow-hidden">
+            <div className="absolute inset-0 matrix-grid opacity-5 pointer-events-none" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full">
+                <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#6C5CE7]/5 blur-[200px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#FF7A00]/5 blur-[200px] rounded-full" />
+            </div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 60 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white/[0.02] backdrop-blur-4xl p-10 md:p-20 rounded-[4rem] md:rounded-[5rem] border border-white/10 max-w-3xl w-full text-center shadow-4xl relative z-10 overflow-hidden"
-            >
-                {/* Status Header */}
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#6C5CE7]/40 to-transparent" />
-
-                <div className="relative mb-16">
-                    <div className="absolute inset-0 bg-[#6C5CE7]/20 rounded-full blur-3xl opacity-40 animate-pulse" />
-                    <div className="w-32 h-32 bg-[#6C5CE7]/10 text-[#6C5CE7] rounded-[3rem] flex items-center justify-center mx-auto mb-10 border border-[#6C5CE7]/20 shadow-4xl transform -rotate-12 hover:rotate-0 transition-transform duration-1000 group">
-                        <ShieldCheck size={64} className="group-hover:scale-110 transition-transform duration-1000" />
-                    </div>
+            <main className="max-w-6xl mx-auto relative z-10">
+                <div className="flex flex-col items-center mb-16 text-center">
+                    <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="w-20 h-20 bg-[#6C5CE7]/10 text-[#6C5CE7] rounded-3xl flex items-center justify-center mb-8 border border-[#6C5CE7]/20 shadow-2xl"
+                    >
+                        <ShieldCheck size={40} />
+                    </motion.div>
+                    <motion.h1 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none mb-4"
+                    >
+                        Tickets <span className="text-gradient-primary">Confirmed</span>
+                    </motion.h1>
+                    <motion.p 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-slate-600 font-black tracking-[0.4em] uppercase text-[10px] opacity-70"
+                    >
+                        Your Transaction [ #{String(orderId).slice(-8).toUpperCase()} ] was successful
+                    </motion.p>
                 </div>
 
-                <div className="space-y-6 mb-20">
-                    <div className="flex items-center justify-center gap-6 text-[#6C5CE7]">
-                        <div className="w-16 h-[2px] bg-[#6C5CE7]/30 shadow-[0_0_10px_#6C5CE7]" />
-                        <span className="text-[11px] font-black uppercase tracking-[0.8em] opacity-80">ENCRYPTION VERIFIED</span>
-                        <div className="w-16 h-[2px] bg-[#6C5CE7]/30 shadow-[0_0_10px_#6C5CE7]" />
-                    </div>
-                    <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase leading-[0.8] transform ">
-                        VAULT KEY <br /><span className="text-gradient-primary">ISSUED</span>
-                    </h1>
-                </div>
-
-                <div className="flex justify-center mb-20 group">
-                    <div className="relative">
-                        <div className="absolute -inset-10 bg-gradient-to-tr from-[#6C5CE7]/20 to-[#FF7A00]/20 rounded-[4rem] blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-1500" />
-                        <div className="p-8 md:p-10 bg-white rounded-[3.5rem] md:rounded-[4rem] shadow-4xl border-[6px] border-white/5 relative z-10 transform group-hover:scale-105 transition-transform duration-1000">
-                            <img
-                                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${orderId || 'ETH-782'}`}
-                                alt="Order QR Code"
-                                className="rounded-2xl w-40 md:w-64 h-40 md:h-64"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Tickets Section: Digital Access Tokens */}
-                <div className="space-y-12 mb-20 text-left">
-                    <div className="flex items-center gap-6 mb-4">
-                        <div className="w-10 h-10 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#6C5CE7] shadow-inner">
-                            <Cpu size={22} />
-                        </div>
-                        <h2 className="text-[11px] font-black text-slate-800 uppercase tracking-[0.5em] opacity-40">AUTHORIZED MODULES</h2>
-                    </div>
-
-                    <div className="space-y-6">
-                        {(orderDetails?.items || []).filter(item => item.id !== 'tax-gst-9').map((item, idx) => (
-                            <motion.div
-                                key={item.id || item._id}
-                                initial={{ opacity: 0, x: -30 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.4 + idx * 0.1, duration: 0.8 }}
-                                className="bg-black/40 backdrop-blur-4xl border border-white/5 rounded-[3.5rem] p-8 shadow-4xl flex items-center justify-between gap-8 relative overflow-hidden group hover:border-[#6C5CE7]/30 transition-all duration-700"
-                            >
-                                <div className="absolute top-0 left-0 w-2 h-full bg-[#6C5CE7] opacity-0 group-hover:opacity-100 transition-all duration-700 blur-[1px]" />
-                                <div className="flex items-center gap-8">
-                                    <div className="relative shrink-0">
-                                        <div className="absolute -inset-2 bg-[#6C5CE7]/20 rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                        <OptimizedImage
-                                            src={item.image ? decodeURIComponent(item.image) : ''}
-                                            alt={item.name}
-                                            priority={idx < 4}
-                                            className="w-24 h-24 rounded-[2rem] object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-110 transition-all duration-1000 relative z-10 border border-white/10"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <h3 className="font-black text-white text-2xl uppercase tracking-tighter transform leading-none group-hover:text-gradient-primary transition-all duration-700">{item.name}</h3>
-                                        <div className="flex items-center gap-5">
-                                            <span className="text-[10px] text-slate-800 font-black uppercase tracking-widest opacity-60">QTY: {item.quantity}</span>
-                                            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-                                            <span className="text-[10px] text-[#6C5CE7] font-black uppercase tracking-widest tracking-[0.2em]">₹{item.price * item.quantity}</span>
-                                        </div>
-                                        <div className="flex items-center gap-3 mt-4">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_#10b981]" />
-                                            <span className="text-[9px] uppercase font-black text-emerald-400 tracking-[0.4em] leading-none">ACTIVE SYNC</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="hidden sm:flex flex-col items-center border-l border-white/5 pl-10 space-y-4">
-                                    <div className="p-3 bg-white rounded-2xl shadow-4xl transform group-hover:rotate-6 transition-transform duration-700">
-                                        <img
-                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=ETH-${orderId || '782'}-${item.id || item._id}`}
-                                            alt="QR"
-                                            className="w-16 h-16 pointer-events-none"
-                                        />
-                                    </div>
-                                    <span className="text-[8px] font-black text-slate-800 tracking-[0.5em] uppercase opacity-40 leading-none">ALPHA-KEY</span>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-8">
-                    <Link to="/login" className="flex-1 btn-premium py-8 rounded-[2.5rem] shadow-4xl group/btn flex items-center justify-center gap-4 h-full">
-                        PROFILE HUB <User size={22} className="group-hover/btn:scale-110 transition-transform duration-700" />
-                    </Link>
-                    <Link to="/dine" className="flex-1 glass-card border border-white/10 hover:border-[#6C5CE7]/40 py-8 rounded-[2.5rem] flex items-center justify-center gap-4 text-white font-black uppercase tracking-[0.5em] text-[12px] transition-all duration-1000 group/dine shadow-4xl bg-white/[0.03] backdrop-blur-4xl h-full">
-                        DINE MODULE <ArrowRight size={22} className="group-hover/dine:translate-x-3 transition-transform duration-700" />
-                    </Link>
-                </div>
-
-                {/* Protocol Guidelines */}
-                <div className="mt-24 p-12 bg-black/40 rounded-[4rem] text-left border border-white/5 backdrop-blur-4xl relative overflow-hidden group hover:border-[#6C5CE7]/20 transition-all duration-1000">
-                    <div className="absolute top-0 right-0 w-40 h-40 bg-[#6C5CE7]/5 blur-[60px] rounded-full translate-x-20 -translate-y-20 transition-opacity duration-1000 opacity-60" />
-                    <div className="relative z-10 flex flex-col md:flex-row items-start gap-10">
-                        <div className="w-20 h-20 rounded-[2rem] bg-[#6C5CE7]/5 flex items-center justify-center text-[#6C5CE7] shrink-0 border border-[#6C5CE7]/20 shadow-4xl group-hover:scale-110 transition-transform duration-1000">
-                            <Activity size={36} />
-                        </div>
-                        <div className="space-y-8 flex-grow">
-                            <div className="flex items-center gap-4">
-                                <h3 className="font-black text-white tracking-[0.6em] uppercase text-[11px] opacity-40 leading-none">DIRECTIVE OMNI-01</h3>
-                                <div className="h-[1px] flex-grow bg-white/5" />
+                {/* ── REWARD POINTS SECTION ── */}
+                {Number(orderDetails?.amount || 0) >= 500 && (
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="max-w-md mx-auto mb-16 p-8 rounded-[3rem] bg-gradient-to-br from-[#6C5CE7]/20 to-transparent border border-[#6C5CE7]/30 backdrop-blur-3xl relative overflow-hidden group"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#6C5CE7]/10 blur-[60px] -mr-16 -mt-16 group-hover:bg-[#6C5CE7]/20 transition-all duration-700" />
+                        <div className="flex items-center gap-6 relative z-10">
+                            <div className="w-16 h-16 rounded-2xl bg-[#6C5CE7] flex items-center justify-center text-white shadow-[0_0_20px_rgba(108,92,231,0.5)] animate-pulse">
+                                <Zap size={32} fill="white" />
                             </div>
-                            <ul className="grid md:grid-cols-2 gap-x-16 gap-y-6 text-[12px] text-slate-500 font-bold uppercase tracking-[0.15em] opacity-90 leading-relaxed">
-                                <li className="flex gap-5"><Zap size={18} className="text-[#6C5CE7] shrink-0" /> Synchronize digital keys at designated kiosks for instant verification.</li>
-                                <li className="flex gap-5"><Zap size={18} className="text-[#6C5CE7] shrink-0" /> Real-time telemetry monitoring enabled via profile uplink.</li>
-                                <li className="flex gap-5"><Zap size={18} className="text-[#6C5CE7] shrink-0" /> Access tokens are unique to this holographic session.</li>
-                                <li className="flex gap-5"><Zap size={18} className="text-[#6C5CE7] shrink-0" /> Protocol execution successful. Welcome to Efour Quantum.</li>
-                            </ul>
+                            <div>
+                                <p className="text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.4em] mb-1">Loyalty Protocol</p>
+                                <h2 className="text-3xl font-black text-white tracking-tighter uppercase leading-none">
+                                    +{Math.floor(Number(orderDetails.amount) / 500) * 10} Points <span className="text-[#6C5CE7]">Earned</span>
+                                </h2>
+                                <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2">Added to your Profile Hub registry</p>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </motion.div>
+                    </motion.div>
+                )}
 
-            {/* Global Styles */}
-            <style dangerouslySetInnerHTML={{
-                __html: `
-                .matrix-grid {
-                    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-                    background-size: 50px 50px;
-                }
-                .backdrop-blur-4xl { backdrop-filter: blur(80px); }
-                .shadow-4xl { box-shadow: 0 50px 100px -20px rgba(0,0,0,0.9); }
-            `}} />
+                {/* Ticket Grid - Using Professional Card UI */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                    {(orderDetails?.items || []).filter(i => i.id !== 'tax-gst-9').map((item, idx) => (
+                        <motion.div
+                            key={item.id || idx}
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 + idx * 0.1 }}
+                        >
+                            <TicketCard ticket={orderDetails} item={item} />
+                        </motion.div>
+                    ))}
+                </div>
+
+                <div className="max-w-xl mx-auto space-y-6">
+                    <div className="flex flex-col sm:flex-row gap-6">
+                        <Link to="/login" className="flex-1 btn-premium py-6 rounded-3xl flex items-center justify-center gap-4 text-xs font-black uppercase tracking-widest shadow-2xl">
+                           <User size={18} /> Profile Hub
+                        </Link>
+                        <Link to="/dine" className="flex-1 bg-white/[0.03] border border-white/10 hover:border-[#6C5CE7]/40 py-6 rounded-3xl flex items-center justify-center gap-4 text-white text-xs font-black uppercase tracking-widest transition-all">
+                           Dine Module <ArrowRight size={18} />
+                        </Link>
+                    </div>
+                    <p className="text-center text-[9px] font-black uppercase tracking-[0.4em] text-white/20 italic">
+                        Tickets are automatically synced to your Profile Hub for offline access
+                    </p>
+                </div>
+            </main>
+
+            <style dangerouslySetInnerHTML={{ __html: `
+                .matrix-grid { background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 40px 40px; }
+                .backdrop-blur-4xl { backdrop-filter: blur(60px); }
+                .shadow-4xl { box-shadow: 0 40px 80px -15px rgba(0,0,0,0.8); }
+                .perspective-3000 { perspective: 3000px; }
+                .preserve-3d { transform-style: preserve-3d; }
+                .backface-hidden { backface-visibility: hidden; }
+                .rotate-y-180 { transform: rotateY(180deg); }
+                .text-gradient-primary { background: linear-gradient(to right, #6C5CE7, #A29BFE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+            ` }} />
         </div>
     );
 };
 
 export default Success;
-

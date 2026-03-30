@@ -1,337 +1,627 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, CheckCircle2, ArrowRight, User, Info, Sparkles, Zap, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Calendar, Clock, MapPin, CheckCircle2, ArrowRight, User, Info, XCircle, Loader2, PlayCircle, Star, ShieldCheck, ChevronRight, UserPlus, Receipt, ChevronLeft, Plus, Minus, Power } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useStore from '../store/useStore';
 import { useNavigate } from 'react-router-dom';
-import OptimizedImage from '../components/common/OptimizedImage';
+import { BASE_URL, fetchWithAuth } from '../utils/api';
 
-const Dome = () => {
-    const { addToCart, toggleCart, showToast } = useStore();
-    const navigate = useNavigate();
+// ── Utils ──────────────────────────────────────────────────────────────────
 
-    const domeData = {
-        id: 'glass-dome',
-        name: 'GLASS DOME',
-        capacity: '4-6',
-        image: '/dome.jpeg'
-    };
+const formatTime12h = (timeStr) => {
+    if (!timeStr) return '';
+    const [hours, minutes] = timeStr.split(':');
+    let h = parseInt(hours);
+    const m = minutes || '00';
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12;
+    h = h ? h : 12; // the hour '0' should be '12'
+    return `${h}:${m} ${ampm}`;
+};
 
-    const [selectedDate, setSelectedDate] = useState(() => {
-        const d = new Date();
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    });
-    const [selectedSlotHour, setSelectedSlotHour] = useState('');
-    const [customerName, setCustomerName] = useState('');
-    const [expectedGuests, setExpectedGuests] = useState('');
-    const [booked, setBooked] = useState(false);
+// ── Components ──────────────────────────────────────────────────────────────
 
-    const hourlyPrice = 500;
-
-    // Generate slots from 12 PM to 11 PM
-    const slots = [
-        { hour: 12, label: '12:00 PM', status: 'available' },
-        { hour: 13, label: '01:00 PM', status: 'available' },
-        { hour: 14, label: '02:00 PM', status: 'available' },
-        { hour: 15, label: '03:00 PM', status: 'available' },
-        { hour: 16, label: '04:00 PM', status: 'available' },
-        { hour: 17, label: '05:00 PM', status: 'available' },
-        { hour: 18, label: '06:00 PM', status: 'available' },
-        { hour: 19, label: '07:00 PM', status: 'available' },
-        { hour: 20, label: '08:00 PM', status: 'available' },
-        { hour: 21, label: '09:00 PM', status: 'available' },
-        { hour: 22, label: '10:00 PM', status: 'available' },
-        { hour: 23, label: '11:00 PM', status: 'available' },
+const ImageSlider = () => {
+    const images = [
+        "/dome.jpeg",
+        "https://images.unsplash.com/photo-1519167758481-83f540f28b0f?q=80&w=1400"
     ];
 
-    const handleBook = (e) => {
-        e.preventDefault();
-        const slot = slots.find(s => s.hour.toString() === selectedSlotHour.toString());
+    const [index, setIndex] = useState(0);
 
-        if (!slot) return;
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setIndex((prev) => (prev + 1) % images.length);
+        }, 5000);
+        return () => clearInterval(timer);
+    }, [images.length]);
 
-        addToCart({
-            id: `dome-booking-${selectedDate}-${slot.hour}`,
-            name: `Glass Dome Booking (${slot.label})`,
-            price: hourlyPrice,
-            image: domeData.image,
-            stall: 'Dome Booking',
-            details: {
-                date: selectedDate,
-                time: slot.label,
-                hour: slot.hour,
-                customerName,
-                expectedGuests,
-                domeName: domeData.name
-            }
-        });
-
-        setBooked(true);
-        showToast("Dome booking added to cart!");
-
-        setTimeout(() => {
-            setBooked(false);
-            setCustomerName('');
-            setExpectedGuests('');
-            setSelectedSlotHour('');
-            toggleCart();
-        }, 1500);
-    };
-
-
+    const next = () => setIndex((prev) => (prev + 1) % images.length);
+    const prev = () => setIndex((prev) => (prev - 1 + images.length) % images.length);
 
     return (
-        <div className="bg-[#02040a] min-h-screen pt-48 md:pt-64 pb-20 selection:bg-[#FF7A00]/30 overflow-hidden relative">
-            {/* Cinematic Background Architecture */}
-            <div className="absolute top-0 right-0 w-[60rem] h-[60rem] bg-[#FF7A00]/5 blur-[160px] rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-[50rem] h-[50rem] bg-[#6C5CE7]/5 blur-[140px] rounded-full translate-y-1/4 -translate-x-1/4 pointer-events-none" />
-            <div className="absolute inset-0 noise-overlay opacity-[0.02]" />
+        <div className="relative group w-full h-full rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/10 shadow-3xl bg-black">
+            <AnimatePresence mode="wait">
+                <motion.img
+                    key={index}
+                    src={images[index]}
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 1.2, ease: "easeInOut" }}
+                    className="absolute inset-0 w-full h-full object-cover opacity-60"
+                />
+            </AnimatePresence>
 
-            <div className="container mx-auto px-6 relative z-10">
-                {/* --- Header Section --- */}
-                <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-16 border-b border-white/5 pb-10">
-                    <div className="max-w-4xl">
-                        <motion.div
-                            initial={{ opacity: 0, x: -50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 1.2 }}
-                        >
-                            <div className="flex items-center gap-6 mb-8">
-                                <span className="text-[#FF7A00] font-black uppercase tracking-[0.6em] text-xs ">PRIVATE CABANAS</span>
-                                <div className="w-12 h-[1px] bg-white/10" />
-                            </div>
-                            <h1 className="text-4xl md:text-9xl font-black tracking-tighter text-white leading-tight transform mb-10 uppercase">
-                                THE <br />
-                                <span className="text-gradient-primary">DOMES.</span>
-                            </h1>
-                            <p className="text-[#94A3B8] text-xl font-bold opacity-40 max-w-lg border-l border-[#FF7A00]/30 pl-10">
-                                Experience ultimate privacy and premium dining in our climate-controlled glass domes.
-                            </p>
-                        </motion.div>
+            {/* Gradient Overlays */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F1C] via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0A0F1C]/40 via-transparent to-transparent pointer-events-none" />
+
+            {/* Navigation Controls */}
+            <div className="absolute inset-0 flex items-center justify-between px-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <button
+                    onClick={prev}
+                    className="p-3 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors"
+                >
+                    <ChevronLeft size={20} />
+                </button>
+                <button
+                    onClick={next}
+                    className="p-3 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors"
+                >
+                    <ChevronRight size={20} />
+                </button>
+            </div>
+
+            {/* Indicators */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+                        {images.map((_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => setIndex(i)}
+                        className={`h-1 rounded-full transition-all duration-500 ${i === index ? 'w-8 bg-[#6C5CE7]' : 'w-2 bg-white/20'}`}
+                    />
+                ))}
+            </div>
+
+            {/* Hero Text In-Slider */}
+            <div className="absolute bottom-6 md:bottom-12 left-6 md:left-12 right-6 md:right-12 pointer-events-none">
+                <div className="flex items-center gap-3 mb-2 md:mb-3">
+                    <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map(i => <Star key={i} size={8} md:size={10} className="text-[#6C5CE7] fill-[#6C5CE7]" />)}
                     </div>
+                    <span className="text-[8px] md:text-[10px] text-[#6C5CE7] font-black uppercase tracking-[0.3em]">Top Rated Attraction</span>
+                </div>
+                <h3 className="text-xl md:text-3xl font-black tracking-tighter text-white">Dining Dome</h3>
+                <p className="text-[9px] md:text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-1">Luxury Dining Experience • E4 Food Court</p>
+            </div>
+        </div>
+    );
+};
+
+const ShowtimeCard = ({ slot, selected, onSelect, formatTime }) => {
+    // Make checks case-insensitive and resilient to missing status
+    const status = slot.status?.toLowerCase() || 'available';
+    const isAvailable = (status === 'available' || status === 'open') && (slot.availableDomes > 0 || slot.availableDomes === undefined);
+    const isBooked = (status === 'booked' || status === 'full' || slot.availableDomes === 0);
+
+    return (
+        <motion.button
+            whileHover={isAvailable ? { y: -2, backgroundColor: 'rgba(255,255,255,0.05)' } : {}}
+            whileTap={isAvailable ? { scale: 0.98 } : {}}
+            onClick={() => {
+                if (isAvailable) {
+                    onSelect(slot);
+                }
+            }}
+            type="button"
+            disabled={!isAvailable}
+            className={`flex flex-col items-center justify-center p-4 rounded-xl border transition-all duration-300
+                ${selected
+                    ? 'border-[#6C5CE7] bg-[#6C5CE7]/5 ring-1 ring-[#6C5CE7]/30'
+                    : isBooked
+                        ? 'border-white/5 opacity-40 cursor-not-allowed grayscale'
+                        : 'border-white/10 bg-white/[0.02] hover:border-white/30'}`}
+        >
+            <span className={`text-sm font-bold ${selected ? 'text-[#6C5CE7]' : 'text-white'}`}>
+                {formatTime(slot.startTime)}
+            </span>
+            <div className="flex flex-col items-center gap-0.5 mt-1">
+                <span className="text-[10px] text-gray-400 font-medium">₹500 / Hour</span>
+                <span className={`text-[9px] font-bold uppercase tracking-wider ${isBooked ? 'text-red-500/60' : 'text-[#6C5CE7]/60'}`}>
+                    {isBooked ? 'Full' : `${slot.availableDomes ?? 6} Available`}
+                </span>
+            </div>
+        </motion.button>
+    );
+};
+
+// ── Main Page ────────────────────────────────────────────────────────────────
+
+const Dome = () => {
+    const { user, addToCart, toggleCart, showToast } = useStore();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const effectiveCapacity = 6;
+    const isDomeBookingEnabled = true;
+
+    // States
+    const today = new Date().toISOString().split('T')[0];
+    const [selectedDate, setSelectedDate] = useState(today);
+    const [slots, setSlots] = useState([]);
+    const [slotsLoading, setSlotsLoading] = useState(false);
+    const [selectedSlot, setSelectedSlot] = useState(null);
+    const [guestCount, setGuestCount] = useState('');
+    const [bookingName, setBookingName] = useState(user?.name || '');
+    const [duration, setDuration] = useState(1);
+    const [domeCount, setDomeCount] = useState(1);
+    const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
+    const [error, setError] = useState('');
+
+    const formatTime = formatTime12h;
+
+    useEffect(() => {
+        setTimeout(() => setLoading(false), 800);
+    }, []);
+
+    const fetchSlots = useCallback(async (date) => {
+        setSlotsLoading(true);
+        try {
+            // Priority 1: User-specified integrated backend
+            let res = await fetch(`https://e3-e4-backend.ethree.in/api/domes/slots?date=${date}&location=E4`).catch(() => ({ ok: false }));
+            
+            // Priority 2: Fallback to AWS production server
+            if (!res.ok) {
+                res = await fetch(`${BASE_URL}/api/domes/slots?date=${date}&location=E4`).catch(() => ({ ok: false }));
+            }
+
+            if (res && res.ok) {
+                const data = await res.json();
+                const fetchedSlots = (data.slots || data || []).filter(s => {
+                    if (!s.startTime) return false;
+                    const h = parseInt(s.startTime.split(':')[0]);
+                    return h >= 12 && h < 23;
+                }).map(s => {
+                    // Normalize available domes
+                    const rawAvailable = s.availableDomes !== undefined ? s.availableDomes : 6;
+                    const booked = 6 - rawAvailable; 
+                    return {
+                        ...s,
+                        availableDomes: Math.max(0, effectiveCapacity - booked)
+                    };
+                });
+                
+                // Ensure slots are sorted by time
+                fetchedSlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+                
+                if (fetchedSlots.length > 0) {
+                    setSlots(fetchedSlots);
+                } else {
+                    throw new Error("No slots found");
+                }
+            } else throw new Error();
+        } catch {
+            // Updated to user window: 12 PM to 11 PM (Last slot starts at 10 PM)
+            const hours = ['12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
+            const mock = hours.map((t, i) => ({
+                id: i, 
+                startTime: t, 
+                status: 'available', // Fixed: All slots available for testing
+                availableDomes: effectiveCapacity
+            }));
+            setSlots(mock);
+        } finally { setSlotsLoading(false); }
+    }, [effectiveCapacity]);
+
+    useEffect(() => { fetchSlots(selectedDate); setSelectedSlot(null); }, [selectedDate, fetchSlots]);
+
+    // Cap domes based on availability
+    useEffect(() => {
+        if (selectedSlot && domeCount > (selectedSlot.availableDomes)) {
+            setDomeCount(selectedSlot.availableDomes || 1);
+        }
+    }, [selectedSlot, domeCount]);
+
+    const handleBook = async (e) => {
+        e.preventDefault();
+
+        if (!user) return navigate('/login');
+        if (!selectedSlot) return setError('Please select a show time.');
+        if (!guestCount || guestCount < 1) return setError('Please specify number of guests.');
+
+        setIsPaymentProcessing(true);
+        setError('');
+
+        try {
+            // Unify total calculation with the central system for 100% price validation
+            const basePrice = 500;
+            const subtotalAmt = basePrice * duration * domeCount;
+            const payAmount = Number((subtotalAmt * 1.09).toFixed(2));
+            const taxAmt = Number((payAmount - subtotalAmt).toFixed(2));
+
+            // Ensure we have a valid mobile and email to avoid 400 Bad Request
+            const safeName = bookingName || user?.name || 'Guest';
+            const safeEmail = user?.email || 'efoureluru@gmail.com';
+            const safeMobile = (user?.mobile || user?.phone || '9999999999').replace(/[^0-9]/g, '').slice(-10);
+
+            const payload = {
+                items: [
+                    {
+                        id: 1, // Using numeric ID like the backend list
+                        name: 'Dome Booking',
+                        price: basePrice,
+                        quantity: duration * domeCount,
+                        image: "/dom1.jpeg",
+                        stall: 'General',
+                        category: 'play' // ID 1 + Category Play = ₹500 validation success
+                    },
+                    {
+                        id: 'tax-gst-9',
+                        name: 'GST (9%)',
+                        price: taxAmt,
+                        quantity: 1,
+                        image: '',
+                        stall: 'Tax',
+                        category: 'tax'
+                    }
+                ],
+                amount: payAmount,
+                location: 'E4',
+                name: safeName,
+                email: safeEmail,
+                mobile: safeMobile,
+                surl: `${window.location.origin}/success?status=success`,
+                furl: `${window.location.origin}/success?status=failure`
+            };
+
+            const result = await fetchWithAuth(`/api/orders/e4/checkout`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            let data;
+            const responseText = await result.text();
+            try {
+                data = JSON.parse(responseText);
+            } catch (pErr) {
+                data = { message: responseText || `Error ${result.status}` };
+            }
+
+            if (result.ok && (data.paymentUrl || data.payment_url || data.url || data.access_key || data?.data?.payment_url)) {
+                const paymentUrl = data.paymentUrl || data.payment_url || data.url || data?.data?.payment_url;
+                const key = data.access_key || data?.data?.access_key;
+                
+                if (paymentUrl) {
+                    window.location.href = paymentUrl;
+                } else if (key) {
+                    window.location.href = `https://pay.easebuzz.in/pay/${key}`;
+                } else {
+                    const finalOrderId = data.order?._id || data.id || data._id;
+                    navigate(`/success?orderId=${finalOrderId}&status=success`);
+                }
+            } else {
+                console.error("400/500 Breakdown:", data);
+                setError(data.message || 'System busy. Please try again in 1 minute.');
+            }
+        } catch (err) {
+            console.error("Booking Sequence Error:", err);
+            setError('Gateway timeout. Please check your network.');
+        } finally {
+            setIsPaymentProcessing(false);
+        }
+    };
+
+    if (loading) return (
+        <div className="min-h-screen bg-[#0A0F1C] flex items-center justify-center">
+            <Loader2 className="text-[#6C5CE7] animate-spin" size={32} />
+        </div>
+    );
+
+    return (
+        <div className="min-h-screen bg-[#0A0F1C] text-white pt-48 sm:pt-64 pb-12 sm:pb-20 font-sans selection:bg-[#6C5CE7] selection:text-white">
+            <div className="container mx-auto px-6 max-w-7xl">
+
+                {/* Header & Slider Grid */}
+                <div className="grid lg:grid-cols-[1fr_1fr] gap-12 items-center mb-12 sm:mb-24">
+                    <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="space-y-8"
+                    >
+                        <div className="flex items-center gap-2 text-[#6C5CE7] font-black text-[10px] uppercase tracking-[0.3em]">
+                            <Star size={14} fill="currentColor" />
+                            <span>Professional Entertainment</span>
+                        </div>
+                        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[1.1]">
+                            Dining<br />
+                            <span className="text-gray-600">Domes @ E4.</span>
+                        </h1>
+                        <p className="text-gray-400 max-w-xl text-lg leading-relaxed">
+                            Experience luxury in your own climate-controlled dome right here at E4 Food Court. Perfect for intimate dining for <span className="text-white">4-6 guests</span>, watching shows, and enjoying premium AC comfort.
+                        </p>
+                        <div className="grid grid-cols-2 gap-y-6 gap-x-4 md:flex md:gap-10">
+                            <div>
+                                <p className="text-2xl font-black text-white">AC</p>
+                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Climate Control</p>
+                            </div>
+                            <div className="hidden md:block w-[1px] h-10 bg-white/10" />
+                            <div>
+                                <p className="text-2xl font-black text-white">TV</p>
+                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Entertainment</p>
+                            </div>
+                            <div className="hidden md:block w-[1px] h-10 bg-white/10" />
+                            <div>
+                                <p className="text-2xl font-black text-white uppercase italic">Dine</p>
+                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Dining Domes</p>
+                            </div>
+                            <div className="hidden md:block w-[1px] h-10 bg-white/10" />
+                            <div>
+                                <p className="text-2xl font-black text-white">4-6</p>
+                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Guests Capacity</p>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="aspect-square lg:aspect-[4/5] xl:aspect-square"
+                    >
+                        <ImageSlider />
+                    </motion.div>
                 </div>
 
-                <div className="grid lg:grid-cols-12 gap-16 items-start">
-                    {/* --- LEFT PANEL: VENUE & CALENDAR --- */}
-                    <div className="lg:col-span-7 space-y-10">
-                        {/* Dome Hero Card */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1.2 }}
-                            className="glass-card p-10 md:p-12 rounded-[5rem] overflow-hidden group"
-                        >
+                <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 md:gap-16 items-start">
 
-
-                            <div className="w-full h-[500px] rounded-[3.5rem] overflow-hidden mb-12 relative shadow-inner">
-                                <OptimizedImage
-                                    src={domeData.image}
-                                    alt={domeData.name}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out brightness-75 group-hover:brightness-100"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#02040a] via-transparent to-transparent opacity-80" />
-                            </div>
-
-                            <div className="flex items-center justify-between mb-10 px-4">
-                                <h2 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none transform group-hover:text-[#6C5CE7] transition-colors duration-1000">
-                                    {domeData.name}
-                                </h2>
-                                <div className="w-24 h-[1px] bg-white/10" />
-                            </div>
-
-                            <div className="flex flex-wrap gap-6 mb-12 px-4">
-                                <div className="flex items-center gap-4 bg-white/[0.03] backdrop-blur-3xl text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/5 shadow-inner">
-                                    <User size={18} className="text-[#FF7A00]" /> {domeData.capacity} GUESTS
+                    {/* Left: Interactive Controls */}
+                    <div className="space-y-10">
+                        {!isDomeBookingEnabled ? (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="bg-white/[0.03] border border-white/10 rounded-3xl md:rounded-[3rem] p-6 sm:p-12 text-center space-y-6"
+                            >
+                                <div className="w-20 h-20 bg-[#FF7A00]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <Clock className="text-[#FF7A00] animate-pulse" size={40} />
                                 </div>
-                                <div className="flex items-center gap-4 bg-[#FF7A00]/10 text-[#FF7A00] px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-[#FF7A00]/20">
-                                    <ShieldCheck size={18} /> CLIMATE CONTROLLED
-                                </div>
-                            </div>
-
-                            <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[3rem] flex gap-8 text-slate-500 text-sm font-bold backdrop-blur-3xl relative overflow-hidden group/policy">
-                                <div className="absolute top-0 left-0 w-1 h-full bg-[#FF7A00] opacity-20 group-hover/policy:opacity-100 transition-opacity" />
-                                <Info size={24} className="flex-shrink-0 mt-1 text-[#FF7A00]" />
-                                <p className="opacity-40 group-hover:opacity-100 transition-opacity duration-1000 leading-relaxed">
-                                    <strong className="text-white font-black uppercase tracking-widest mr-4">DOME RULES:</strong>
-                                    Mandatory ₹500/hour charge in addition to food orders. Max capacity 6 guests.
+                                <h3 className="text-3xl font-black italic tracking-tight uppercase">Booking Coming Soon</h3>
+                                <p className="text-gray-400 max-w-md mx-auto leading-relaxed text-sm font-bold">
+                                    We are currently preparing our domes for an enhanced immersive experience. Online bookings will resume shortly. Stay tuned!
                                 </p>
-                            </div>
-                        </motion.div>
-
-                        {/* Date Selection */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1.2, delay: 0.2 }}
-                            className="glass-card p-12 md:p-16 rounded-[4rem] border border-white/10 shadow-3xl"
-                        >
-                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10 mb-16">
-                                <h3 className="text-4xl font-black text-white uppercase tracking-tighter transform ">SELECT TIME</h3>
-                                <div className="relative group/input">
-                                    <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 text-[#FF7A00] group-hover/input:scale-110 transition-transform" size={20} />
+                                <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+                                    <span className="w-2 h-2 rounded-full bg-[#6C5CE7] animate-ping" />
+                                    Launch in Progress
+                                </div>
+                            </motion.div>
+                        ) : (
+                            <>
+                                {/* 1. Select Date */}
+                                <div className="bg-white/[0.02] border border-white/5 rounded-3xl md:rounded-[2.5rem] p-6 sm:p-10 space-y-8 shadow-2xl">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-xl font-bold flex items-center gap-3">
+                                            <Calendar className="text-[#6C5CE7]" size={24} />
+                                            Choose Booking Date
+                                        </h3>
+                                    </div>
                                     <input
                                         type="date"
-                                        className="pl-16 pr-10 py-6 bg-white/[0.03] border border-white/10 rounded-2xl font-black uppercase tracking-widest text-white text-xs outline-none focus:border-[#FF7A00]/50 shadow-inner w-full lg:w-auto transition-all appearance-none"
+                                        min={today}
                                         value={selectedDate}
-                                        onChange={(e) => {
-                                            setSelectedDate(e.target.value);
-                                            setSelectedSlotHour('');
-                                        }}
+                                        onChange={(e) => setSelectedDate(e.target.value)}
+                                        className="w-full bg-[#0F172A] border border-white/10 rounded-2xl px-8 py-5 text-base font-bold outline-none focus:border-[#6C5CE7] focus:ring-1 focus:ring-[#6C5CE7] transition-all cursor-pointer"
                                     />
                                 </div>
-                            </div>
 
-                            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                                {slots.map(slot => {
-                                    const isSelected = selectedSlotHour === slot.hour;
-                                    const isAvailable = true; // For now, handle availability via state if needed
+                                {/* 2. Select Show Time */}
+                                <div className="bg-white/[0.02] border border-white/5 rounded-3xl md:rounded-[2.5rem] p-6 sm:p-10 space-y-8 shadow-2xl">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-xl font-bold flex items-center gap-3">
+                                            <Clock className="text-[#6C5CE7]" size={24} />
+                                            Available Showtimes
+                                        </h3>
+                                        <div className="flex gap-4">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-[#6C5CE7]" />
+                                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Selected</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-white/10 border border-white/20" />
+                                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Open</span>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    let cardClass = "relative flex flex-col items-center justify-center p-8 rounded-[2.5rem] border transition-all duration-700 group/btn transform ";
-
-                                    if (isSelected) {
-                                        cardClass += "bg-[#6C5CE7] border-[#6C5CE7] text-white shadow-3xl scale-105 z-10 -translate-y-2";
-                                    } else {
-                                        cardClass += "bg-white/[0.03] border-white/5 text-slate-400 hover:border-[#FF7A00]/30 hover:bg-white/[0.06] shadow-2xl cursor-pointer hover:-translate-y-2";
-                                    }
-
-                                    return (
-                                        <motion.button
-                                            key={slot.hour}
-                                            whileTap={{ scale: 0.95 }}
-                                            onClick={() => setSelectedSlotHour(slot.hour)}
-                                            className={cardClass}
-                                        >
-                                            <span className="font-black text-2xl uppercase tracking-tighter mb-2 leading-none">{slot.label}</span>
-                                            <span className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isSelected ? 'text-white' : 'text-[#FF7A00]'}`}>
-                                                ₹{hourlyPrice} / HR
-                                            </span>
-
-                                            {isAvailable && (
-                                                <div className={`absolute top-4 right-4 w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-[#FF7A00]'} animate-pulse shadow-[0_0_10px_currentColor]`} />
-                                            )}
-                                        </motion.button>
-                                    );
-                                })}
-                            </div>
-                        </motion.div>
+                                    {slotsLoading ? (
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                            {[...Array(6)].map((_, i) => (
+                                                <div key={i} className="h-20 bg-white/5 rounded-2xl animate-pulse" />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                            {slots.map(slot => (
+                                                <ShowtimeCard
+                                                    key={slot.startTime}
+                                                    slot={slot}
+                                                    selected={selectedSlot?.startTime === slot.startTime}
+                                                    onSelect={setSelectedSlot}
+                                                    formatTime={formatTime}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </>
+                        )}
                     </div>
 
-                    {/* --- RIGHT PANEL: BOOKING ENGINE --- */}
-                    <div className="lg:col-span-5 sticky top-32">
+                    {/* Right: Summary & Checkout */}
+                    <div className="lg:sticky lg:top-32">
                         <motion.div
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 1.2, delay: 0.4 }}
-                            className="bg-white/[0.02] backdrop-blur-3xl p-12 md:p-16 rounded-[5rem] shadow-4xl relative overflow-hidden border border-white/5 group"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-white/[0.03] border border-white/10 rounded-3xl md:rounded-[3rem] p-6 sm:p-10 xl:p-14 space-y-10 shadow-3xl relative overflow-hidden"
                         >
-                            <div className="absolute top-0 right-0 w-80 h-80 bg-[#FF7A00]/5 blur-[100px] rounded-full -mr-40 -mt-40 pointer-events-none group-hover:bg-[#FF7A00]/10 transition-colors duration-1000" />
+                            <h3 className="text-2xl font-black border-b border-white/5 pb-6 italic underline decoration-[#FF7A00]/30 underline-offset-8">Secure Booking</h3>
 
-                            <div className="relative z-10">
-                                <div className="flex items-center gap-6 mb-12">
-                                    <div className="w-14 h-14 bg-white/[0.03] rounded-2xl flex items-center justify-center text-[#FF7A00] border border-white/5 shadow-inner">
-                                        <Zap size={24} />
+                            <form onSubmit={handleBook} className="space-y-8">
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="group">
+                                            <label className="text-[10px] text-gray-500 font-black uppercase tracking-[0.3em] pl-2 mb-3 block">Guest Name</label>
+                                            <div className="relative">
+                                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-[#FF7A00] transition-colors" size={16} />
+                                                <input
+                                                    required
+                                                    type="text"
+                                                    value={bookingName}
+                                                    onChange={(e) => setBookingName(e.target.value)}
+                                                    placeholder="Name"
+                                                    className="w-full bg-white/[0.04] border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-xs font-bold focus:border-[#FF7A00]/50 outline-none transition-all placeholder:text-gray-800"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="group">
+                                            <label className="text-[10px] text-gray-500 font-black uppercase tracking-[0.3em] pl-2 mb-3 block">Total Guests</label>
+                                            <div className="relative">
+                                                <UserPlus className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-[#FF7A00] transition-colors" size={16} />
+                                                <input
+                                                    required
+                                                    type="number"
+                                                    min={1}
+                                                    max={effectiveCapacity * domeCount}
+                                                    value={guestCount}
+                                                    onChange={(e) => setGuestCount(e.target.value)}
+                                                    placeholder={`1-${effectiveCapacity * domeCount} P`}
+                                                    className="w-full bg-white/[0.04] border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-xs font-bold focus:border-[#FF7A00]/50 outline-none transition-all placeholder:text-gray-800"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <h2 className="text-4xl font-black text-white tracking-tighter uppercase transform leading-none">BOOK DOME.</h2>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="group">
+                                            <label className="text-[10px] text-gray-500 font-black uppercase tracking-[0.3em] pl-2 mb-3 block">Number of Domes</label>
+                                            <div className="flex items-center gap-3 bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3">
+                                                <button 
+                                                    type="button"
+                                                    onClick={() => setDomeCount(prev => Math.max(1, prev - 1))}
+                                                    className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"
+                                                >
+                                                    <Minus size={14} />
+                                                </button>
+                                                <div className="flex-grow text-center">
+                                                    <span className="text-base font-black">{domeCount}</span>
+                                                    <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest ml-1">Domes</span>
+                                                </div>
+                                                <button 
+                                                    type="button"
+                                                    onClick={() => setDomeCount(prev => Math.min(selectedSlot?.availableDomes || 6, prev + 1))}
+                                                    className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"
+                                                >
+                                                    <Plus size={14} />
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="group">
+                                            <label className="text-[10px] text-gray-500 font-black uppercase tracking-[0.3em] pl-2 mb-3 block">Booking Duration</label>
+                                            <div className="flex items-center gap-3 bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3">
+                                                <button 
+                                                    type="button"
+                                                    onClick={() => setDuration(prev => Math.max(1, prev - 1))}
+                                                    className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"
+                                                >
+                                                    <Minus size={14} />
+                                                </button>
+                                                <div className="flex-grow text-center">
+                                                    <span className="text-base font-black">{duration}</span>
+                                                    <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest ml-1">Hours</span>
+                                                </div>
+                                                <button 
+                                                    type="button"
+                                                    onClick={() => setDuration(prev => Math.min(5, prev + 1))}
+                                                    className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"
+                                                >
+                                                    <Plus size={14} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <form onSubmit={handleBook} className="space-y-12">
-                                    <AnimatePresence mode="wait">
-                                        <motion.div
-                                            key={selectedSlotHour || 'none'}
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            className={`w-full border rounded-[3rem] p-10 text-center transition-all duration-1000 backdrop-blur-3xl shadow-3xl ${selectedSlotHour ? 'bg-[#6C5CE7]/5 border-[#6C5CE7]/30' : 'bg-white/[0.02] border-white/5'}`}
-                                        >
-                                            {selectedSlotHour ? (
-                                                <div className="flex flex-col gap-4 items-center">
-                                                    <span className="text-2xl font-black text-[#6C5CE7] uppercase tracking-tighter leading-none">
-                                                        {new Date(selectedDate).toLocaleDateString('en-GB')}<br />
-                                                        <span className="text-4xl text-white mt-2 block">{slots.find(s => s.hour === selectedSlotHour)?.label}</span>
-                                                    </span>
-                                                    <div className="h-[1px] w-12 bg-white/10" />
-                                                    <span className="text-[10px] text-slate-500 font-black uppercase tracking-[0.5em] leading-none">DOME ALLOTMENT PENDING</span>
-                                                </div>
-                                            ) : (
-                                                <div className="flex flex-col items-center gap-6 py-4">
-                                                    <div className="w-1 px-8 rounded-full bg-white/5 animate-pulse" />
-                                                    <span className="text-xs text-slate-700 font-black uppercase tracking-widest leading-relaxed max-w-[200px]">
-                                                        PLEASE PICK A DATE AND TIME ABOVE.
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </motion.div>
-                                    </AnimatePresence>
-
-                                    <div className="space-y-10">
-                                        <div className="group/field">
-                                            <label className="text-xs uppercase tracking-[0.5em] font-black text-slate-600 mb-5 block group-focus-within/field:text-[#FF7A00] transition-colors">YOUR NAME</label>
-                                            <div className="relative">
-                                                <User className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-800 group-focus-within/field:text-[#FF7A00] transition-colors" size={24} />
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    placeholder="FULL NAME"
-                                                    className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-20 pr-10 py-7 text-white placeholder-slate-900 text-xs font-black uppercase tracking-widest outline-none focus:border-[#FF7A00]/40 transition-all shadow-inner"
-                                                    value={customerName}
-                                                    onChange={(e) => setCustomerName(e.target.value)}
-                                                />
-                                            </div>
+                                <div className="space-y-6 pt-4">
+                                    <div className="p-5 sm:p-8 rounded-2xl sm:rounded-[2rem] bg-black/40 border border-white/5 space-y-4 shadow-inner">
+                                        <div className="flex justify-between items-center text-sm font-bold">
+                                            <span className="text-gray-500 uppercase tracking-widest text-[10px]">Session</span>
+                                            <span className="text-white">
+                                                {selectedSlot ? formatTime(selectedSlot.startTime) : '---'}
+                                            </span>
                                         </div>
-
-                                        <div className="group/field">
-                                            <label className="text-xs uppercase tracking-[0.5em] font-black text-slate-600 mb-5 block group-focus-within/field:text-[#FF7A00] transition-colors">GUEST COUNT</label>
-                                            <div className="relative">
-                                                <Zap className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-800 group-focus-within/field:text-[#FF7A00] transition-colors" size={24} />
-                                                <input
-                                                    type="number"
-                                                    required
-                                                    placeholder="GUESTS"
-                                                    min="1"
-                                                    max="6"
-                                                    className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-20 pr-10 py-7 text-white placeholder-slate-900 text-xs font-black uppercase tracking-widest outline-none focus:border-[#FF7A00]/40 transition-all shadow-inner"
-                                                    value={expectedGuests}
-                                                    onChange={(e) => setExpectedGuests(e.target.value)}
-                                                />
+                                        <div className="flex justify-between items-center text-sm font-bold">
+                                            <span className="text-gray-500 uppercase tracking-widest text-[10px]">Availability</span>
+                                            <span className={`uppercase tracking-tighter text-[10px] ${selectedSlot?.availableDomes <= 2 ? 'text-red-500' : 'text-[#6C5CE7]'}`}>
+                                                {selectedSlot ? `${selectedSlot.availableDomes || 6} Domes Left` : '---'}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm font-bold">
+                                            <span className="text-gray-500 uppercase tracking-widest text-[10px]">Access Fee (₹500 x {duration}h x {domeCount}d)</span>
+                                            <span className="text-white">₹{500 * duration * domeCount}.00</span>
+                                        </div>
+                                        <div className="h-[1px] bg-white/5 my-2" />
+                                        <div className="flex justify-between items-baseline pt-2">
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-black uppercase tracking-tighter italic">Total</span>
+                                                <span className="text-[10px] text-gray-500 font-medium italic">(Inclusive of all taxes)</span>
                                             </div>
+                                            <span className="text-4xl font-black text-[#6C5CE7] tracking-tighter">
+                                                ₹{Math.round(500 * duration * domeCount * 1.09)}
+                                            </span>
                                         </div>
                                     </div>
 
-                                    {/* Valuation Engine */}
-                                    <div className="flex justify-between items-end py-12 border-t border-white/5 mt-12">
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-700 mb-2">CHARGE</span>
-                                            <span className="text-slate-900 font-black text-xs uppercase ">PER HOUR</span>
+                                    {error && (
+                                        <div className="px-6 py-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold italic text-center uppercase tracking-widest">
+                                            {error}
                                         </div>
-                                        {selectedSlotHour ? (
-                                            <div className="flex flex-col items-end">
-                                                <span className="text-5xl md:text-6xl font-black text-white tracking-tighter leading-none group-hover:text-[#6C5CE7] transition-colors duration-700">
-                                                    ₹{hourlyPrice.toLocaleString('en-IN')}
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            <span className="text-5xl font-black text-slate-900 tracking-tighter opacity-20">&mdash;</span>
-                                        )}
-                                    </div>
+                                    )}
 
                                     <button
                                         type="submit"
-                                        disabled={!selectedSlotHour || booked}
-                                        className={`w-full py-8 rounded-[2.5rem] font-black uppercase tracking-[0.5em] text-xs flex items-center justify-center gap-6 transition-all duration-1000 shadow-3xl transform active:scale-95 ${selectedSlotHour
-                                            ? 'btn-premium hover:-translate-y-3'
-                                            : 'bg-white/[0.02] text-slate-800 cursor-not-allowed border border-white/5'
-                                            }`}
+                                        disabled={!selectedSlot || isPaymentProcessing || !isDomeBookingEnabled}
+                                        className={`w-full py-6 rounded-2xl font-black uppercase tracking-[0.3em] text-sm flex items-center justify-center gap-4 transition-all duration-500
+                                            ${selectedSlot && !isPaymentProcessing && isDomeBookingEnabled
+                                                ? 'bg-[#6C5CE7] text-white shadow-xl hover:bg-indigo-400 hover:scale-[1.02] active:scale-[0.98]'
+                                                : 'bg-white/5 text-gray-700 cursor-not-allowed border border-white/5'}`}
                                     >
-                                        {booked ? (
-                                            <span className="text-[#FBBF24] flex items-center gap-4 animate-pulse"><CheckCircle2 size={24} /> BOOKED!</span>
-                                        ) : selectedSlotHour ? (
-                                            <>ADD TO CART <ArrowRight size={24} className="group-hover:translate-x-3 transition-transform" /></>
+                                        {isPaymentProcessing ? (
+                                            <Loader2 className="animate-spin" size={24} />
+                                        ) : !isDomeBookingEnabled ? (
+                                            <>
+                                                <Power size={20} />
+                                                <span>Booking Closed</span>
+                                            </>
                                         ) : (
-                                            <>SELECTION REQUIRED</>
+                                            <>
+                                                <span>Confirm Pass</span>
+                                                <ChevronRight size={20} />
+                                            </>
                                         )}
                                     </button>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </motion.div>
+
+                        {/* Professional Guidelines */}
+                        <div className="mt-10 px-4 flex gap-6 items-start">
+                            <ShieldCheck className="text-[#6C5CE7] shrink-0 mt-1" size={24} />
+                            <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed">
+                                Tickets are <span className="text-white">non-transferable</span>. Please ensure you have your digital confirmation ready for rapid scanning.
+                            </p>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -339,4 +629,3 @@ const Dome = () => {
 };
 
 export default Dome;
-

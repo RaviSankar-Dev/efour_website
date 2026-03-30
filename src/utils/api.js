@@ -103,9 +103,13 @@ export const deleteAccount = async () => {
 };
 
 export const getMyTickets = async () => {
-    return fetchWithAuth(import.meta.env.VITE_TICKETS_API_URL || 'https://xzanzkz0wl.execute-api.ap-south-1.amazonaws.com/api/tickets/my-tickets');
+    return fetchWithAuth('/api/orders/e4');
 };
 
 export const getOrderDetails = async (orderId) => {
-    return fetchWithAuth(`https://xzanzkz0wl.execute-api.ap-south-1.amazonaws.com/api/tickets/order/${orderId}`);
+    return fetchWithAuth(`/api/tickets/order/${orderId}`);
+};
+
+export const getProfile = async () => {
+    return fetchWithAuth('https://xzanzkz0wl.execute-api.ap-south-1.amazonaws.com/api/profile');
 };

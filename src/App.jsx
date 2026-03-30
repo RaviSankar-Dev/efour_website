@@ -23,6 +23,7 @@ import Dome from './pages/Dome';
 
 import ScrollToTop from './components/common/ScrollToTop';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import useStore from './store/useStore';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    App-level splash logic
@@ -86,6 +87,14 @@ function useSplashControl() {
 
 function App() {
     const { showSplash, handleSplashFinish } = useSplashControl();
+    const { refreshUser } = useStore();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            refreshUser();
+        }
+    }, [refreshUser]);
 
     return (
         <>

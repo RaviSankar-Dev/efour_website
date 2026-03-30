@@ -5,7 +5,7 @@ import OptimizedImage from '../components/common/OptimizedImage';
 
 const Contact = () => {
     return (
-        <div className="bg-[#02040a] min-h-screen pt-48 md:pt-64 pb-32 relative overflow-hidden selection:bg-[#6C5CE7]/30">
+        <div className="bg-[#02040a] min-h-screen pt-32 md:pt-48 pb-20 relative overflow-hidden selection:bg-[#6C5CE7]/30">
             {/* Immersive Background Architecture */}
             <div className="absolute inset-0 noise-overlay opacity-[0.03] pointer-events-none" />
             <div className="absolute top-0 left-0 w-full h-[60rem] bg-gradient-to-b from-[#6C5CE7]/5 to-transparent pointer-events-none" />
@@ -18,7 +18,7 @@ const Contact = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2 }}
-                    className="mb-32 text-center max-w-5xl mx-auto space-y-12"
+                    className="mb-16 md:mb-20 text-center max-w-5xl mx-auto space-y-12"
                 >
                     <div className="flex flex-col items-center gap-6">
                         <h1 className="text-3xl xs:text-5xl md:text-9xl font-black text-white tracking-tighter uppercase leading-tight transform ">
@@ -30,7 +30,7 @@ const Contact = () => {
                     </div>
                 </motion.div>
 
-                <div className="grid lg:grid-cols-3 gap-12 mb-32">
+                <div className="grid lg:grid-cols-3 gap-8 md:gap-12 mb-16 md:mb-20">
                     {/* Information Column */}
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
@@ -38,48 +38,48 @@ const Contact = () => {
                         viewport={{ once: true }}
                         className="lg:col-span-1"
                     >
-                        <div className="glass-card p-12 rounded-[4rem] h-full relative group overflow-hidden">
+                        <div className="glass-card p-6 md:p-10 rounded-[2.5rem] h-full relative group overflow-hidden">
                             <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-[#6C5CE7]/10 to-transparent blur-[80px] opacity-50" />
 
-                            <h3 className="text-2xl font-black mb-16 flex items-center gap-6 text-white uppercase tracking-tighter transform ">
-                                <Activity className="text-[#6C5CE7] animate-pulse" size={28} />
-                                CONTACT INFO
+                            <h3 className="text-lg font-black mb-8 md:mb-10 flex items-center gap-4 text-white uppercase tracking-tighter">
+                                <Activity className="text-[#6C5CE7] animate-pulse" size={20} />
+                                CONTACT
                             </h3>
 
                             <div className="space-y-16">
-                                <div className="space-y-6 group/item">
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#94A3B8] group-hover/item:text-[#6C5CE7] group-hover/item:scale-110 group-hover/item:bg-[#6C5CE7]/10 transition-all duration-500 shadow-xl">
-                                            <MapPin size={24} />
+                                <div className="space-y-3 group/item">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#94A3B8] group-hover/item:text-[#6C5CE7] group-hover/item:scale-110 transition-all duration-500 shadow-xl">
+                                            <MapPin size={18} />
                                         </div>
-                                        <p className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] ">LOCATION</p>
+                                        <p className="text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.4em] ">LOCATION</p>
                                     </div>
-                                    <p className="font-bold text-white text-lg leading-relaxed transform group-hover/item:translate-x-4 transition-all duration-500 opacity-60 group-hover:opacity-100">
+                                    <p className="font-bold text-white text-sm leading-relaxed transform group-hover/item:translate-x-2 transition-all duration-500 opacity-60">
                                         Opp: New RTC Main Bus Stand,<br />
                                         NR Peta, ELURU - 534 006
                                     </p>
                                 </div>
 
-                                <div className="space-y-6 group/item">
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#94A3B8] group-hover/item:text-[#6C5CE7] group-hover/item:scale-110 group-hover/item:bg-[#6C5CE7]/10 transition-all duration-500 shadow-xl">
-                                            <Phone size={24} />
+                                <div className="space-y-3 group/item">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#94A3B8] group-hover/item:text-[#6C5CE7] group-hover/item:scale-110 transition-all duration-500 shadow-xl">
+                                            <Phone size={18} />
                                         </div>
-                                        <p className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] ">DIRECT LINE</p>
+                                        <p className="text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.4em] ">DIRECT LINE</p>
                                     </div>
-                                    <p className="font-black text-white text-3xl tracking-tighter transform group-hover/item:translate-x-4 transition-all duration-500 group-hover:text-[#FF7A00]">
+                                    <p className="font-black text-white text-xl md:text-2xl tracking-tighter transform group-hover/item:translate-x-2 transition-all duration-500 group-hover:text-[#FF7A00]">
                                         +91 70369 23456
                                     </p>
                                 </div>
 
-                                <div className="space-y-6 group/item pt-8 border-t border-white/5">
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#94A3B8] group-hover/item:text-[#6C5CE7] group-hover/item:scale-110 group-hover/item:bg-[#6C5CE7]/10 transition-all duration-500 shadow-xl">
-                                            <Clock size={24} />
+                                <div className="space-y-3 group/item pt-6 border-t border-white/5">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-[#94A3B8] group-hover/item:text-[#6C5CE7] group-hover/item:scale-110 transition-all duration-500 shadow-xl">
+                                            <Clock size={18} />
                                         </div>
-                                        <p className="text-xs font-black text-[#6C5CE7] uppercase tracking-[0.4em] ">OPENING HOURS</p>
+                                        <p className="text-[10px] font-black text-[#6C5CE7] uppercase tracking-[0.4em] ">HOURS</p>
                                     </div>
-                                    <p className="font-black text-white text-2xl tracking-tighter transform group-hover/item:translate-x-4 transition-all duration-500">
+                                    <p className="font-black text-white text-lg md:text-xl tracking-tighter transform group-hover/item:translate-x-2 transition-all duration-500">
                                         9:00 AM - 11:00 PM
                                     </p>
                                 </div>
@@ -94,7 +94,7 @@ const Contact = () => {
                         viewport={{ once: true }}
                         className="lg:col-span-2"
                     >
-                        <div className="glass-card rounded-[5rem] overflow-hidden shadow-2xl h-[520px] relative group/map">
+                        <div className="glass-card rounded-[2.5rem] overflow-hidden shadow-2xl h-[480px] md:h-[500px] relative group/map">
                             <OptimizedImage
                                 src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1200&q=80"
                                 className="w-full h-full object-cover opacity-20 grayscale group-hover/map:opacity-50 group-hover/map:grayscale-0 group-hover/map:scale-110 transition-all duration-[2000ms]"
@@ -107,7 +107,7 @@ const Contact = () => {
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
-                                    className="bg-[#050810]/90 backdrop-blur-3xl p-12 rounded-[4rem] shadow-3xl border border-white/10 flex flex-col md:flex-row items-center gap-12 max-w-2xl relative overflow-hidden"
+                                    className="bg-[#050810]/90 backdrop-blur-3xl p-8 md:p-10 rounded-[2.5rem] shadow-3xl border border-white/10 flex flex-col md:flex-row items-center gap-8 max-w-2xl relative overflow-hidden"
                                 >
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#6C5CE7]/10 blur-[60px] rounded-full" />
                                     <div className="relative z-10 p-8 bg-white/[0.03] rounded-[3rem] border border-white/10 shadow-2xl transform hover:rotate-6 transition-transform duration-700">
@@ -138,12 +138,12 @@ const Contact = () => {
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="glass-card rounded-[3rem] md:rounded-[5rem] p-6 xs:p-12 md:p-24 relative overflow-hidden shadow-3xl"
+                    className="glass-card rounded-[2.5rem] md:rounded-[3rem] p-6 xs:p-10 md:p-12 relative overflow-hidden shadow-3xl"
                 >
                     <div className="absolute top-0 right-0 w-[60%] h-[60%] bg-[#6C5CE7]/5 rounded-full blur-[160px] pointer-events-none" />
                     <div className="absolute bottom-0 left-0 w-[60%] h-[60%] bg-[#FF7A00]/5 rounded-full blur-[140px] pointer-events-none" />
 
-                    <div className="relative z-10 grid xl:grid-cols-2 gap-16 md:gap-32 items-center">
+                    <div className="relative z-10 grid xl:grid-cols-2 gap-12 md:gap-20 items-center">
                         <div className="space-y-12">
                             <div className="space-y-6">
                                 <div className="flex items-center gap-4 text-[#6C5CE7]">
